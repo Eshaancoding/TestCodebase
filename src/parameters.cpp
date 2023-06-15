@@ -21,11 +21,14 @@ PID HeadingPID = PID(
     Heading_FACTOR
 );
 
-OdomOkapi odometery = OdomOkapi();
 
 MotorGroup leftMotorGroup = okapi::MotorGroup({LEFT_TOP_MOTOR, LEFT_BOTTOM_MOTOR});
 MotorGroup rightMotorGroup = okapi::MotorGroup({RIGHT_TOP_MOTOR, RIGHT_BOTTOM_MOTOR});
 
+OdomOkapi odometery = OdomOkapi();
+
 Drive drive = Drive();
 
 Effectors effectors = Effectors();
+
+Motor m = okapi::Motor(3);

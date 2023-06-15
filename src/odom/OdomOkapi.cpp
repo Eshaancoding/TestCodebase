@@ -6,6 +6,7 @@
 #include "OdomMath.h"
 
 OdomOkapi :: OdomOkapi () {
+
     auto builder = okapi::ChassisControllerBuilder();
     builder
         .withMotors(
@@ -60,7 +61,7 @@ OdomOkapi :: OdomOkapi () {
 }
 
 okapi::OdomState OdomOkapi::getPos () {
-    auto state = chassis->getState();
+    auto state = chassis.lock()->getState();
     return {
         state.x,
         state.y,
@@ -69,5 +70,5 @@ okapi::OdomState OdomOkapi::getPos () {
 }
 
 void OdomOkapi::setPos (okapi::OdomState state) {
-    chassis->setState(state);
+    chassis.lock()->setState(state);
 }

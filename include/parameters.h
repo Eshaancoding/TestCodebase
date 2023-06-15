@@ -63,8 +63,8 @@ extern Effectors effectors;
 #define LEFT_TRACKING_WHEEL_BOTTOM    'B'
 #define RIGHT_TRACKING_WHEEL_TOP      'C'
 #define RIGHT_TRACKING_WHEEL_BOTTOM   'D'
-#define MID_TRACKING_WHEEL_TOP ' '
-#define MID_TRACKING_WHEEL_BOTTOM ' '
+#define MID_TRACKING_WHEEL_TOP        ' '
+#define MID_TRACKING_WHEEL_BOTTOM     ' '
 
 // tracking wheel dim
 #define TRACKING_WHEEL_TRACK    2_in    // Distance from the center of the left tracking wheel to the center of the right tracking wheel

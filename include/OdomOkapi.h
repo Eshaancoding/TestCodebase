@@ -2,10 +2,11 @@
 #define ODOM_H
 
 #include "main.h"
+#include <memory>
 
 class OdomOkapi {
 private:
-    std::shared_ptr<okapi::OdomChassisController> chassis;
+    std::weak_ptr<okapi::OdomChassisController> chassis;
 public: 
     OdomOkapi ();
 

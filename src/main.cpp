@@ -1,5 +1,4 @@
 #include "main.h"
-#include "routes.h"
 
 void disabled() {}
 void competition_initialize() {}
@@ -15,5 +14,5 @@ void autonomous() {};
 
 // Operation control (driver)
 void opcontrol() {
-	Routes::test();	 // run test just for now
+	pros::lcd::print(0, "Hello World!");
 }
