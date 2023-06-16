@@ -63,15 +63,10 @@ OdomOkapi :: OdomOkapi () {
 okapi::OdomState OdomOkapi::getPos () {
     auto state = chassis->getState();
     
-    /**
-     * @brief  CONVERT THIS TO YOUR PREFERRED COORDINATE SYSTEM!!
-     * 
-     */
-
     return {
         state.x,
         state.y,
-        Math::restrictAngle180(state.theta-90_deg) 
+        Math::restrictAngle180(state.theta)
     };
 }
 

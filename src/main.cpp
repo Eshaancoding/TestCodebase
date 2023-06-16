@@ -17,17 +17,22 @@ void autonomous() {
 
 // Operation control (driver)
 void opcontrol() {
-	pros::lcd::print(0, "Hello World!");
 
-	for (float i = -2.5; i < 2.5; i += 0.5) {
-		pros::lcd::print(1, "Dist: %f", 
-			Math::distance({0_in, 0_in, 0_deg}, {0_in, i*1_in}).convert(okapi::inch)
+	for (float i = 2.5; i > -2.5; i -= 0.5) {
+	
+		OdomState p1 = {0.2_in, 0_in, 87_deg};
+		Point p2 = {0.1_in, i * 1_in};
+	
+		printf("Orig P: %f %f %f deg \n", p1.x.convert(inch), p1.y.convert(inch), p1.theta.convert(degree));
+		printf("Target P: %f %f \n", p2.x.convert(inch), p2.y.convert(inch));
+		printf("Dist: %f\n", 
+			Math::distance(p1, p2).convert(okapi::inch)
 		);
-
-		pros::lcd::print(2, "Angle: %f", 
-			Math::anglePoint({0_in, 0_in, 180_deg}, {0_in, i*1_in}).convert(okapi::degree)
+		printf("Angle: %f\n\n", 
+			Math::anglePoint(p1, p2).convert(okapi::degree)
 		);
-		pros::delay(500);
+		
+		pros::delay(100);
 
 	}
 }

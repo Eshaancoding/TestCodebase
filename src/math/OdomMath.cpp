@@ -27,9 +27,7 @@ QLength Math::distance(OdomState p1, Point p2) {
 
 
 /**
- * @brief Coordinate system is different in okapi, assumes that robot is facing x axis
- * I like when robot faces y direction, so therefore we 90-deg when computing point
- * This coordinate system should also be applied to the OdomOkapi and OdomCustom
+ * @brief Coordinate system is weird in okapi, but we're using it (robot faces in x-direction at first)
  * Note: for some reason if point is directly on it, then the degree is 90...
     * So changed condition so its just... 0 when point is directly on it
  */
@@ -38,7 +36,7 @@ QAngle Math::anglePoint(OdomState currentState, Point p1) {
     if (currentState.x - p1.x == 0_in && currentState.y - p1.y == 0_in) { // on same point!
         return 0_deg;
     } else {
-        return Math::restrictAngle180(okapi::OdomMath::computeAngleToPoint(p1, currentState) - 90_deg);
+        return Math::restrictAngle180(okapi::OdomMath::computeAngleToPoint(p1, currentState));
     }
 }
 
