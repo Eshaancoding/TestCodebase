@@ -3,7 +3,6 @@
 #include "main.h"
 
 namespace Math {
-    QAngle restrictAngle360 (QAngle angle);
     QAngle restrictAngle180 (QAngle angle);
     
     QLength distance (OdomState p1, Point p2);

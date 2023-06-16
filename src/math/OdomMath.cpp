@@ -6,9 +6,7 @@ QAngle Math::restrictAngle180(QAngle angle) {
     return okapi::OdomMath::constrainAngle180(angle);
 }
 
-QAngle Math::restrictAngle360(QAngle angle) {
-    return okapi::OdomMath::constrainAngle360(angle);
-}
+
 
 /**
  * @brief Returns the distance between point by point
@@ -17,12 +15,7 @@ QAngle Math::restrictAngle360(QAngle angle) {
 QLength Math::distance(OdomState p1, Point p2) {
     QAngle ang = anglePoint(p1, p2);
     QLength dist = okapi::OdomMath::computeDistanceToPoint(p2,p1);
-
-    if (okapi::abs(ang) > 90_deg) {
-        return -dist;
-    } else {
-        return dist;
-    }
+    return dist * (okapi::abs(ang) > 90_deg ? -1 : 1);
 }
 
 
@@ -46,5 +39,4 @@ Point Math::findPointOffset(OdomState state, QLength dist) {
         state.y + okapi::sin(state.theta) * dist,
     };
 
-    // kind of suspicious of okapi::sin... (180? 360? etc.)
 }
