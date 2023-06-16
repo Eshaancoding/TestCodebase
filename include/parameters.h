@@ -1,6 +1,16 @@
 #ifndef PARAMETERS
 #define PARAMETERS
 
+
+// *********************** NOTES ***********************
+//* Remember that you DID NOT INITIALIZE ODOMETERY!! 
+//* This was for (TESTING PURPOSES)
+//* ALSO NTOE THAT YOU NEED TO CHECK COORD SIYSTEM OF ODOM OKAPI
+//*     VEX coordinate system is REALLY weird... (face y direction to where the bot is facing rn)
+//*     Make it so that by default the y direction of the robot faces the y direction
+//* Take a look at parameters.cpp
+// *****************************************************
+
 #include "pid.h"
 #include "OdomOkapi.h"
 

@@ -6,7 +6,7 @@
 
 class OdomOkapi {
 private:
-    std::weak_ptr<okapi::OdomChassisController> chassis;
+    std::shared_ptr<okapi::OdomChassisController> chassis;
 public: 
     OdomOkapi ();
 

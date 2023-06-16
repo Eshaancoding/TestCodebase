@@ -1,23 +1,45 @@
 #include "OdomMath.h"
 
 QAngle Math::restrictAngle180(QAngle angle) {
-    return okapi::OdomMath::constrainAngle180(angle); // <-- ehh much rather do this manually but we'll see
+    // >= 180, goes negative (-180)
+    // supports for angles > 360
+    return okapi::OdomMath::constrainAngle180(angle);
 }
 
 QAngle Math::restrictAngle360(QAngle angle) {
-    return okapi::OdomMath::constrainAngle360(angle); // <-- ehh much rather do this manually but we'll see
+    return okapi::OdomMath::constrainAngle360(angle);
 }
 
-QLength Math::distanceForm(Point p1, Point p2) {
-    return okapi::OdomMath::computeDistanceToPoint(p1, {p2.x, p2.y, 0_deg}); // why we need theta :/
+/**
+ * @brief Returns the distance between point by point
+ * reports negative distance if the odomstate (p1) is PAST the p2 (this is useful for PID stuff)
+*/
+QLength Math::distance(OdomState p1, Point p2) {
+    QAngle ang = anglePoint(p1, p2);
+    QLength dist = okapi::OdomMath::computeDistanceToPoint(p2,p1);
+
+    if (okapi::abs(ang) > 90_deg) {
+        return -dist;
+    } else {
+        return dist;
+    }
 }
 
-QLength Math::distanceForm(OdomState p1, Point p2) {
-    return okapi::OdomMath::computeDistanceToPoint(p2,p1); // hopefully gives negative values based on odom state deg? hopefullysdfsdf
-}
+
+/**
+ * @brief Coordinate system is different in okapi, assumes that robot is facing x axis
+ * I like when robot faces y direction, so therefore we 90-deg when computing point
+ * This coordinate system should also be applied to the OdomOkapi and OdomCustom
+ * Note: for some reason if point is directly on it, then the degree is 90...
+    * So changed condition so its just... 0 when point is directly on it
+ */
 
 QAngle Math::anglePoint(OdomState currentState, Point p1) {
-    return okapi::OdomMath::computeAngleToPoint(p1, currentState); // <-- ehh much rather do this manually be we'll see
+    if (currentState.x - p1.x == 0_in && currentState.y - p1.y == 0_in) { // on same point!
+        return 0_deg;
+    } else {
+        return Math::restrictAngle180(okapi::OdomMath::computeAngleToPoint(p1, currentState) - 90_deg);
+    }
 }
 
 Point Math::findPointOffset(OdomState state, QLength dist) {

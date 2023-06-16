@@ -14,7 +14,7 @@ void Drive::goForward(
     auto startingPos = odometery.getPos(); // get initial position
     auto targetPos = Math::findPointOffset(startingPos, distance);
     auto start = pros::millis(); // for recording the time ellapse
-    QLength err = Math::distanceForm(startingPos, targetPos); // should be close to distance
+    QLength err = Math::distance(startingPos, targetPos); // should be close to distance
     QLength origErr = err;
     
     while (true) { // whoaaa while true loop that's dangerous :O
@@ -47,7 +47,7 @@ void Drive::goForward(
         double power = DistancePID.step(err.convert(okapi::inch));
         leftMotorGroup.moveVelocity(power * 128);    // maybe use voltage? 
         rightMotorGroup.moveVelocity(power * 128);   // maybe use voltage?
-        err = Math::distanceForm(odometery.getPos(), targetPos);
+        err = Math::distance(odometery.getPos(), targetPos);
         
         // ================ Check whether we should stop ==============
         if (okapi::abs(err) < distanceTol) break; 
