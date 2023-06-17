@@ -8,8 +8,8 @@
 using namespace std;
 
 namespace AutonSelector {
-    enum SideState {LEFT, RIGHT};
-    enum RiskyState {RISKY, NONRISKY};
+    enum SideState {LEFT=0, RIGHT=1};
+    enum RiskyState {RISKY=0, SAFE=1};
     enum Status {NOTREADY, TEST, ROUTE};
 
     struct State {

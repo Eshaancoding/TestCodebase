@@ -96,18 +96,12 @@ namespace AutonSelector {
     }
 
     State getState () { 
-        Status genState;
-        if (!isDonePrompt) {
-            genState = NOTREADY;
-        } 
-        else if (shouldTest) {
-            genState = TEST;
-        }
-        else {
-            genState = ROUTE;
-        }
- 
-        return {SideState::LEFT, RiskyState::RISKY, genState};
+        return {
+            isLeft ? LEFT : RIGHT, 
+            isRisky ? RISKY : SAFE, 
+            !isDonePrompt ? NOTREADY : 
+            shouldTest ? TEST : 
+            ROUTE};
     }
 
     void init () {

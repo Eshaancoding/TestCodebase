@@ -8,7 +8,7 @@ void competition_initialize() {}
 
 // When robot initializes. 
 void initialize() {
-    // AutonSelector::init(); 
+    AutonSelector::init(); 
 }
 
 
@@ -46,7 +46,7 @@ void opcontrol() {
             Console::printBrain(0, "Op TEST!");
         }
         else if (state.status == AutonSelector::ROUTE) {
-            Console::printBrain(0, "Op ROUTE!");
+            Console::printBrain(0, "Op ROUTE Is Left: %d is risky: %d!", state.side, state.risky);
         }
 
         pros::delay(10);
