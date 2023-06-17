@@ -1,6 +1,6 @@
 #include "main.h"
 #include "OdomMath.h"
-#include "BrainScreen/BrainScreen.h"
+#include "BrainScreen/AutonSelector.h"
 #include "BrainScreen/Console.h"
 
 void disabled() {}
@@ -14,21 +14,41 @@ void initialize() {
 
 // Autonomous Mode
 void autonomous() {
+    while (true) {
+        auto state = AutonSelector::getState();
+
+        if (state.status == AutonSelector::NOTREADY) {
+            Console::printBrain(0, "Auton READY!");
+        } 
+        else if (state.status == AutonSelector::TEST) {
+            Console::printBrain(0, "Auton TEST!");
+        }
+        else if (state.status == AutonSelector::ROUTE) {
+            Console::printBrain(0, "Auton ROUTE!");
+        }
+
+        pros::delay(10);
+    }
 
 };
 
 // Operation control (driver)
 void opcontrol() {
 
-    Console::printBrain(0, "Hello!");
 
-	Point point = Math::findPointOffset(
-		{0_in, 1_in, 180_deg}	
-	, 3_in);
+    while (true) {
+        auto state = AutonSelector::getState();
 
-    Console::printBrain(0, "P: %f %f \n", point.x.convert(inch), point.y.convert(inch));
-    for (int i = 0; i < 100; i++) {
-        Console::printBrain(1, "P: %f %f\n", point.x.convert(inch)+i, point.y.convert(inch));
-        pros::delay(100);
+        if (state.status == AutonSelector::NOTREADY) {
+            Console::printBrain(0, "Op READY!");
+        } 
+        else if (state.status == AutonSelector::TEST) {
+            Console::printBrain(0, "Op TEST!");
+        }
+        else if (state.status == AutonSelector::ROUTE) {
+            Console::printBrain(0, "Op ROUTE!");
+        }
+
+        pros::delay(10);
     }
 }

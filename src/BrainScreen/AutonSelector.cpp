@@ -1,4 +1,4 @@
-#include "BrainScreen/BrainScreen.h"
+#include "BrainScreen/AutonSelector.h"
 #include "display/lv_conf.h"
 #include "display/lv_core/lv_obj.h"
 #include "display/lv_objx/lv_label.h"
@@ -6,6 +6,11 @@
 namespace AutonSelector {
     bool selectedSide = false;
     bool selectedRisky = false;
+
+    bool isRisky = false;
+    bool isLeft = false;
+    bool shouldTest = true;
+    bool isReady = true;
 
     lv_obj_t* leftButton;    
     lv_obj_t* rightButton;    
@@ -29,7 +34,7 @@ namespace AutonSelector {
     }
 
     lv_res_t setLeft (lv_obj_t* obj) {
-        AutonSelector::isLeft = true;
+        isLeft = true;
         selectedSide = true;
         lv_btn_set_state(rightButton, LV_BTN_STATE_REL);
         lv_btn_set_state(testButton, LV_BTN_STATE_REL);
@@ -38,7 +43,7 @@ namespace AutonSelector {
     }
 
     lv_res_t setRight (lv_obj_t* obj) {
-        AutonSelector::isLeft = false;
+        isLeft = false;
         selectedSide = true;
         lv_btn_set_state(leftButton, LV_BTN_STATE_REL);
         lv_btn_set_state(testButton, LV_BTN_STATE_REL);
@@ -47,7 +52,7 @@ namespace AutonSelector {
     }
 
     lv_res_t setRiskyFalse (lv_obj_t* obj) {
-        AutonSelector::isRisky = false;
+        isRisky = false;
         selectedRisky = true;
         lv_btn_set_state(riskyButton, LV_BTN_STATE_REL);
         lv_btn_set_state(testButton, LV_BTN_STATE_REL);
@@ -56,7 +61,7 @@ namespace AutonSelector {
     }
 
     lv_res_t setRiskyTrue (lv_obj_t* obj) {
-        AutonSelector::isRisky = true;
+        isRisky = true;
         selectedRisky = true;
         lv_btn_set_state(nonRiskyButton, LV_BTN_STATE_REL);
         lv_btn_set_state(testButton, LV_BTN_STATE_REL);
@@ -64,7 +69,7 @@ namespace AutonSelector {
     }
 
     lv_res_t setTest (lv_obj_t* obj) {
-        AutonSelector::isRisky = !AutonSelector::isRisky;
+        isRisky = !isRisky;
         shouldTest = true;
         lv_btn_set_state(nonRiskyButton, LV_BTN_STATE_REL);
         lv_btn_set_state(riskyButton, LV_BTN_STATE_REL);
@@ -90,10 +95,24 @@ namespace AutonSelector {
         return LV_RES_OK; 
     }
 
+    State getState () { 
+        Status genState;
+        if (!isReady) {
+            genState = NOTREADY;
+        } 
+        else if (shouldTest) {
+            genState = TEST;
+        }
+        else {
+            genState = ROUTE;
+        }
+ 
+        return {SideState::LEFT, RiskyState::RISKY, genState};
+    }
+
     void init () {
-        printf("INIT!");
-        AutonSelector::shouldTest = false;        
-        AutonSelector::isReady = false;
+        shouldTest = false;        
+        isReady = false;
 
         leftButton = createButton("Left", 25, 25, 100, 50);
         rightButton = createButton("Right", 150, 25, 100, 50);

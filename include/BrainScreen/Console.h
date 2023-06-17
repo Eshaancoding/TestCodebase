@@ -2,7 +2,7 @@
 #define CONSOLE_H
 
 #include <iostream>
-#include "BrainScreen.h"
+#include "AutonSelector.h"
 #include <memory>
 #include <vector>
 #include <string>
@@ -12,7 +12,6 @@ using namespace std;
 namespace Console {
     static vector<lv_obj_t*> lines = {};
 
-    // DEFINITELY NOT COPIED FROM STACK OVERFLOW ;)
     template<typename ... Args>
     std::string string_format( const std::string& format, Args ... args )
     {
@@ -27,21 +26,17 @@ namespace Console {
 
     template <typename... Arg>
     void printBrain(int lineNum, string str, Arg ...params) {
-        printf("is ready: %d\n", AutonSelector::isRisky);
-        if (!AutonSelector::isReady) return;
+        if (AutonSelector::getState().status == AutonSelector::NOTREADY) return;
 
         string formattedStr = string_format(str, params...);
 
         // create lines if not exist;
-        if (lineNum >= lines.size()) {
-            int left = lines.size()-lineNum;
-            for (int x = 0; x <= left; x++) {
-                lv_obj_t* label = lv_label_create(lv_scr_act(), NULL);  
-                lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL);
-                lv_obj_set_width(label, LV_HOR_RES);
-                lv_obj_set_pos(label, 0, 5+lineNum*20);
-                lines.push_back(label);
-            }
+        while (lineNum >= lines.size()) {
+            lv_obj_t* label = lv_label_create(lv_scr_act(), NULL);  
+            lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL);
+            lv_obj_set_width(label, LV_HOR_RES);
+            lv_obj_set_pos(label, 0, 5+lines.size()*20);
+            lines.push_back(label);
         }
 
         lv_label_set_text(lines[lineNum], formattedStr.c_str());
