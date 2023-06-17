@@ -1,13 +1,11 @@
-#include "AutonSelector/AutonSelector.h"
+#include "BrainScreen/BrainScreen.h"
+#include "display/lv_conf.h"
 #include "display/lv_core/lv_obj.h"
-#include "display/lv_core/lv_style.h"
-#include "display/lv_misc/lv_color.h"
-#include "display/lv_objx/lv_btn.h"
+#include "display/lv_objx/lv_label.h"
 
 namespace AutonSelector {
     bool selectedSide = false;
     bool selectedRisky = false;
-
 
     lv_obj_t* leftButton;    
     lv_obj_t* rightButton;    
@@ -15,6 +13,7 @@ namespace AutonSelector {
     lv_obj_t* nonRiskyButton;    
     lv_obj_t* testButton;    
     lv_obj_t* goButton;    
+
 
     lv_obj_t* createButton(string name, int x, int y, int w, int h, bool setToggle=true) {
         lv_obj_t* obj = lv_btn_create(lv_scr_act(), NULL);
@@ -92,6 +91,10 @@ namespace AutonSelector {
     }
 
     void init () {
+        printf("INIT!");
+        AutonSelector::shouldTest = false;        
+        AutonSelector::isReady = false;
+
         leftButton = createButton("Left", 25, 25, 100, 50);
         rightButton = createButton("Right", 150, 25, 100, 50);
         riskyButton = createButton("Risky", 25, 100, 100, 50);
@@ -115,5 +118,8 @@ namespace AutonSelector {
         newStyle->body.radius = 35;
         lv_btn_set_style(goButton, LV_BTN_STYLE_REL, newStyle);
     } 
+
+
+    
 
 }

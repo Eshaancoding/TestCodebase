@@ -1,18 +1,22 @@
-#ifndef AUTONSELECTOR_H
-#define AUTONSELECTOR_H
+#ifndef BRAINSCREEN_H
+#define BRAINSCREEN_H
 
-#include "display/lv_core/lv_obj.h"
 #include "display/lvgl.h" // display library  
+#include "main.h"
+#include <vector>
 #include <string>
 using namespace std;
 
 namespace AutonSelector {
     static bool isRisky = false;
     static bool isLeft = false;
-    static bool shouldTest = false;
-    static bool isReady = false;
+    static bool shouldTest = true;
+    static bool isReady = true;
 
     void init ();
+    
 };
+
+
 
 #endif
