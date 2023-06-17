@@ -8,7 +8,7 @@ void competition_initialize() {}
 
 // When robot initializes. 
 void initialize() {
-    AutonSelector::init(); 
+    // AutonSelector::init(); 
 }
 
 
@@ -40,7 +40,7 @@ void opcontrol() {
         auto state = AutonSelector::getState();
 
         if (state.status == AutonSelector::NOTREADY) {
-            Console::printBrain(0, "Op READY!");
+            Console::printBrain(0, "Op NOT READY!");
         } 
         else if (state.status == AutonSelector::TEST) {
             Console::printBrain(0, "Op TEST!");

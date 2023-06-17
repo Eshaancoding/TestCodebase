@@ -10,7 +10,7 @@ namespace AutonSelector {
     bool isRisky = false;
     bool isLeft = false;
     bool shouldTest = true;
-    bool isReady = true;
+    bool isDonePrompt = false;
 
     lv_obj_t* leftButton;    
     lv_obj_t* rightButton;    
@@ -89,7 +89,7 @@ namespace AutonSelector {
             lv_obj_del(nonRiskyButton);
             lv_obj_del(testButton);
             lv_obj_del(goButton);
-            isReady = true;
+            isDonePrompt = true;
         }
 
         return LV_RES_OK; 
@@ -97,7 +97,7 @@ namespace AutonSelector {
 
     State getState () { 
         Status genState;
-        if (!isReady) {
+        if (!isDonePrompt) {
             genState = NOTREADY;
         } 
         else if (shouldTest) {
@@ -112,7 +112,6 @@ namespace AutonSelector {
 
     void init () {
         shouldTest = false;        
-        isReady = false;
 
         leftButton = createButton("Left", 25, 25, 100, 50);
         rightButton = createButton("Right", 150, 25, 100, 50);

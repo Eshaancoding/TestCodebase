@@ -26,8 +26,6 @@ namespace Console {
 
     template <typename... Arg>
     void printBrain(int lineNum, string str, Arg ...params) {
-        if (AutonSelector::getState().status == AutonSelector::NOTREADY) return;
-
         string formattedStr = string_format(str, params...);
 
         // create lines if not exist;
