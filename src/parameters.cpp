@@ -31,3 +31,5 @@ MotorGroup rightMotorGroup = okapi::MotorGroup({RIGHT_TOP_MOTOR, RIGHT_BOTTOM_MO
 Drive drive = Drive();
 
 Effectors effectors = Effectors();
+
+OdomSim simulation = OdomSim();

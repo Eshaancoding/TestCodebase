@@ -1,54 +1,60 @@
 #include "main.h"
-#include "OdomMath.h"
+#include "odom/OdomMath.h"
 #include "BrainScreen/AutonSelector.h"
 #include "BrainScreen/Console.h"
+#include "parameters.h"
+#include "pros/rtos.hpp"
 
 void disabled() {}
 void competition_initialize() {}
 
-// When robot initializes. 
-void initialize() {
-    AutonSelector::init(); 
+// Auton Selector wait state function (helper for autonomous and opcontrol)
+AutonSelector::State waitForValidState () {
+    AutonSelector::State state;
+    
+    // constantly check state change
+    while (true) { 
+        auto stateCheck = AutonSelector::getState();             
+ 
+        if (stateCheck.status == AutonSelector::TEST) {
+            state = stateCheck;
+            break;
+        }
+        else if (stateCheck.status == AutonSelector::ROUTE) {
+            state = stateCheck;
+            break;
+        }
+
+        pros::delay(50);
+    }
+    return state;
 }
 
+// When robot initializes. 
+void initialize() {
+    // AutonSelector::init(); 
+}
 
 // Autonomous Mode
 void autonomous() {
-    while (true) {
-        auto state = AutonSelector::getState();
-
-        if (state.status == AutonSelector::NOTREADY) {
-            Console::printBrain(0, "Auton READY!");
-        } 
-        else if (state.status == AutonSelector::TEST) {
-            Console::printBrain(0, "Auton TEST!");
-        }
-        else if (state.status == AutonSelector::ROUTE) {
-            Console::printBrain(0, "Auton ROUTE!");
-        }
-
-        pros::delay(10);
-    }
 
 };
 
 // Operation control (driver)
 void opcontrol() {
-
-
-    while (true) {
-        auto state = AutonSelector::getState();
-
-        if (state.status == AutonSelector::NOTREADY) {
-            Console::printBrain(0, "Op NOT READY!");
-        } 
-        else if (state.status == AutonSelector::TEST) {
-            Console::printBrain(0, "Op TEST!");
-        }
-        else if (state.status == AutonSelector::ROUTE) {
-            Console::printBrain(0, "Op ROUTE Is Left: %d is risky: %d!", state.side, state.risky);
+    for (int i = 0; i < 500; i++) {
+        if (i < 30) {
+            simulation.step(0.3, 0.1);
+            Console::printBrain(2, true, "applied vel");
+        } else {
+            simulation.step(0, 0);
+            Console::printBrain(2, false, "applied vel");
         }
 
-        pros::delay(10);
+        Console::printBrain(0, simulation.getPos(), "Simulation Pos");
+        Console::printBrain(1, simulation.vel, "Velocity");
+        
+
+        pros::delay(500);
     }
 }

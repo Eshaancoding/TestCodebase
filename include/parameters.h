@@ -12,7 +12,8 @@
 // *****************************************************
 
 #include "pid.h"
-#include "OdomOkapi.h"
+#include "Odom/OdomOkapi.h"
+#include "Odom/OdomSim.h"
 
 // ==========================================================
 // =========================== PID ==========================
@@ -96,5 +97,21 @@ extern OdomOkapi odometery;
 // =============================================================
 
 #define DRIVE_TYPE "tank" // change to "arcade" for arcade mode
+
+// =============================================================
+// ====================== Odom Simulation ======================
+// =============================================================
+
+#define ENABLE_ODOMSIM true
+
+#define ACC 3_in
+#define MAX_VEL 10_in
+#define DECEL_CONSTANT 0.3
+
+#define ACC_ANG 2_deg
+#define MAX_ACC_ANG 30_deg
+#define ANGLE_DECEL_CONSTANT 0.3
+
+extern OdomSim simulation;
 
 #endif

@@ -1,7 +1,7 @@
 #include "drive.h"
 #include "okapi/api/units/QAngle.hpp"
 #include "parameters.h"
-#include "OdomMath.h"
+#include "odom/OdomMath.h"
 
 void Drive::turnRight(
     QAngle ang, 
@@ -46,8 +46,7 @@ void Drive::turnRight(
         // ================ Step through PID ==============
 
         double power = HeadingPID.step(Math::restrictAngle180(err).convert(okapi::radian));
-        leftMotorGroup.moveVelocity(power * 128);    // maybe use voltage? 
-        rightMotorGroup.moveVelocity(-power * 128);   // maybe use voltage?
+        Drive::moveArcade(0, power);
         err = targetAngle - odometery.getPos().theta;
         
         // ================ Check whether we should stop ==============

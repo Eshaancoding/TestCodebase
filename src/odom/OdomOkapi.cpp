@@ -1,9 +1,9 @@
-#include "OdomOkapi.h"
+#include "odom/OdomOkapi.h"
 #include "okapi/api/device/motor/abstractMotor.hpp"
 #include "okapi/api/odometry/odomState.hpp"
 #include "okapi/impl/device/rotarysensor/adiEncoder.hpp"
 #include "parameters.h"
-#include "OdomMath.h"
+#include "odom/OdomMath.h"
 
 OdomOkapi :: OdomOkapi () {
 

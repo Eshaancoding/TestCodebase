@@ -1,5 +1,5 @@
-#include "OdomCustom.h"
-#include "OdomOkapi.h"
+#include "odom/OdomCustom.h"
+#include "Odom/OdomOkapi.h"
 #include "okapi/api/units/QAngle.hpp"
 #include "okapi/api/units/QLength.hpp"
 #include "okapi/api/util/mathUtil.hpp"

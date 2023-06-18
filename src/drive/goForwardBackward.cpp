@@ -1,6 +1,6 @@
 #include "drive.h"
 #include "parameters.h"
-#include "OdomMath.h"
+#include "Odom/OdomMath.h"
 
 void Drive::goForward(
     QLength distance, 
@@ -45,8 +45,7 @@ void Drive::goForward(
         // ================ Step through PID ==============
 
         double power = DistancePID.step(err.convert(okapi::inch));
-        leftMotorGroup.moveVelocity(power * 128);    // maybe use voltage? 
-        rightMotorGroup.moveVelocity(power * 128);   // maybe use voltage?
+        Drive::moveArcade(power, 0);
         err = Math::distance(odometery.getPos(), targetPos);
         
         // ================ Check whether we should stop ==============

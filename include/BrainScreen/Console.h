@@ -3,15 +3,19 @@
 
 #include <iostream>
 #include "AutonSelector.h"
+#include "main.h"
 #include <memory>
 #include <vector>
 #include <string>
 #include "display/lvgl.h"
+#include "okapi/api/odometry/odomState.hpp"
+#include "okapi/api/units/QSpeed.hpp"
 using namespace std;
 
 namespace Console {
     static vector<lv_obj_t*> lines = {};
 
+    // formatting the string giving args
     template<typename ... Args>
     std::string string_format( const std::string& format, Args ... args )
     {
@@ -23,7 +27,7 @@ namespace Console {
         return std::string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
     }
 
-
+    // main function for printing
     template <typename... Arg>
     void printBrain(int lineNum, string str, Arg ...params) {
         string formattedStr = string_format(str, params...);
@@ -39,6 +43,15 @@ namespace Console {
 
         lv_label_set_text(lines[lineNum], formattedStr.c_str());
     }
+
+    // helper functions for printing (will call the main printBrain function)
+    // functions defined in PrintTypes.cpp
+    void printBrain (int lineNum, OdomState state, string label="");
+    void printBrain (int lineNum, QAngle ang, string label="");
+    void printBrain (int lineNum, QLength length, string label="");
+    void printBrain (int lineNum, Point p, string label="");
+    void printBrain (int lineNum, double n, string label="");
+    void printBrain (int lineNum, bool n, string label="");
 };
 
 #endif

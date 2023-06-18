@@ -1,3 +1,6 @@
+#ifndef ODOMCUSTOM_H
+#define ODOMCUSTOM_H
+
 #include "main.h"
 #include "OdomMath.h"
 #include "parameters.h"
@@ -25,3 +28,6 @@ public:
     okapi::OdomState getPos();
     void setPos (okapi::OdomState state);
 };
+
+
+#endif 

@@ -1,12 +1,10 @@
-#include "OdomMath.h"
+#include "Odom/OdomMath.h"
 
 QAngle Math::restrictAngle180(QAngle angle) {
     // >= 180, goes negative (-180)
     // supports for angles > 360
     return okapi::OdomMath::constrainAngle180(angle);
 }
-
-
 
 /**
  * @brief Returns the distance between point by point

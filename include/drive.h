@@ -13,6 +13,21 @@ private:
 
 public:
     bool drive = false;
+    /**
+     * @brief move arcade
+     * 
+     * @param distance the distance (forward/backward)
+     * @param heading  the heading (left/right)  ** + counter clockwise **
+     */
+    void moveArcade (double distance, double heading);
+
+    /**
+     * @brief move arcade
+     * 
+     * @param distance the distance (forward/backward)
+     * @param heading  the heading (left/right)  ** + counter clockwise **
+     */
+    void moveTank (double left, double right);
 
     /**
      * @brief Go forward for x distance
