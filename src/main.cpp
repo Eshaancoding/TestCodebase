@@ -45,7 +45,7 @@ void opcontrol() {
     auto state = waitForValidState();    
 
     if (state.status == AutonSelector::TEST) {
-        drive.turnRight(90_deg);
+        drive.turnRight(235_deg);
         drive.goForward(2_tile);
         drive.turnLeft(45_deg);
         drive.goBackward(4_tile);

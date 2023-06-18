@@ -4,9 +4,15 @@
 #include <numeric>
 #include <cmath>
 
+
+/**
+ * HEY WHY DONT YOU USE THE OKAPI LIB HM?
+ * yeah but that's what NERDS do I am not a nerd I am just a herd :) 
+ */
+
 class MovingAverage {
 private:
-    std::vector<double> avgs;
+    std::vector<double> avgs; 
     int n;
 public:
     MovingAverage (int n) : n(n) {};
