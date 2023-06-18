@@ -1,7 +1,7 @@
 #include "main.h"
 #include "odom/OdomMath.h"
-#include "BrainScreen/AutonSelector.h"
-#include "BrainScreen/Console.h"
+#include "AutonSelector.h"
+#include "Console.h"
 #include "parameters.h"
 #include "drive.h"
 
@@ -42,7 +42,7 @@ void autonomous() {
 
 // Operation control (driver)
 void opcontrol() {
-    drive.goBackward(3_tile, {}, {
+    drive.turnRight(90_deg, {}, {
         {0.3, []() { Console::printBrain(7, "0.3 done"); } },
         {0.6, []() { Console::printBrain(7, "0.6 done"); } }
     });

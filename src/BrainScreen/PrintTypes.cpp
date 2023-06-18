@@ -1,4 +1,4 @@
-#include "BrainScreen/Console.h"
+#include "Console.h"
 #include <string>
 
 void Console::printBrain(int lineNum, OdomState state, string label) {

@@ -1,7 +1,7 @@
 #ifndef DRIVE_H
 #define DRIVE_H
 
-#include "BrainScreen/Console.h"
+#include "Console.h"
 #include "parameters.h"
 #include "main.h"
 #include <map>

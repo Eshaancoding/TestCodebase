@@ -22,14 +22,14 @@
 // ==========================================================
 
 // angle
-#define Heading_P            0.5
+#define Heading_P            1.5
 #define Heading_I            0
 #define Heading_D            0
 #define Heading_MINERRDISI   2.5 // min error to disable I (in inches)
 #define Heading_MAXPOWER     0.5
 #define Heading_MINPOWER     0
 #define Heading_FACTOR       1
-#define Heading_SLEW         0.2
+#define Heading_SLEW         1
 
 // distance (forward/backward)
 #define Distance_P           0.05
@@ -41,14 +41,15 @@
 #define Distance_FACTOR      1
 #define Distance_SLEW        0.2
 
-// ************ DELAY CAHNGE ***************
+// ************* DELAY CHANGE ***************
 // ****** THIS IS REALLY IMPORTANT PARAM ****
 // essentially it determines the number of iterations 
 // to update its parameters & power arcade, etc.
-#define DELAYITER            500_ms  
+#define DELAYITER           500_ms  
 
 // how much errors to average when finding min error
 #define Distance_N          10
+#define Heading_N           5
 
 // ************ DELAY CAHNGE ***************
 extern PID DistancePID; // declared in parameters.cpp
@@ -105,7 +106,7 @@ extern OdomOkapi odometery;
 // =============================================================
 
 #define DISTANCE_TOLERANCE 0.5_in 
-#define ANGLE_TOLERANCE 0.25_deg
+#define ANGLE_TOLERANCE 1_deg
 #define TIME_TOLERANCE 30_s // ADJUST THIS A LITTLE LESS 
 
 // =============================================================
