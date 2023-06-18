@@ -42,5 +42,8 @@ void autonomous() {
 
 // Operation control (driver)
 void opcontrol() {
-    drive.goForward(3_tile);
+    drive.goBackward(3_tile, {}, {
+        {0.3, []() { Console::printBrain(7, "0.3 done"); } },
+        {0.6, []() { Console::printBrain(7, "0.6 done"); } }
+    });
 }

@@ -1,7 +1,7 @@
 #include "drive.h"
 #include "okapi/api/units/QAngle.hpp"
 #include "parameters.h"
-#include "odom/OdomMath.h"
+#include "Odom/OdomMath.h"
 
 void Drive::turnRight(
     QAngle ang, 

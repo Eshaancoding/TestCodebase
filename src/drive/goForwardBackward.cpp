@@ -39,7 +39,7 @@ void Drive::goForward(
 
         // go through factor map and set factor map if necessary
         for (auto itr = factorMap.begin(); itr != factorMap.end(); itr++) {
-            if (itr->first > percentChange) {
+            if (itr->first < percentChange && percentChange <= 1) {
                 DistancePID.setFactor(itr->second);
                 factorMap.erase(itr);
                 break;
@@ -48,7 +48,7 @@ void Drive::goForward(
 
         // go through callback map and call if necessary
         for (auto itr = callbackMap.begin(); itr != callbackMap.end(); itr++) {
-            if (itr->first > percentChange) {
+            if (itr->first < percentChange && percentChange <= 1) {
                 itr->second();
                 callbackMap.erase(itr);
                 break;
@@ -67,22 +67,10 @@ void Drive::goForward(
             err = Math::distance(odometery.getPos(), targetPos);
         }
         avg.step(err.convert(inch));
-
-        Console::printBrain(0, power, "Power");
-        Console::printBrain(1, err, "Error");
-        Console::printBrain(2, simulation.getPos(), "Position: ");
-        Console::printBrain(3, targetPos, "Target Pos: ");
-        Console::printBrain(4, avg.value(), "Moving average out: ");
         
         // ================ Check whether we should stop ==============
-        if (abs(avg.value()) <= distanceTol.convert(okapi::inch)) {
-            Console::printBrain(5, "We stopped cause of err tolerance.");
-            break; 
-        }
-        if ((pros::millis() - start) >= timeTol.convert(okapi::millisecond)) {
-            Console::printBrain(5, "We stopped cause of time.");
-            break;
-        }
+        if (abs(avg.value()) <= distanceTol.convert(okapi::inch)) break; 
+        if ((pros::millis() - start) >= timeTol.convert(okapi::millisecond)) break;
 
         pros::delay(DELAYITER.convert(okapi::millisecond)); 
     }
@@ -93,5 +81,5 @@ void Drive::goBackward(
     std::map<double, double> factorMap, 
     std::map<double, std::function<void()>> callbackMap
 ) {
-    goForward(-distance, factorMap, callbackMap); // goBackward function is mainly because of the name. Other than that, it's pretty much like goForward.
+    goForward(-distance, factorMap, callbackMap); // goBackward function is mainly because of the name. Other than that, it's pretty much li goForward.
 }

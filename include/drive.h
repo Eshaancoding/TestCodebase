@@ -21,7 +21,11 @@ public:
      * @param distance the distance (forward/backward)
      * @param heading  the heading (left/right)  ** + counter clockwise **
      */
-    void moveArcade (double distance, double heading);
+    void moveArcade (double distance, double heading) {
+        distance *= 128; heading *= 128;
+        leftMotorGroup.moveVelocity(distance - heading);    // maybe use voltage? 
+        rightMotorGroup.moveVelocity(distance + heading);   // maybe use voltage?
+    }
 
     /**
      * @brief move arcade
@@ -29,7 +33,11 @@ public:
      * @param distance the distance (forward/backward)
      * @param heading  the heading (left/right)  ** + counter clockwise **
      */
-    void moveTank (double left, double right);
+    void moveTank (double left, double right) {
+        left *= 128; right *= 128;
+        leftMotorGroup.moveVelocity(left);     // maybe use voltage? 
+        rightMotorGroup.moveVelocity(right);   // maybe use voltage?
+    }
 
     /**
      * @brief Go forward for x distance
