@@ -19,7 +19,7 @@ public:
     okapi::OdomState getPos ();
     void setPos (okapi::OdomState state);
 
-    void step (double heading, double distance);
+    void step (double distance, double heading);
 };
 
 #endif

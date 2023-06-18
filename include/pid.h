@@ -41,11 +41,11 @@ public:
      * @param i main parameter for I
      * @param d main parameter for D
      * @param minErrThreshold if the err becomes smaller than <0.1 for example, then we disable incrementing error sum (i.e no i in PID)
-     * @param maxPower limit max power variable
-     * @param minPower limit min power variable
+     * @param minPower limit max power variable
+     * @param maxPower limit min power variable
      * @param factor the factor, from 0 - 1 will control the range of the PID value
      */
-    PID (double p, double i, double d, double minErrThreshold=0, double maxPower=1, double minPower=0, double slew=1, double factor=1) : 
+    PID (double p, double i, double d, double minErrThreshold, double minPower, double maxPower, double slew, double factor) : 
         p(p), i(i), d(d), maxPower(maxPower), minPower(minPower), factor(factor), minErrThreshold(minErrThreshold), slew(slew), prevError(0), prevOutput(0), errorSum(0) {} 
 
     // reset the PID variables

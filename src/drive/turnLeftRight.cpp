@@ -12,7 +12,11 @@ void Drive::turnRight(
     // ========= Initial Variable Declaration ========
 
     HeadingPID.reset();  // reset distance PID
-    auto startingPos = odometery.getPos(); // get initial position
+    okapi::OdomState startingPos;
+    if (ENABLE_ODOMSIM) 
+        startingPos = simulation.getPos();
+    else
+        startingPos = odometery.getPos();
     auto targetAngle = startingPos.theta + ang;
     auto start = pros::millis(); // for recording the time ellapse
     QAngle err = ang;
@@ -46,12 +50,21 @@ void Drive::turnRight(
         // ================ Step through PID ==============
 
         double power = HeadingPID.step(Math::restrictAngle180(err).convert(okapi::radian));
-        Drive::moveArcade(0, power);
-        err = targetAngle - odometery.getPos().theta;
+        if (ENABLE_ODOMSIM) {
+            simulation.step(0, power);
+            err = targetAngle - simulation.getPos().theta;
+        }
+        else {
+            Drive::moveArcade(0, power);
+            err = targetAngle - odometery.getPos().theta;
+        }
         
         // ================ Check whether we should stop ==============
         if (okapi::abs(err) < angleTol) break; 
         if ((pros::millis() - start) >= timeTol.convert(okapi::millisecond)) break;
+
+        // delay a little bit
+        pros::delay(DELAYITER.convert(okapi::millisecond)); 
     }
 }
 

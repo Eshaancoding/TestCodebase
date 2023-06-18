@@ -1,4 +1,8 @@
+#include "BrainScreen/Console.h"
+#include "MovingAverage.h"
 #include "drive.h"
+#include "okapi/api/odometry/odomState.hpp"
+#include "okapi/api/units/QTime.hpp"
 #include "parameters.h"
 #include "Odom/OdomMath.h"
 
@@ -11,11 +15,20 @@ void Drive::goForward(
     // ========= Initial Variable Declaration ========
 
     DistancePID.reset();  // reset distance PID
-    auto startingPos = odometery.getPos(); // get initial position
+
+    okapi::OdomState startingPos;
+    if (ENABLE_ODOMSIM) 
+        startingPos = simulation.getPos(); // get initial position
+    else
+        startingPos = odometery.getPos(); // get initial position
+
     auto targetPos = Math::findPointOffset(startingPos, distance);
     auto start = pros::millis(); // for recording the time ellapse
     QLength err = Math::distance(startingPos, targetPos); // should be close to distance
     QLength origErr = err;
+
+    MovingAverage avg (Distance_N);
+    avg.step(err.convert(inch));
     
     while (true) { // whoaaa while true loop that's dangerous :O
 
@@ -45,12 +58,33 @@ void Drive::goForward(
         // ================ Step through PID ==============
 
         double power = DistancePID.step(err.convert(okapi::inch));
-        Drive::moveArcade(power, 0);
-        err = Math::distance(odometery.getPos(), targetPos);
+        if (ENABLE_ODOMSIM) {
+            simulation.step(power, 0);
+            err = Math::distance(simulation.getPos(), targetPos);
+        } 
+        else {
+            Drive::moveArcade(power, 0);
+            err = Math::distance(odometery.getPos(), targetPos);
+        }
+        avg.step(err.convert(inch));
+
+        Console::printBrain(0, power, "Power");
+        Console::printBrain(1, err, "Error");
+        Console::printBrain(2, simulation.getPos(), "Position: ");
+        Console::printBrain(3, targetPos, "Target Pos: ");
+        Console::printBrain(4, avg.value(), "Moving average out: ");
         
         // ================ Check whether we should stop ==============
-        if (okapi::abs(err) < distanceTol) break; 
-        if ((pros::millis() - start) >= timeTol.convert(okapi::millisecond)) break;
+        if (abs(avg.value()) <= distanceTol.convert(okapi::inch)) {
+            Console::printBrain(5, "We stopped cause of err tolerance.");
+            break; 
+        }
+        if ((pros::millis() - start) >= timeTol.convert(okapi::millisecond)) {
+            Console::printBrain(5, "We stopped cause of time.");
+            break;
+        }
+
+        pros::delay(DELAYITER.convert(okapi::millisecond)); 
     }
 }
 

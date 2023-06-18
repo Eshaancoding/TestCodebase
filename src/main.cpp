@@ -3,7 +3,7 @@
 #include "BrainScreen/AutonSelector.h"
 #include "BrainScreen/Console.h"
 #include "parameters.h"
-#include "pros/rtos.hpp"
+#include "drive.h"
 
 void disabled() {}
 void competition_initialize() {}
@@ -42,19 +42,5 @@ void autonomous() {
 
 // Operation control (driver)
 void opcontrol() {
-    for (int i = 0; i < 500; i++) {
-        if (i < 30) {
-            simulation.step(0.3, 0.1);
-            Console::printBrain(2, true, "applied vel");
-        } else {
-            simulation.step(0, 0);
-            Console::printBrain(2, false, "applied vel");
-        }
-
-        Console::printBrain(0, simulation.getPos(), "Simulation Pos");
-        Console::printBrain(1, simulation.vel, "Velocity");
-        
-
-        pros::delay(500);
-    }
+    drive.goForward(3_tile);
 }

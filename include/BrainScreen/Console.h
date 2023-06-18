@@ -13,7 +13,7 @@
 using namespace std;
 
 namespace Console {
-    static vector<lv_obj_t*> lines = {};
+    static unordered_map<int, lv_obj_t*> lines = {};
 
     // formatting the string giving args
     template<typename ... Args>
@@ -33,15 +33,18 @@ namespace Console {
         string formattedStr = string_format(str, params...);
 
         // create lines if not exist;
-        while (lineNum >= lines.size()) {
-            lv_obj_t* label = lv_label_create(lv_scr_act(), NULL);  
-            lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL);
-            lv_obj_set_width(label, LV_HOR_RES);
-            lv_obj_set_pos(label, 0, 5+lines.size()*20);
-            lines.push_back(label);
+        lv_obj_t* line;
+        if (lines.find(lineNum) != lines.end()) {
+            line = lines[lineNum];
+        } else {
+            line = lv_label_create(lv_scr_act(), NULL);  
+            lv_label_set_long_mode(line, LV_LABEL_LONG_SCROLL);
+            lv_obj_set_width(line, LV_HOR_RES);
+            lv_obj_set_pos(line, 0, 5+lineNum*20);
+            lines[lineNum] = line;
         }
 
-        lv_label_set_text(lines[lineNum], formattedStr.c_str());
+        lv_label_set_text(line, formattedStr.c_str());
     }
 
     // helper functions for printing (will call the main printBrain function)
@@ -51,7 +54,6 @@ namespace Console {
     void printBrain (int lineNum, QLength length, string label="");
     void printBrain (int lineNum, Point p, string label="");
     void printBrain (int lineNum, double n, string label="");
-    void printBrain (int lineNum, bool n, string label="");
 };
 
 #endif

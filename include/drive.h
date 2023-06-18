@@ -1,9 +1,11 @@
 #ifndef DRIVE_H
 #define DRIVE_H
 
+#include "BrainScreen/Console.h"
 #include "parameters.h"
 #include "main.h"
 #include <map>
+#include "MovingAverage.h"
 
 class Drive {
 private:

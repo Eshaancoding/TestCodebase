@@ -19,9 +19,6 @@ double PID :: step (double error) {
     // calculate output
     double output = (error * p) + (errorSum * i) + (dir * d);
 
-    // apply factor
-    output *= factor;
-
     // clamp between maxPower and minPower and also provide slew
     // we do this by converting to just positive number and then after computation set it to negative or positive
 
@@ -35,7 +32,7 @@ double PID :: step (double error) {
     prevError = error;
     prevOutput = output;
 
-    return output; 
+    return output * factor; 
 }
 
 void PID :: setFactor(double newFactor) {
