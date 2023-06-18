@@ -25,14 +25,14 @@ AutonSelector::State waitForValidState () {
             break;
         }
 
-        pros::delay(50);
+        pros::delay(200); // doesn't have to check too often :)
     }
     return state;
 }
 
 // When robot initializes. 
 void initialize() {
-    // AutonSelector::init(); 
+    AutonSelector::init(); 
 }
 
 // Autonomous Mode
@@ -42,10 +42,14 @@ void autonomous() {
 
 // Operation control (driver)
 void opcontrol() {
-    drive.turnRight(90_deg);
-    drive.goForward(2_tile);
-    drive.turnLeft(45_deg);
-    drive.goBackward(4_tile);
+    auto state = waitForValidState();    
 
-    Console::printBrain(8, simulation.getPos(), "Final Pos");
+    if (state.status == AutonSelector::TEST) {
+        drive.turnRight(90_deg);
+        drive.goForward(2_tile);
+        drive.turnLeft(45_deg);
+        drive.goBackward(4_tile);
+
+        Console::printBrain(8, simulation.getPos(), "Final Pos");
+    }
 }
