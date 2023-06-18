@@ -4,7 +4,7 @@
 #include "Odom/OdomMath.h"
 #include "Console.h"
 
-void Drive::turnRight(
+void Drive::turnLeft(
     QAngle ang, 
     std::map<double, double> factorMap, 
     std::map<double, std::function<void()>> callbackMap
@@ -15,9 +15,9 @@ void Drive::turnRight(
     HeadingPID.reset();  // reset heading PID
     okapi::OdomState startingPos;
     if (ENABLE_ODOMSIM) 
-        startingPos = simulation.getPos(); // get initial position
+        startingPos = simulation.getPos();
     else
-        startingPos = odometery.getPos(); // get initial position
+        startingPos = odometery.getPos(); 
 
     auto targetAngle = OdomMath::constrainAngle180(startingPos.theta + ang);
     auto start = pros::millis(); // for recording the time ellapse
@@ -66,12 +66,14 @@ void Drive::turnRight(
         }
         avg.step(err.convert(radian));
         
-        // debug
-        Console::printBrain(0, err, "Error");
-        Console::printBrain(1, power, "Power");
-        Console::printBrain(2, avg.value(), "MA Value");
-        Console::printBrain(3, targetAngle, "Target Angle");
-        Console::printBrain(4, simulation.getPos(), "Pos");
+        // ================ Debug ODOM! ==============
+        if (ODOM_DEBUG) {
+            Console::printBrain(0, err, "Error");
+            Console::printBrain(1, power, "Power");
+            Console::printBrain(2, avg.value(), "MA Value");
+            Console::printBrain(3, targetAngle, "Target Angle");
+            Console::printBrain(4, simulation.getPos(), "Pos");
+        }
         
         // ================ Check whether we should stop ==============
         if (abs(avg.value()) <= angleTol.convert(okapi::radian)) break; 
@@ -81,10 +83,10 @@ void Drive::turnRight(
     }
 }
 
-void Drive::turnLeft(
+void Drive::turnRight(
     QAngle ang, 
     std::map<double, double> factorMap, 
     std::map<double, std::function<void()>> callbackMap
 ) {
-    turnRight(-ang, factorMap, callbackMap);
+    turnLeft(-ang, factorMap, callbackMap);
 }

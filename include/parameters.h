@@ -45,7 +45,7 @@
 // ****** THIS IS REALLY IMPORTANT PARAM ****
 // essentially it determines the number of iterations 
 // to update its parameters & power arcade, etc.
-#define DELAYITER           500_ms  
+#define DELAYITER           5_ms  
 
 // how much errors to average when finding min error
 #define Distance_N          10
@@ -82,6 +82,9 @@ extern Effectors effectors;
 // ======================= ODOM PARAMS ========================
 // ============================================================
 
+// debug
+#define ODOM_DEBUG      true
+
 // wheeeeels
 #define WHEEL_DIM       3_in  // Diameter of robot wheel
 #define WHEEL_TRACK     4_in  // Distance from center of the bottom left wheel to the center of the bottom right wheel
@@ -105,7 +108,7 @@ extern OdomOkapi odometery;
 // ======================= ROUTE PARAMS ========================
 // =============================================================
 
-#define DISTANCE_TOLERANCE 0.5_in 
+#define DISTANCE_TOLERANCE 1_in 
 #define ANGLE_TOLERANCE 1_deg
 #define TIME_TOLERANCE 30_s // ADJUST THIS A LITTLE LESS 
 

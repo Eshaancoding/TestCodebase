@@ -67,7 +67,16 @@ void Drive::goForward(
             err = Math::distance(odometery.getPos(), targetPos);
         }
         avg.step(err.convert(inch));
-        
+
+        // ================ Debug ODOM! ==============
+        if (ODOM_DEBUG) {
+            Console::printBrain(0, err, "Error");
+            Console::printBrain(1, power, "Power");
+            Console::printBrain(2, avg.value(), "MA Value");
+            Console::printBrain(3, targetPos, "Target Pso");
+            Console::printBrain(4, simulation.getPos(), "Pos");
+        }
+            
         // ================ Check whether we should stop ==============
         if (abs(avg.value()) <= distanceTol.convert(okapi::inch)) break; 
         if ((pros::millis() - start) >= timeTol.convert(okapi::millisecond)) break;

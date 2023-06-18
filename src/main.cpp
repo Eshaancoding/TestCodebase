@@ -42,8 +42,10 @@ void autonomous() {
 
 // Operation control (driver)
 void opcontrol() {
-    drive.turnRight(90_deg, {}, {
-        {0.3, []() { Console::printBrain(7, "0.3 done"); } },
-        {0.6, []() { Console::printBrain(7, "0.6 done"); } }
-    });
+    drive.turnRight(90_deg);
+    drive.goForward(2_tile);
+    drive.turnLeft(45_deg);
+    drive.goBackward(4_tile);
+
+    Console::printBrain(8, simulation.getPos(), "Final Pos");
 }
