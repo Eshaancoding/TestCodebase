@@ -3,7 +3,7 @@
 #include "okapi/api/odometry/odomState.hpp"
 #include "okapi/impl/device/rotarysensor/adiEncoder.hpp"
 #include "parameters.h"
-#include "odom/OdomMath.h"
+#include "Math.h"
 
 OdomOkapi :: OdomOkapi () {
 

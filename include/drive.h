@@ -14,6 +14,15 @@ private:
     QTime timeTol = TIME_TOLERANCE;
 
 public:
+    void moveToPoint (
+        Point point, 
+        bool isRelative=true,
+        bool headingActivated=true, 
+        bool distanceActivated=true,
+        std::map<double, pair<double, double>> factorMap={},
+        std::map<double, std::function<void()>> callbackMap={}
+    );
+
     bool drive = false;
     /**
      * @brief move arcade

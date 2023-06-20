@@ -1,7 +1,7 @@
 #include "drive.h"
 #include "okapi/api/odometry/odomMath.hpp"
 #include "parameters.h"
-#include "Odom/OdomMath.h"
+#include "Odom/Math.h"
 #include "Console.h"
 
 void Drive::turnLeft(

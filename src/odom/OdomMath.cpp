@@ -1,4 +1,4 @@
-#include "Odom/OdomMath.h"
+#include "Odom/Math.h"
 
 QAngle Math::restrictAngle180(QAngle angle) {
     // >= 180, goes negative (-180)
@@ -13,7 +13,7 @@ QAngle Math::restrictAngle180(QAngle angle) {
 QLength Math::distance(OdomState p1, Point p2) {
     QAngle ang = anglePoint(p1, p2);
     QLength dist = okapi::OdomMath::computeDistanceToPoint(p2,p1);
-    return dist * (okapi::abs(ang) > 90_deg ? -1 : 1);
+    return dist * (okapi::abs(ang) > 150_deg ? -1 : 1);
 }
 
 

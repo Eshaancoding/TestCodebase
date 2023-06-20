@@ -2,7 +2,7 @@
 #define ODOMSIM_H
 
 #include "main.h"
-#include "OdomMath.h"
+#include "Math.h"
 
 // basically... a really BAD vehicle simulator :/
 // going to be arcade drive :thumbsup:

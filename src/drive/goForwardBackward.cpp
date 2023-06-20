@@ -4,7 +4,7 @@
 #include "okapi/api/odometry/odomState.hpp"
 #include "okapi/api/units/QTime.hpp"
 #include "parameters.h"
-#include "Odom/OdomMath.h"
+#include "Odom/Math.h"
 
 void Drive::goForward(
     QLength distance, 

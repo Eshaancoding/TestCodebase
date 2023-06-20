@@ -26,7 +26,7 @@
 #define Heading_I            0
 #define Heading_D            0
 #define Heading_MINERRDISI   2.5 // min error to disable I (in inches)
-#define Heading_MAXPOWER     0.5
+#define Heading_MAXPOWER     1
 #define Heading_MINPOWER     0
 #define Heading_FACTOR       1
 #define Heading_SLEW         1
@@ -45,7 +45,7 @@
 // ****** THIS IS REALLY IMPORTANT PARAM ****
 // essentially it determines the number of iterations 
 // to update its parameters & power arcade, etc.
-#define DELAYITER           5_ms  
+#define DELAYITER           2_s
 
 // how much errors to average when finding min error
 #define Distance_N          10
@@ -110,7 +110,7 @@ extern OdomOkapi odometery;
 
 #define DISTANCE_TOLERANCE 1_in 
 #define ANGLE_TOLERANCE 1_deg
-#define TIME_TOLERANCE 30_s // ADJUST THIS A LITTLE LESS 
+#define TIME_TOLERANCE 300_s // ADJUST THIS A LITTLE LESS 
 
 // =============================================================
 // ===================== CONTROLLER PARAMS =====================

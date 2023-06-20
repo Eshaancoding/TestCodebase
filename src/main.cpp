@@ -1,5 +1,5 @@
 #include "main.h"
-#include "odom/OdomMath.h"
+#include "odom/Math.h"
 #include "AutonSelector.h"
 #include "Console.h"
 #include "parameters.h"
@@ -45,11 +45,6 @@ void opcontrol() {
     auto state = waitForValidState();    
 
     if (state.status == AutonSelector::TEST) {
-        drive.turnRight(235_deg);
-        drive.goForward(2_tile);
-        drive.turnLeft(45_deg);
-        drive.goBackward(4_tile);
-
-        Console::printBrain(8, simulation.getPos(), "Final Pos");
+        drive.moveToPoint({2_tile, 2_tile}, true, true, true, {{0.75, {1,0}}});
     }
 }
