@@ -45,6 +45,14 @@ void opcontrol() {
     auto state = waitForValidState();    
 
     if (state.status == AutonSelector::TEST) {
-        drive.moveToPoint({0_tile, 0_tile}, true, false, true);
+        Console::printBrain(6, "Facing 1, 1");
+        drive.faceToPoint({1_in, 1_in}, true);
+        Console::printBrain(6, "Going 1, 1");
+        drive.goToPoint({1_tile, 1_tile}, true);
+        
+        Console::printBrain(6, "Facing -1, -1");
+        drive.faceToPoint({-1_in, -1_in}, true);
+        Console::printBrain(6, "Going 0, 0");
+        drive.goToPoint({0_in, 0_in}, false);
     }
 }

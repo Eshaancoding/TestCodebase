@@ -46,7 +46,7 @@
 // ****** THIS IS REALLY IMPORTANT PARAM ****
 // essentially it determines the number of iterations 
 // to update its parameters & power arcade, etc.
-#define DELAYITER           2_s
+#define DELAYITER           500_ms
 
 // how much errors to average when finding min error
 #define Distance_N          10

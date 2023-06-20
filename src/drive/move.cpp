@@ -2,7 +2,6 @@
 #include "MovingAverage.h"
 #include "drive.h"
 #include "Odom/Math.h"
-#include "odom/Math.h"
 #include "okapi/api/odometry/odomState.hpp"
 #include "okapi/api/units/QAngle.hpp"
 #include "okapi/api/units/QLength.hpp"
@@ -51,6 +50,12 @@ void Drive::move (
     MovingAverage headingAvg (Heading_N);
     distanceAvg.step(distErr.convert(inch));
     headingAvg.step(angleErr.convert(radian));
+
+    // record previous factors + clear line
+    double prevDistanceFact = DistancePID.getFactor();
+    double prevHeadingFact = HeadingPID.getFactor();
+
+    if (ODOM_DEBUG) Console::printBrain(4, "");
 
     // =================== Main loop ==================
 
@@ -122,8 +127,8 @@ void Drive::move (
 
         // check on if we should stop or not
         if (
-            (!distanceActivated || abs(distanceAvg.value()) <= distanceTol.convert(inch)) &&
-            (!headingActivated || abs(headingAvg.value()) <= angleTol.convert(radian))
+            ((!distanceActivated || DistancePID.getFactor() == 0) || abs(distanceAvg.value()) <= distanceTol.convert(inch)) &&
+            ((!headingActivated || HeadingPID.getFactor() == 0) || abs(headingAvg.value()) <= angleTol.convert(radian))
         ) {
             if (ODOM_DEBUG) Console::printBrain(4, "Stopped due to heading/distance threshold reached.");
             break;
@@ -135,4 +140,8 @@ void Drive::move (
 
         pros::delay(DELAYITER.convert(okapi::millisecond));
     }
+
+    // set previous factor for PID factor
+    HeadingPID.setFactor(prevHeadingFact);
+    DistancePID.setFactor(prevDistanceFact);
 }

@@ -54,6 +54,9 @@ public:
     // set new factor (usually in the middle of a run)
     void setFactor (double newFactor);
 
+    // get factor
+    double getFactor ();
+
     // step function
     double step (double error);
 };

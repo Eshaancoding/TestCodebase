@@ -38,3 +38,5 @@ double PID :: step (double error) {
 void PID :: setFactor(double newFactor) {
     factor = newFactor;
 }
+
+double PID :: getFactor () { return factor; }
