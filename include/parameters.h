@@ -11,6 +11,7 @@
 //*     VEX coordinate system is REALLY weird... (face y direction to where the bot is facing rn)
 //*     Make it so that by default the y direction of the robot faces the y direction
 //* Take a look at parameters.cpp
+//* Ideally... give doxygen comments in everywhere
 // *****************************************************
 
 #include "pid.h"

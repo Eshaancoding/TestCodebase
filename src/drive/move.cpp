@@ -17,7 +17,7 @@ Point add (okapi::OdomState orig, Point p) {
     return p; 
 }
 
-void Drive::moveToPoint (
+void Drive::move (
     Point point, 
     bool isRelative,
     bool headingActivated, 

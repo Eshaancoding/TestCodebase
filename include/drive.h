@@ -6,6 +6,7 @@
 #include "main.h"
 #include <map>
 #include "MovingAverage.h"
+#include "Odom/Math.h"
 
 class Drive {
 private:
@@ -13,8 +14,21 @@ private:
     QAngle angleTol = ANGLE_TOLERANCE;
     QTime timeTol = TIME_TOLERANCE;
 
-public:
-    void moveToPoint (
+    /**
+     * @brief Essentially goes to the point but in general this houses the PID for both distance and heading
+     * Every public function uses the move function under the hood.
+     * The difference between this and the other functions is either    
+     *      1. either heading/distance is deactivated, thus only allowing one type of movement (either going forward/backward or right/left)
+     *      2. for movements that only go forward/backward, it will also enable the heading as a sort of correct just in case the robot swerves as the path goes on. The function (ex: goToPoint) also adds in a disable point in which it will automatically stop swerve correction (reason? explained in drive.cpp)
+     * 
+     * @param point  the point of interest (can be relative, i.e an offset)
+     * @param isRelative if true, point offers as an offset rather than absolute position
+     * @param headingActivated whether to activate heading (i.e enable robot turn left/right)
+     * @param distanceActivated whether to activate distance (i.e enable robot to go forward/backward)
+     * @param factorMap factormap. note that there's a pair, the first number is for the distance factor and second number in the pair is for the heading factor
+     * @param callbackMap callbackm ap that is used to execute functions in the middle of the run. (ex: turning on an intake)
+     */
+    void move (
         Point point, 
         bool isRelative=true,
         bool headingActivated=true, 
@@ -23,7 +37,7 @@ public:
         std::map<double, std::function<void()>> callbackMap={}
     );
 
-    bool drive = false;
+public:
     /**
      * @brief move arcade
      * 
@@ -96,6 +110,36 @@ public:
      */
     void turnRight (
         QAngle ang,
+        std::map<double, double> factorMap={},
+        std::map<double, std::function<void()>> callbackMap={}
+    );
+
+    /**
+     * @brief faces to point that can be relative or absolute
+     * 
+     * @param point the point (or offset) to face the angle
+     * @param isRelative is true, uses relative positioning if false then no
+     * @param factorMap the factor map used to slow down robot in the middle of run 
+     * @param callbackMap the map used to execute functions in the middle of the run (ex: running intake at 50% of run)
+     */
+    void faceToPoint (
+        Point point,
+        bool isRelative,
+        std::map<double, double> factorMap={},
+        std::map<double, std::function<void()>> callbackMap={}
+    );
+
+    /**
+     * @brief goes to point that can be relative or absolute
+     * 
+     * @param point the point (or offset) to face the angle
+     * @param isRelative is true, uses relative positioning if false then no
+     * @param factorMap the factor map used to slow down robot in the middle of run 
+     * @param callbackMap the map used to execute functions in the middle of the run (ex: running intake at 50% of run)
+     */
+    void goToPoint (
+        Point point,
+        bool isRelative,
         std::map<double, double> factorMap={},
         std::map<double, std::function<void()>> callbackMap={}
     );

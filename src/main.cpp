@@ -45,6 +45,6 @@ void opcontrol() {
     auto state = waitForValidState();    
 
     if (state.status == AutonSelector::TEST) {
-        drive.moveToPoint({2_tile, 2_tile}, true, true, true, {{0.75, {1,0}}});
+        drive.moveToPoint({0_tile, 0_tile}, true, false, true);
     }
 }
