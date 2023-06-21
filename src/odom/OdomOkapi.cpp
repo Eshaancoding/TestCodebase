@@ -14,10 +14,9 @@ OdomOkapi :: OdomOkapi () {
         )
         .withDimensions(
             AbstractMotor::GearsetRatioPair(
-                okapi::AbstractMotor::gearset::green,
-                60.0/48.0 // might be reversed
+                okapi::AbstractMotor::gearset::blue, 1
             ),
-            okapi::ChassisScales({WHEEL_DIM, WHEEL_TRACK}, okapi::imev5GreenTPR)
+            okapi::ChassisScales({WHEEL_DIM, WHEEL_TRACK}, okapi::imev5BlueTPR*60.0/48.0)
         )
         .withOdometry()
         .buildOdometry();

@@ -16,7 +16,7 @@ void Effectors::stepCataReset () {
         cataMotorTwo.moveVelocity(128);
 
         if (limitSwitch.get_value() == 1) {
-            delay(250_ms);
+            delay(300_ms);
             cataMotor.moveVelocity(0);
             cataMotorTwo.moveVelocity(0);
             shouldReset = false;
