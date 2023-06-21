@@ -75,8 +75,12 @@ class Drive; // will be defined later
 extern Drive drive;
 
 // effectors
-#define FLYWHEEL_MOTOR 4
-#define INTAKE_MOTOR 7
+#define CATA_MOTOR          9
+#define CATA_MOTOR_TWO      10
+#define INTAKE_MOTOR        7
+#define INTAKE_MOTOR_TWO    5
+
+#define LIMITSWITCH         'A'
 
 class Effectors;
 extern Effectors effectors;

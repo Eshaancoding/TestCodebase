@@ -2,7 +2,9 @@
 #include "odom/Math.h"
 #include "AutonSelector.h"
 #include "Console.h"
+#include "okapi/impl/device/controller.hpp"
 #include "parameters.h"
+#include "effectors.h"
 #include "drive.h"
 
 void disabled() {}
@@ -32,7 +34,7 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    AutonSelector::init(); 
+    // AutonSelector::init(); 
 }
 
 // Autonomous Mode
@@ -42,19 +44,19 @@ void autonomous() {
 
 // Operation control (driver)
 void opcontrol() {
-    auto state = waitForValidState();    
+    // auto state = waitForValidState();    
 
-    if (state.status == AutonSelector::TEST) {
-        Console::printBrain(6, "Turn right...");
-        drive.faceToPoint({0_in, -1_in}, true);
+    okapi::Controller controller; 
 
-        Console::printBrain(6, "going forward...");
-        drive.goForward(2_tile);
+    Console::printBrain(0, "Creating running alg");
 
-        Console::printBrain(6, "turning left...");
-        drive.turnLeft(90_deg);
+    while (true) {
+        if (controller.getDigital(okapi::ControllerDigital::A)) {
+            effectors.shoot();
+        }
 
-        Console::printBrain(6, "going backward...");
-        drive.goBackward(2_tile);
+        effectors.stepCataReset();
+        
+        pros::delay(10);
     }
 }

@@ -17,9 +17,11 @@ OdomOkapi :: OdomOkapi () {
     // check if mid tracking wheels is valid
     if (MID_TRACKING_WHEEL_BOTTOM != ' ' && MID_TRACKING_WHEEL_TOP != ' ') {
         builder.withDimensions(
-            okapi::AbstractMotor::gearset::green,
+            okapi::AbstractMotor::gearset::blue,
             okapi::ChassisScales({WHEEL_DIM, WHEEL_TRACK, TRACKING_WHEEL_BACK, WHEEL_DIM}, okapi::imev5GreenTPR)
         );
+        // 48 - 60 gear ratio (somehow add that) 
+        // end wheels 480 RPM
 
         builder.withSensors(
             okapi::ADIEncoder(
