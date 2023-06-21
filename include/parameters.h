@@ -10,7 +10,6 @@
 //* ALSO NTOE THAT YOU NEED TO CHECK COORD SIYSTEM OF ODOM OKAPI
 //*     VEX coordinate system is REALLY weird... (face y direction to where the bot is facing rn)
 //*     Make it so that by default the y direction of the robot faces the y direction
-//* Take a look at parameters.cpp
 //* Ideally... give doxygen comments in everywhere
 // *****************************************************
 
@@ -47,6 +46,9 @@
 // essentially it determines the number of iterations 
 // to update its parameters & power arcade, etc.
 #define DELAYITER           500_ms
+
+// defines what % of the path that should disable the heading for course correction
+#define DISABLEPOINT        0.75
 
 // how much errors to average when finding min error
 #define Distance_N          10

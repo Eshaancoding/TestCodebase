@@ -1,4 +1,5 @@
 #include "drive.h"
+#include "Console.h"
 #include "Odom/Math.h"
 #include "okapi/api/odometry/odomState.hpp"
 #include "okapi/api/units/QAngle.hpp"
@@ -27,7 +28,7 @@ void Drive::goForward (
     // the reason why is because say that the robot swerves a little bit, we could use the heading at the same time as the distance to correct it a little bit.
 
     // we have to disable the heading somewhere at the end BECAUSE angle point becomes larger and larger as it grows closer to the point!
-    double disablePoint = 0.75; 
+    double disablePoint = DISABLEPOINT; 
     if (map.find(disablePoint) == map.end()) { // not found in map
         map[disablePoint] = {1, 0}; // completely disables heading! only allows distance
     }
@@ -41,7 +42,7 @@ void Drive::goBackward (
     std::map<double, double> factorMap,
     std::map<double, std::function<void()>> callbackMap
 ) {
-    goBackward(-distance, factorMap, callbackMap);
+    goForward(-distance, factorMap, callbackMap);
 }
 
 void Drive::turnLeft (
@@ -101,7 +102,7 @@ void Drive::goToPoint (
     // the reason why is because say that the robot swerves a little bit, we could use the heading at the same time as the distance to correct it a little bit.
 
     // we have to disable the heading somewhere at the end BECAUSE angle point becomes larger and larger as it grows closer to the point!
-    double disablePoint = 0.75; 
+    double disablePoint = DISABLEPOINT; 
     if (map.find(disablePoint) == map.end()) { // not found in map
         map[disablePoint] = {1, 0}; // completely disables heading! only allows distance
     }

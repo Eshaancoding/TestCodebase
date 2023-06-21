@@ -38,7 +38,8 @@ void Drive::move (
     // get target position and distance/angle error 
     auto targetPos = isRelative ? add(startingPos, point) : point;
     QLength distErr = Math::distance(startingPos, targetPos);
-    QAngle angleErr = Math::anglePoint(startingPos, targetPos);
+
+    QAngle angleErr = Math::anglePoint(startingPos, targetPos, distanceActivated);
 
     // record original distance and angle error as well as time
     auto start = pros::millis();
@@ -64,9 +65,9 @@ void Drive::move (
         // determine which percent change (used for callback map and factor mapto use; by default distance
         double percentChange;
         if (distanceActivated) 
-            percentChange = abs(distErr.convert(inch)-origDistErr.convert(inch))/(origDistErr.convert(inch));
+            percentChange = abs(distErr.convert(inch)-origDistErr.convert(inch))/(abs(origDistErr.convert(inch)));
         else                   
-            percentChange = abs(angleErr.convert(radian)-origAngleErr.convert(radian))/(origAngleErr.convert(radian));
+            percentChange = abs(angleErr.convert(radian)-origAngleErr.convert(radian))/(abs(origAngleErr.convert(radian)));
 
         // go through factor map
         for (auto itr = factorMap.begin(); itr != factorMap.end(); itr++) {
@@ -111,7 +112,7 @@ void Drive::move (
         if (ENABLE_ODOMSIM) newPos = simulation.getPos();
         else                newPos = odometery.getPos();
         distErr = Math::distance(newPos, targetPos);
-        angleErr = Math::anglePoint(newPos, targetPos);
+        angleErr = Math::anglePoint(newPos, targetPos, distanceActivated);
 
         // add to moving average function 
         distanceAvg.step(distErr.convert(inch));

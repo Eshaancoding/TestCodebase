@@ -4,6 +4,7 @@
 #include "parameters.h"
 #include "main.h"
 
+// I could make this a namespace idk why im making it a class
 class Effectors {
 private:
     Motor flywheelMotor; 

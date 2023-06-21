@@ -6,7 +6,7 @@ namespace Math {
     QAngle restrictAngle180 (QAngle angle);
     
     QLength distance (OdomState p1, Point p2);
-    QAngle anglePoint (OdomState currentState, Point p1);
+    QAngle anglePoint (OdomState currentState, Point p1, bool restrict=false);
 
     Point findPointOffset (OdomState state, QLength dist);
 };
