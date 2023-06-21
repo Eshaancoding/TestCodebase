@@ -63,10 +63,10 @@ extern PID HeadingPID;  // declared in parameters.cpp
 // ============================================================
 
 // drive
-#define LEFT_TOP_MOTOR      3
-#define RIGHT_TOP_MOTOR     11
-#define LEFT_BOTTOM_MOTOR   8
-#define RIGHT_BOTTOM_MOTOR  5
+#define LEFT_TOP_MOTOR     17 
+#define LEFT_BOTTOM_MOTOR  1
+#define RIGHT_TOP_MOTOR      8
+#define RIGHT_BOTTOM_MOTOR   3
 
 extern MotorGroup leftMotorGroup;
 extern MotorGroup rightMotorGroup;
@@ -77,7 +77,7 @@ extern Drive drive;
 // effectors
 #define CATA_MOTOR          9
 #define CATA_MOTOR_TWO      10
-#define INTAKE_MOTOR        7
+#define INTAKE_MOTOR        6
 #define INTAKE_MOTOR_TWO    5
 
 #define LIMITSWITCH         'A'

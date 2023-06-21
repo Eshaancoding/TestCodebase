@@ -7,59 +7,20 @@
 
 OdomOkapi :: OdomOkapi () {
 
-    auto builder = okapi::ChassisControllerBuilder();
-    builder
+    chassis = okapi::ChassisControllerBuilder()
         .withMotors(
             leftMotorGroup,
             rightMotorGroup
-        );
-        
-    // check if mid tracking wheels is valid
-    if (MID_TRACKING_WHEEL_BOTTOM != ' ' && MID_TRACKING_WHEEL_TOP != ' ') {
-        builder.withDimensions(
-            okapi::AbstractMotor::gearset::blue,
-            okapi::ChassisScales({WHEEL_DIM, WHEEL_TRACK, TRACKING_WHEEL_BACK, WHEEL_DIM}, okapi::imev5GreenTPR)
-        );
-        // 48 - 60 gear ratio (somehow add that) 
-        // end wheels 480 RPM
-
-        builder.withSensors(
-            okapi::ADIEncoder(
-                LEFT_TRACKING_WHEEL_TOP,
-                LEFT_TRACKING_WHEEL_BOTTOM
+        )
+        .withDimensions(
+            AbstractMotor::GearsetRatioPair(
+                okapi::AbstractMotor::gearset::green,
+                60.0/48.0 // might be reversed
             ),
-
-            okapi::ADIEncoder(
-                RIGHT_TRACKING_WHEEL_TOP,
-                RIGHT_TRACKING_WHEEL_BOTTOM
-            ),
-
-            okapi::ADIEncoder(
-                MID_TRACKING_WHEEL_TOP,
-                MID_TRACKING_WHEEL_BOTTOM
-            )
-        );
-    }
-    else {
-        builder.withDimensions(
-            okapi::AbstractMotor::gearset::green, 
             okapi::ChassisScales({WHEEL_DIM, WHEEL_TRACK}, okapi::imev5GreenTPR)
-        );
-        builder.withSensors(
-            okapi::ADIEncoder(
-                LEFT_TRACKING_WHEEL_TOP,
-                LEFT_TRACKING_WHEEL_BOTTOM
-            ),
-
-            okapi::ADIEncoder(
-                RIGHT_TRACKING_WHEEL_TOP,
-                RIGHT_TRACKING_WHEEL_BOTTOM
-            ) 
-        );
-        
-    }
-
-    chassis = builder.buildOdometry();
+        )
+        .withOdometry()
+        .buildOdometry();
 }
 
 okapi::OdomState OdomOkapi::getPos () {
