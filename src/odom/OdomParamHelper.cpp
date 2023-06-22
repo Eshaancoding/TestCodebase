@@ -31,6 +31,9 @@ void OdomParamHelper :: run () {
     Control::printController(0, "Move robot 1 tile forward/backward (A to done)");
 
     int lineNum = -1;
+    double left;
+    double right; 
+    double mid;
 
     // get wheel dia
     double forwardWheelDia;
@@ -40,8 +43,8 @@ void OdomParamHelper :: run () {
         drive.moveArcade(analogLeftY, 0);
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) {
-            double left = std::abs(odometery.getLeftRevs());            
-            double right = std::abs(odometery.getRightRevs());
+            left = std::abs(odometery.getLeftRevs());            
+            right = std::abs(odometery.getRightRevs());
 
             Console::printBrain(++lineNum, "Left %.3f Right %.3f", left, right);
 
@@ -62,8 +65,8 @@ void OdomParamHelper :: run () {
         // we have valid mid tracking wheel lol
         while (true) {
             if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) {
-                double numRot = std::abs(odometery.getMiddleRevs());
-                midWheelDia = 24.0 / (numRot * pi);
+                mid = std::abs(odometery.getMiddleRevs());
+                midWheelDia = 24.0 / (mid * pi);
                 Console::printBrain(++lineNum, "Mid Wheel Dia: %.3f", midWheelDia);
                 break;
             }
@@ -80,16 +83,16 @@ void OdomParamHelper :: run () {
         drive.moveArcade(0, analogLeftY);
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) {
-            double left = std::abs(odometery.getLeftRevs());            
-            double right = std::abs(odometery.getRightRevs());
+            left = std::abs(odometery.getLeftRevs()) - left;            
+            right = std::abs(odometery.getRightRevs()) - right;
             double numRot = (left + right) / 2;
 
             double radius = (numRot * forwardWheelDia) / 2;
             Console::printBrain(++lineNum, "Forward Radius: %.3f", radius);
 
             if (MID_TRACKING_WHEEL_BOTTOM != ' ' && MID_TRACKING_WHEEL_TOP) {
-                numRot = std::abs(odometery.getRightRevs());
-                radius = (numRot * midWheelDia) / 2;
+                mid = std::abs(odometery.getMiddleRevs()) - mid;
+                radius = (mid * midWheelDia) / 2;
                 Console::printBrain(++lineNum, "Backward Radius: %.3f", radius);
             }
             break;
