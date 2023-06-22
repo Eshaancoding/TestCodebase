@@ -7,9 +7,6 @@
 #include <memory>
 #include <vector>
 #include <string>
-#include "display/lvgl.h"
-#include "okapi/api/odometry/odomState.hpp"
-#include "okapi/api/units/QSpeed.hpp"
 using namespace std;
 
 namespace Console {

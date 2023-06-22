@@ -74,3 +74,17 @@ void OdomCustom::setPos(okapi::OdomState state) {
         previousMidEncoder = 0;
     }
 }
+
+double OdomCustom :: getLeftRevs () {
+    return leftEncoder->get() / 360.0;
+}
+
+double OdomCustom :: getRightRevs () {
+    return rightEncoder->get() / 360.0; 
+}
+
+double OdomCustom :: getMiddleRevs () {
+    if (MID_TRACKING_WHEEL_BOTTOM != ' ' && MID_TRACKING_WHEEL_TOP != ' ') {
+        return middleEncoder->get() / 360.0;
+    } else return 0.0;
+}

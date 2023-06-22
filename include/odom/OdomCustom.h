@@ -27,6 +27,9 @@ public:
     ~OdomCustom() = default;
     okapi::OdomState getPos();
     void setPos (okapi::OdomState state);
+    double getLeftRevs  ();
+    double getRightRevs ();
+    double getMiddleRevs  ();
 };
 
 

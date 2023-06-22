@@ -1,9 +1,15 @@
 #include "odom/OdomOkapi.h"
 #include "okapi/api/device/motor/abstractMotor.hpp"
 #include "okapi/api/odometry/odomState.hpp"
+#include "okapi/api/util/mathUtil.hpp"
 #include "okapi/impl/device/rotarysensor/adiEncoder.hpp"
 #include "parameters.h"
 #include "Math.h"
+
+// Remember, if you are changing the configuation a little bit, then make sure you change the rest of the functions like getting right encoder count
+
+// iterations per revolution; 60/48 because there's a gear ratio :)
+const double itpr = okapi::imev5BlueTPR * 60.0 / 48.0 ;
 
 OdomOkapi :: OdomOkapi () {
 
@@ -16,7 +22,7 @@ OdomOkapi :: OdomOkapi () {
             AbstractMotor::GearsetRatioPair(
                 okapi::AbstractMotor::gearset::blue, 1
             ),
-            okapi::ChassisScales({WHEEL_DIM, WHEEL_TRACK}, okapi::imev5BlueTPR*60.0/48.0)
+            okapi::ChassisScales({WHEEL_DIM, WHEEL_TRACK}, itpr)
         )
         .withOdometry()
         .buildOdometry();
@@ -34,4 +40,16 @@ okapi::OdomState OdomOkapi::getPos () {
 
 void OdomOkapi::setPos (okapi::OdomState state) {
     chassis->setState(state);
+}
+
+double OdomOkapi::getLeftRevs  () {
+    return (leftMotorGroup.getEncoder(0)->get() + leftMotorGroup.getEncoder(1)->get()) / (2 * itpr);
+}
+
+double OdomOkapi::getRightRevs  () {
+    return (rightMotorGroup.getEncoder(0)->get() + rightMotorGroup.getEncoder(1)->get()) / (2 * itpr);
+}
+
+double OdomOkapi::getMiddleRevs () {
+    return 0; // for this configuration we don't have middle encoder
 }

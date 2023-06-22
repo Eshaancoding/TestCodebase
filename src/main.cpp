@@ -2,11 +2,11 @@
 #include "odom/Math.h"
 #include "AutonSelector.h"
 #include "Console.h"
-#include "okapi/impl/device/controller.hpp"
-#include "okapi/impl/device/controllerUtil.hpp"
 #include "parameters.h"
 #include "effectors.h"
 #include "drive.h"
+#include "controller.h"
+#include "pros/misc.h"
 
 void disabled() {}
 void competition_initialize() {}
@@ -46,22 +46,20 @@ void autonomous() {
 // Operation control (driver)
 void opcontrol() {
 
-    okapi::Controller controller; 
-
     while (true) {
-        double analogLeft = controller.getAnalog(okapi::ControllerAnalog::leftY);
-        double analogRight = controller.getAnalog(okapi::ControllerAnalog::rightY);
+        double analogLeft = Control::getAnalog(E_CONTROLLER_ANALOG_LEFT_Y);
+        double analogRight = Control::getAnalog(E_CONTROLLER_ANALOG_RIGHT_Y);
 
         drive.moveTank(analogLeft, analogRight);
 
-        if (controller.getDigital(okapi::ControllerDigital::L1)) {
+        if (Control::getButtonPressed(E_CONTROLLER_DIGITAL_L1)) {
             effectors.shoot();
         }
 
-        if (controller.getDigital(okapi::ControllerDigital::R1)) {
+        if (Control::getButtonPressed(E_CONTROLLER_DIGITAL_R1)) {
             effectors.intake(127);
         }
-        else if (controller.getDigital(okapi::ControllerDigital::R2)) {
+        else if (Control::getButtonPressed(E_CONTROLLER_DIGITAL_R2)) {
             effectors.outtake(127);
         }
         else {
