@@ -1,7 +1,7 @@
+#include "parameters.h"
 #include "Odom/OdomParamHelper.h"
 #include "Controller.h"
 #include "okapi/api/util/mathUtil.hpp"
-#include "parameters.h"
 #include "drive.h"
 #include "Console.h"
 #include "pros/misc.h"
