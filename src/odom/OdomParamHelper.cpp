@@ -92,7 +92,11 @@ void OdomParamHelper :: run () {
                 radius = (numRot * midWheelDia) / 2;
                 Console::printBrain(++lineNum, "Backward Radius: %.3f", radius);
             }
+            break;
         }
+
+        pros::delay(10);
     }
-    
+
+    Control::printController(0, "Done!");
 };
