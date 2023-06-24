@@ -7,6 +7,9 @@
 #include "Math.h"
 #include "Console.h"
 
+#define WHEEL_DIM       3.152_in  // Diameter of robot wheel
+#define WHEEL_TRACK     13.895_in  // Distance from center of the bottom left wheel to the center of the bottom right wheel
+
 // Remember, if you are changing the configuation a little bit, then make sure you change the rest of the functions like getting right encoder count
 
 // iterations per revolution; 60/48 because there's a gear ratio :)

@@ -42,3 +42,11 @@ void Effectors::stopIntake() {
 void Effectors::delay(QTime time) {
     pros::delay(time.convert(okapi::millisecond));
 }
+
+void Effectors::enablePiston() {
+    piston.set_value(false);
+}
+
+void Effectors::disablePiston() {
+    piston.set_value(true);
+}

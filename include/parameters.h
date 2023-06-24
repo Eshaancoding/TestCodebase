@@ -59,6 +59,8 @@ extern Drive drive;
 #define INTAKE_MOTOR        6
 #define INTAKE_MOTOR_TWO    5
 
+#define PISTON_ENABLE       'B'
+
 #define LIMITSWITCH         'A'
 
 class Effectors;
@@ -72,8 +74,6 @@ extern Effectors effectors;
 #define ODOM_DEBUG      true
 
 // wheeeeels
-#define WHEEL_DIM       3.352_in  // Diameter of robot wheel
-#define WHEEL_TRACK     14.295_in  // Distance from center of the bottom left wheel to the center of the bottom right wheel
 
 // tracking wheel ports
 #define LEFT_TRACKING_WHEEL_TOP       'A'
@@ -100,7 +100,7 @@ extern OdomOkapi odometery;
 
 #define COURSE_CORRECTION   false
 
-#define DISTANCE_TOLERANCE 1.5_in 
+#define DISTANCE_TOLERANCE 1_in 
 #define ANGLE_TOLERANCE 1_deg
 #define TIME_TOLERANCE 300_s // ADJUST THIS A LITTLE LESS
 // =============================================================

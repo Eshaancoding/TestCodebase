@@ -15,11 +15,12 @@ private:
     Motor intakeMotorTwo;
 
     pros::ADIDigitalIn limitSwitch;
+    pros::ADIDigitalOut piston;
 
     bool shouldReset;
 public:
     Effectors () : 
-        cataMotor(CATA_MOTOR), cataMotorTwo(CATA_MOTOR_TWO), intakeMotor(INTAKE_MOTOR), intakeMotorTwo(INTAKE_MOTOR_TWO), limitSwitch(LIMITSWITCH), shouldReset(true)
+        cataMotor(CATA_MOTOR), cataMotorTwo(CATA_MOTOR_TWO), intakeMotor(INTAKE_MOTOR), intakeMotorTwo(INTAKE_MOTOR_TWO), limitSwitch(LIMITSWITCH), piston(PISTON_ENABLE), shouldReset(true)
     {cataMotor.setBrakeMode(AbstractMotor::brakeMode::hold); cataMotorTwo.setBrakeMode(AbstractMotor::brakeMode::hold);};
 
     void intake (std::int16_t power=127);
@@ -27,6 +28,9 @@ public:
     void stopIntake ();
     void stepCataReset ();
     void shoot ();
+
+    void enablePiston ();
+    void disablePiston ();
 
     void delay (QTime time);
 };

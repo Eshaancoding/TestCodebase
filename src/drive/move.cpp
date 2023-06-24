@@ -36,6 +36,8 @@ void Drive::move (
 
     // get target position and distance/angle error 
     auto targetPos = isRelative ? add(startingPos, point) : point;
+    Console::printBrain(9, targetPos, "target pos");
+    
     QLength distErr = Math::distance(startingPos, targetPos);
 
     QAngle angleErr = Math::anglePoint(startingPos, targetPos, distanceActivated);
@@ -146,4 +148,6 @@ void Drive::move (
     DistancePID.setFactor(prevDistanceFact);
 
     if (!ENABLE_ODOMSIM) Drive::moveArcade(0, 0);
+
+    pros::delay(50);
 }

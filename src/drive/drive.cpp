@@ -46,7 +46,7 @@ void Drive::goBackward (
     goForward(-distance, factorMap, callbackMap);
 }
 
-void Drive::turnLeft (
+void Drive::turnRight (
     QAngle ang,
     std::map<double, double> factorMap,
     std::map<double, std::function<void()>> callbackMap
@@ -65,12 +65,12 @@ void Drive::turnLeft (
     move(absolute, false, true, false, map, callbackMap);
 }
 
-void Drive::turnRight (
+void Drive::turnLeft (
     QAngle ang,
     std::map<double, double> factorMap,
     std::map<double, std::function<void()>> callbackMap
 ) {
-    turnLeft(-ang, factorMap, callbackMap);
+    turnRight(-ang, factorMap, callbackMap);
 }
 
 void Drive::faceToPoint (
