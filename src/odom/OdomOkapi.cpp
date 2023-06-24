@@ -5,6 +5,7 @@
 #include "okapi/impl/device/rotarysensor/adiEncoder.hpp"
 #include "parameters.h"
 #include "Math.h"
+#include "Console.h"
 
 // Remember, if you are changing the configuation a little bit, then make sure you change the rest of the functions like getting right encoder count
 
@@ -43,10 +44,13 @@ void OdomOkapi::setPos (okapi::OdomState state) {
 }
 
 double OdomOkapi::getLeftRevs  () {
+    Console::printBrain(6, "leftt0: %.3f left1: %.3f", leftMotorGroup.getEncoder(0)->get(), leftMotorGroup.getEncoder(1)->get());
     return (leftMotorGroup.getEncoder(0)->get() + leftMotorGroup.getEncoder(1)->get()) / (2 * itpr);
 }
 
 double OdomOkapi::getRightRevs  () {
+    Console::printBrain(5, "right0: %.3f right1: %.3f", rightMotorGroup.getEncoder(0)->get(), rightMotorGroup.getEncoder(1)->get());
+
     return (rightMotorGroup.getEncoder(0)->get() + rightMotorGroup.getEncoder(1)->get()) / (2 * itpr);
 }
 

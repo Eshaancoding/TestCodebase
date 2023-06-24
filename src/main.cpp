@@ -7,6 +7,7 @@
 #include "drive.h"
 #include "controller.h"
 #include "pros/misc.h"
+#include "odom/OdomParamHelper.h"
 
 void disabled() {}
 void competition_initialize() {}
@@ -45,10 +46,15 @@ void autonomous() {
 
 // Operation control (driver)
 void opcontrol() {
-
+    // OdomParamHelper::run();  
+    
     while (true) {
         double analogLeft = Control::getAnalog(E_CONTROLLER_ANALOG_LEFT_Y);
         double analogRight = Control::getAnalog(E_CONTROLLER_ANALOG_RIGHT_Y);
+
+        double l = odometery.getLeftRevs();
+        double r = odometery.getRightRevs();
+        Console::printBrain(1, "left %.3f right %.3f", l, r);
 
         drive.moveTank(analogLeft, analogRight);
 
@@ -73,3 +79,16 @@ void opcontrol() {
         pros::delay(10);
     }
 }
+
+
+/*
+wheel dia: 3.405 3.329 3.321 = 3.35166667
+track:     6.723 6.752 6.768 = 6.74766667
+
+forward testing:
+
+left:
+right:
+
+
+*/

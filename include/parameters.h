@@ -93,8 +93,8 @@ extern Effectors effectors;
 #define ODOM_DEBUG      true
 
 // wheeeeels
-#define WHEEL_DIM       3.5_in  // Diameter of robot wheel
-#define WHEEL_TRACK     4_in  // Distance from center of the bottom left wheel to the center of the bottom right wheel
+#define WHEEL_DIM       3.352_in  // Diameter of robot wheel
+#define WHEEL_TRACK     13.495_in  // Distance from center of the bottom left wheel to the center of the bottom right wheel
 
 // tracking wheel ports
 #define LEFT_TRACKING_WHEEL_TOP       'A'

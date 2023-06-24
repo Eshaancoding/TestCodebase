@@ -32,6 +32,8 @@ void OdomParamHelper :: run () {
 
     int lineNum = -1;
     double left;
+    double prevRevsLeft;
+    double prevRevsRight;
     double right; 
     double mid;
 
@@ -40,11 +42,16 @@ void OdomParamHelper :: run () {
     while (true) {
         double analogLeftY = Control::getAnalog(E_CONTROLLER_ANALOG_RIGHT_Y);
         
-        drive.moveArcade(analogLeftY, 0);
+        drive.moveArcade(analogLeftY*0.5, 0);
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) {
-            left = std::abs(odometery.getLeftRevs());            
-            right = std::abs(odometery.getRightRevs());
+            prevRevsLeft = odometery.getLeftRevs();
+            prevRevsRight = odometery.getRightRevs();
+
+            left = std::abs(prevRevsLeft);            
+            right = std::abs(prevRevsRight);
+
+            Console::printBrain(4, "Left rot: %.3f right rot: %.3f", left, right);
 
             Console::printBrain(++lineNum, "Left %.3f Right %.3f", left, right);
 
@@ -75,16 +82,29 @@ void OdomParamHelper :: run () {
         }
     }
 
+    
+    Control::printController(0, "Reposition... press a to ready");
+    while (true) {
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) break;
+        pros::delay(50);
+    }
+
+    prevRevsLeft = odometery.getLeftRevs();
+    prevRevsRight = odometery.getRightRevs();
+
     // get tracking dimensions
     Control::printController(0, "Move robot 360 deg (A to done)");
     while (true) {
         double analogLeftY = Control::getAnalog(E_CONTROLLER_ANALOG_RIGHT_Y);
         
-        drive.moveArcade(0, analogLeftY);
+        drive.moveArcade(0, analogLeftY*0.5);
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) {
-            left = std::abs(odometery.getLeftRevs()) - left;            
-            right = std::abs(odometery.getRightRevs()) - right;
+            left = std::abs(odometery.getLeftRevs() - prevRevsLeft);            
+            right = std::abs(odometery.getRightRevs() - prevRevsRight);
+            
+            Console::printBrain(4, "Left rot: %.3f right rot: %.3f", left, right);
+
             double numRot = (left + right) / 2;
 
             double radius = (numRot * forwardWheelDia) / 2;

@@ -46,7 +46,7 @@ public:
      * @param heading  the heading (left/right)  ** + counter clockwise **
      */
     void moveArcade (double distance, double heading) {
-        distance *= 128; heading *= 128;
+        distance *= 600; heading *= 600;
         leftMotorGroup.moveVelocity(distance - heading);    // maybe use voltage? 
         rightMotorGroup.moveVelocity(distance + heading);   // maybe use voltage?
     }
@@ -58,7 +58,7 @@ public:
      * @param heading  the heading (left/right)  ** + counter clockwise **
      */
     void moveTank (double left, double right) {
-        left *= 128; right *= 128;
+        left *= 600; right *= 600;
         leftMotorGroup.moveVelocity(left);     // maybe use voltage? 
         rightMotorGroup.moveVelocity(right);   // maybe use voltage?
     }
