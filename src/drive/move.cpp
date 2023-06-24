@@ -36,7 +36,6 @@ void Drive::move (
 
     // get target position and distance/angle error 
     auto targetPos = isRelative ? add(startingPos, point) : point;
-    Console::printBrain(9, targetPos, "target pos");
     
     QLength distErr = Math::distance(startingPos, targetPos);
 

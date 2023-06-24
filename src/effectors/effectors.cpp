@@ -1,13 +1,13 @@
 #include "effectors.h"
 
 void Effectors::intake(std::int16_t power) {
-    intakeMotor.moveVelocity(-power);    // might be reverse
-    intakeMotorTwo.moveVelocity(power);// might be reverse
+    intakeMotor.moveVelocity(-power);    
+    intakeMotorTwo.moveVelocity(power);
 }
 
 void Effectors::outtake(std::int16_t power) {
-    intakeMotor.moveVelocity(power);   // might be reverse
-    intakeMotorTwo.moveVelocity(-power); // might be reverse
+    intakeMotor.moveVelocity(power);   
+    intakeMotorTwo.moveVelocity(-power); 
 }
 
 void Effectors::stepCataReset () {

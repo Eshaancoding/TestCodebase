@@ -47,13 +47,10 @@ void OdomOkapi::setPos (okapi::OdomState state) {
 }
 
 double OdomOkapi::getLeftRevs  () {
-    Console::printBrain(6, "leftt0: %.3f left1: %.3f", leftMotorGroup.getEncoder(0)->get(), leftMotorGroup.getEncoder(1)->get());
     return (leftMotorGroup.getEncoder(0)->get() + leftMotorGroup.getEncoder(1)->get()) / (2 * itpr);
 }
 
 double OdomOkapi::getRightRevs  () {
-    Console::printBrain(5, "right0: %.3f right1: %.3f", rightMotorGroup.getEncoder(0)->get(), rightMotorGroup.getEncoder(1)->get());
-
     return (rightMotorGroup.getEncoder(0)->get() + rightMotorGroup.getEncoder(1)->get()) / (2 * itpr);
 }
 

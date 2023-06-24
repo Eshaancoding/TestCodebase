@@ -7,7 +7,6 @@
 #include "drive.h"
 #include "controller.h"
 #include "pros/misc.h"
-#include "odom/OdomParamHelper.h"
 
 void disabled() {}
 void competition_initialize() {}
@@ -49,9 +48,6 @@ void autonomous() {
 // Operation control (driver)
 void opcontrol() {
     
-    // **************** CHANGE THIS IN ACTRUAL MATCH ****************8`
-
-    // effectors.disablePiston();
     bool isEnabled = false;
     effectors.disablePiston();
 
@@ -92,21 +88,8 @@ void opcontrol() {
 
         effectors.stepCataReset();
 
-        Console::printBrain(2, odometery.getPos(), "Pos");
+        Console::printBrain(0, odometery.getPos(), "Pos");
         
         pros::delay(10);
     }
-
-    // drive.goToPoint({2_tile, 0_tile}, true);
-    // pros::delay(100);
-    // drive.turnRight(90_deg);
 }
-
-/**
- * @brief  corrections
- * odom param helper doesn't work   
-    make sure that you isoalte them; only distance & heading
-    longer distances! 48_in, 720_deg
-    make it fast!
- * left/right switched in sim
- */
