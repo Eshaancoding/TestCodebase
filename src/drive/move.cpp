@@ -8,7 +8,6 @@
 #include "okapi/api/units/QTime.hpp"
 #include "parameters.h"
 #include "pros/adi.h"
-#include "pros/rtos.hpp"
 
 Point add (okapi::OdomState orig, Point p) {
     p.x += orig.x;
@@ -105,7 +104,7 @@ void Drive::move (
 
         // add to sim
         if (ENABLE_ODOMSIM) simulation.step(distancePower, headingPower);
-        else                Drive::moveArcade(distancePower, headingPower);
+        else                Drive::moveArcade(distancePower, -headingPower);
         
         // update error
         okapi::OdomState newPos;
@@ -145,4 +144,6 @@ void Drive::move (
     // set previous factor for PID factor
     HeadingPID.setFactor(prevHeadingFact);
     DistancePID.setFactor(prevDistanceFact);
+
+    if (!ENABLE_ODOMSIM) Drive::moveArcade(0, 0);
 }

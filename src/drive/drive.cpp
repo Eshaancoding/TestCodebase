@@ -4,6 +4,7 @@
 #include "okapi/api/odometry/odomState.hpp"
 #include "okapi/api/units/QAngle.hpp"
 #include "okapi/api/units/QLength.hpp"
+#include "parameters.h"
 
 // basically we define a bunch of functions that just wraps around the moveToPoint function
 
@@ -33,7 +34,7 @@ void Drive::goForward (
         map[disablePoint] = {1, 0}; // completely disables heading! only allows distance
     }
 
-    move(absolute, false, true, true, map, callbackMap);
+    move(absolute, false, COURSE_CORRECTION, true, map, callbackMap);
 }
 
 
@@ -107,5 +108,5 @@ void Drive::goToPoint (
         map[disablePoint] = {1, 0}; // completely disables heading! only allows distance
     }
 
-    move(point, isRelative, true, true, map, callbackMap);   
+    move(point, isRelative, COURSE_CORRECTION, true, map, callbackMap);   
 }

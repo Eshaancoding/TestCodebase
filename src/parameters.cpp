@@ -1,5 +1,6 @@
 #include "parameters.h"
 #include "drive.h"
+#include "PIDParams.h"
 #include "effectors.h"
 
 PID DistancePID = PID(

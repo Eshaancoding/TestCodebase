@@ -46,49 +46,37 @@ void autonomous() {
 
 // Operation control (driver)
 void opcontrol() {
-    // OdomParamHelper::run();  
-    
-    while (true) {
-        double analogLeft = Control::getAnalog(E_CONTROLLER_ANALOG_LEFT_Y);
-        double analogRight = Control::getAnalog(E_CONTROLLER_ANALOG_RIGHT_Y);
+    // while (true) {
+    //     double analogLeft = Control::getAnalog(E_CONTROLLER_ANALOG_LEFT_Y);
+    //     double analogRight = Control::getAnalog(E_CONTROLLER_ANALOG_RIGHT_Y);
 
-        double l = odometery.getLeftRevs();
-        double r = odometery.getRightRevs();
-        Console::printBrain(1, "left %.3f right %.3f", l, r);
+    //     double l = odometery.getLeftRevs();
+    //     double r = odometery.getRightRevs();
+    //     Console::printBrain(1, "left %.3f right %.3f", l, r);
 
-        drive.moveTank(analogLeft, analogRight);
+    //     drive.moveArcade(analogLeft, analogRight);
 
-        if (Control::getButtonPressed(E_CONTROLLER_DIGITAL_L1)) {
-            effectors.shoot();
-        }
+    //     if (Control::getButtonPressed(E_CONTROLLER_DIGITAL_L1)) {
+    //         effectors.shoot();
+    //     }
 
-        if (Control::getButtonPressed(E_CONTROLLER_DIGITAL_R1)) {
-            effectors.intake(127);
-        }
-        else if (Control::getButtonPressed(E_CONTROLLER_DIGITAL_R2)) {
-            effectors.outtake(127);
-        }
-        else {
-            effectors.stopIntake();
-        }
+    //     if (Control::getButtonPressed(E_CONTROLLER_DIGITAL_R1)) {
+    //         effectors.intake(127);
+    //     }
+    //     else if (Control::getButtonPressed(E_CONTROLLER_DIGITAL_R2)) {
+    //         effectors.outtake(127);
+    //     }
+    //     else {
+    //         effectors.stopIntake();
+    //     }
 
-        effectors.stepCataReset();
+    //     effectors.stepCataReset();
 
-        Console::printBrain(2, odometery.getPos(), "Pos");
+    //     Console::printBrain(2, odometery.getPos(), "Pos");
         
-        pros::delay(10);
-    }
+    //     pros::delay(10);
+    // }
+
+    // drive.goToPoint({3_tile, 0_tile}, true);
+    drive.faceToPoint({0_in, 3_in}, true);
 }
-
-
-/*
-wheel dia: 3.405 3.329 3.321 = 3.35166667
-track:     6.723 6.752 6.768 = 6.74766667
-
-forward testing:
-
-left:
-right:
-
-
-*/

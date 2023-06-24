@@ -21,38 +21,17 @@
 // =========================== PID ==========================
 // ==========================================================
 
-// angle
-#define Heading_P            1.5
-#define Heading_I            0
-#define Heading_D            0
-#define Heading_MINERRDISI   2.5 // min error to disable I (in inches)
-#define Heading_MAXPOWER     1
-#define Heading_MINPOWER     0
-#define Heading_FACTOR       1
-#define Heading_SLEW         1
-
-// distance (forward/backward)
-#define Distance_P           0.05
-#define Distance_I           0
-#define Distance_D           0
-#define Distance_MINERRDISI  2.5  // min error to disable I (in rad)
-#define Distance_MAXPOWER    0.5
-#define Distance_MINPOWER    0
-#define Distance_FACTOR      1
-#define Distance_SLEW        0.2
+// actual params in PID Params.h
 
 // ************* DELAY CHANGE ***************
 // ****** THIS IS REALLY IMPORTANT PARAM ****
 // essentially it determines the number of iterations 
 // to update its parameters & power arcade, etc.
-#define DELAYITER           500_ms
+#define DELAYITER           10_ms
 
 // defines what % of the path that should disable the heading for course correction
 #define DISABLEPOINT        0.75
 
-// how much errors to average when finding min error
-#define Distance_N          10
-#define Heading_N           5
 
 // ************ DELAY CAHNGE ***************
 extern PID DistancePID; // declared in parameters.cpp
@@ -115,15 +94,20 @@ extern OdomOkapi odometery;
 // ======================= ROUTE PARAMS ========================
 // =============================================================
 
-#define DISTANCE_TOLERANCE 1_in 
-#define ANGLE_TOLERANCE 1_deg
-#define TIME_TOLERANCE 300_s // ADJUST THIS A LITTLE LESS 
+// how much errors to average when finding min error
+#define Distance_N          25
+#define Heading_N           100
 
+#define COURSE_CORRECTION   false
+
+#define DISTANCE_TOLERANCE 1.5_in 
+#define ANGLE_TOLERANCE 1_deg
+#define TIME_TOLERANCE 300_s // ADJUST THIS A LITTLE LESS
 // =============================================================
 // ====================== Odom Simulation ======================
 // =============================================================
 
-#define ENABLE_ODOMSIM true // WILL DISABLE ACTUAL MOVEMENT FORWARD :O
+#define ENABLE_ODOMSIM false // WILL DISABLE ACTUAL MOVEMENT FORWARD :O
 
 #define ACC 3_in
 #define MAX_VEL 10_in
