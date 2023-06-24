@@ -77,6 +77,6 @@ void opcontrol() {
     //     pros::delay(10);
     // }
 
-    // drive.goToPoint({3_tile, 0_tile}, true);
-    drive.faceToPoint({0_in, 3_in}, true);
+    drive.goToPoint({3_tile, 0_tile}, true);
+    // drive.faceToPoint({-1_in, 0_in}, true, {{0, 0.5}});
 }
