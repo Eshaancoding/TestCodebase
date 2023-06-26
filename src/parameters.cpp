@@ -2,6 +2,8 @@
 #include "drive.h"
 #include "PIDParams.h"
 #include "effectors.h"
+#include "pros/motors.h"
+#include "main.h"
 
 PID DistancePID = PID(
     Distance_P,   
@@ -28,6 +30,7 @@ PID HeadingPID = PID(
 
 MotorGroup leftMotorGroup = okapi::MotorGroup({-LEFT_TOP_MOTOR, -LEFT_BOTTOM_MOTOR});
 MotorGroup rightMotorGroup = okapi::MotorGroup({RIGHT_TOP_MOTOR, RIGHT_BOTTOM_MOTOR});
+
 
 // *********** FOR TESTING PURPOSES ***********
 OdomOkapi odometery = OdomOkapi();

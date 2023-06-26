@@ -30,6 +30,8 @@ OdomOkapi :: OdomOkapi () {
         )
         .withOdometry()
         .buildOdometry();
+
+    
 }
 
 okapi::OdomState OdomOkapi::getPos () {

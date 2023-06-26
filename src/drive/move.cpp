@@ -8,6 +8,7 @@
 #include "okapi/api/units/QTime.hpp"
 #include "parameters.h"
 #include "pros/adi.h"
+#include "effectors.h"
 
 Point add (okapi::OdomState orig, Point p) {
     p.x += orig.x;
@@ -148,5 +149,6 @@ void Drive::move (
 
     if (!ENABLE_ODOMSIM) Drive::moveArcade(0, 0);
 
-    pros::delay(50);
+    pros::delay(100);
+
 }

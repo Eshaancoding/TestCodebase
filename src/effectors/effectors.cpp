@@ -15,6 +15,8 @@ void Effectors::stepCataReset () {
         cataMotor.moveVelocity(-128);
         cataMotorTwo.moveVelocity(128);
 
+        Console::printBrain(8, "limit switcvh: %d", limitSwitch.get_value());
+
         if (limitSwitch.get_value() == 1) {
             delay(300_ms);
             cataMotor.moveVelocity(0);
@@ -49,4 +51,17 @@ void Effectors::enablePiston() {
 
 void Effectors::disablePiston() {
     piston.set_value(true);
+}
+
+void Effectors::expand (bool one) {
+    if (one) {
+        expOne.set_value(true);
+    } else {
+        expTwo.set_value(true);
+    }
+}
+
+void Effectors::reset () {
+    expOne.set_value(false);
+    expTwo.set_value(false);
 }

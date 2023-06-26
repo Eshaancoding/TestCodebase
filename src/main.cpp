@@ -7,6 +7,7 @@
 #include "drive.h"
 #include "controller.h"
 #include "pros/misc.h"
+#include "routes.h"
 
 void disabled() {}
 void competition_initialize() {}
@@ -36,60 +37,75 @@ AutonSelector::State waitForValidState () {
 // When robot initializes. 
 void initialize() {
     // AutonSelector::init(); 
+    effectors.reset();
 }
 
 // Autonomous Mode
 void autonomous() {
-    auto state = waitForValidState();    
+    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
 
-    effectors.enablePiston();
+    // Routes::left();
 };
 
 // Operation control (driver)
 void opcontrol() {
     
-    bool isEnabled = false;
-    effectors.disablePiston();
 
-    while (true) {
-        double analogLeft = Control::getAnalog(E_CONTROLLER_ANALOG_LEFT_Y);
-        double analogRight = Control::getAnalog(E_CONTROLLER_ANALOG_RIGHT_Y);
+    // bool isEnabled = false;
+    // effectors.disablePiston();
 
-        double l = odometery.getLeftRevs();
-        double r = odometery.getRightRevs();
-        Console::printBrain(1, "left %.3f right %.3f", l, r);
+    // while (true) {
+    //     double analogLeft = Control::getAnalog(E_CONTROLLER_ANALOG_LEFT_Y);
+    //     double analogRight = Control::getAnalog(E_CONTROLLER_ANALOG_RIGHT_Y);
 
-        drive.moveTank(analogLeft, analogRight);
+    //     double l = odometery.getLeftRevs();
+    //     double r = odometery.getRightRevs();
+    //     Console::printBrain(1, "left %.3f right %.3f", l, r);
 
-        if (Control::getButtonPressed(E_CONTROLLER_DIGITAL_L1)) {
-            effectors.shoot();
-        }
+    //     drive.moveTank(analogLeft, analogRight);
 
-        if (Control::getButtonPressed(E_CONTROLLER_DIGITAL_R1)) {
-            effectors.intake(127);
-        }
-        else if (Control::getButtonPressed(E_CONTROLLER_DIGITAL_R2)) {
-            effectors.outtake(127);
-        }
-        else {
-            effectors.stopIntake();
-        }
+    //     if (Control::getButtonPressed(E_CONTROLLER_DIGITAL_L1)) {
+    //         effectors.shoot();
+    //     }
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_UP)) {
-            isEnabled = !isEnabled;
-            if (isEnabled) {
-                Control::printController(0, "Piston Enabled  ");
-                effectors.enablePiston();
-            } else {
-                Control::printController(0, "Piston Disabled");
-                effectors.disablePiston();
-            }
-        }
+    //     if (Control::getButtonPressed(E_CONTROLLER_DIGITAL_R1)) {
+    //         effectors.intake(127);
+    //     }
+    //     else if (Control::getButtonPressed(E_CONTROLLER_DIGITAL_R2)) {
+    //         effectors.outtake(127);
+    //     }
+    //     else {
+    //         effectors.stopIntake();
+    //     }
 
-        effectors.stepCataReset();
+    //     if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_UP)) {
+    //         isEnabled = !isEnabled;
+    //         if (isEnabled) {
+    //             Control::printController(0, "Piston Enabled  ");
+    //             effectors.enablePiston();
+    //         } else {
+    //             Control::printController(0, "Piston Disabled");
+    //             effectors.disablePiston();
+    //         }
+    //     }
 
-        Console::printBrain(0, odometery.getPos(), "Pos");
+    //     if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+    //         effectors.expand();
+    //     }
+
+    //     if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+    //         effectors.expand(false);
+    //     }
+
+    //     effectors.stepCataReset();
+
+    //     Console::printBrain(0, odometery.getPos(), "Pos");
         
-        pros::delay(10);
-    }
+    //     pros::delay(10);
+    // }
+
+    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+    Routes::left();
 }

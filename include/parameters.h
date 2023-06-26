@@ -63,6 +63,9 @@ extern Drive drive;
 
 #define LIMITSWITCH         'A'
 
+#define EXPANSIONONE        'C'
+#define EXPANSIONTWO        'D'
+
 class Effectors;
 extern Effectors effectors;
 
