@@ -23,20 +23,21 @@ void Routes::left() {
     effectors.delay(50_ms);
     effectors.stopIntake();
 
-    drive.setToleranceParams(std::nullopt, std::nullopt, 5_s);
 
     drive.goBackward(6_in);
 
-    drive.resetToleranceParams();
     
     // go to middle point
     drive.turnLeft(130_deg, {{0, 0.75}});
     
+    drive.setToleranceParams(std::nullopt, std::nullopt, 3_s);
+
     drive.goForward(2.6_tile, {{0, 1}});
     
+    drive.resetToleranceParams();
     
     // // turn to goal and shoot
-    drive.turnRight(90_deg);
+    drive.turnRight(85_deg);
     effectors.enablePiston();
     drive.goBackward(3_in, {}, {{0.5, [](){
         effectors.shoot();
@@ -45,12 +46,29 @@ void Routes::left() {
     effectors.delay(100_ms);
     effectors.disablePiston();
 
+    drive.goForward(5_in);
+    drive.turnLeft(83_deg);
+    drive.setToleranceParams(std::nullopt, std::nullopt, 3_s);
+    drive.goForward(2.55_tile, {{0, 1}});
+    drive.resetToleranceParams();
+
+    drive.turnRight(40_deg);
+    
+
+    drive.setToleranceParams(std::nullopt, std::nullopt, 2_s);
+    drive.goForward(5_in, {{0, 0.75}} );
+    drive.resetToleranceParams();
+
+    effectors.outtake();
+    effectors.delay(200_ms);
+    effectors.stopIntake();
+
     while (true) {
         effectors.stepCataReset();
         pros::delay(10);
         if (effectors.shouldReset == false) break;
     }
-    
+
     // // go to other roller
     // drive.faceToPoint({108_in, 12_in}, false);
     // drive.goToPoint({108_in, 12_in}, false);
