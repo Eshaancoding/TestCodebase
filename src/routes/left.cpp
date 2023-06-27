@@ -46,8 +46,8 @@ void Routes::left() {
     effectors.delay(100_ms);
     effectors.disablePiston();
 
-    drive.goForward(5_in);
-    drive.turnLeft(83_deg);
+    drive.goForward(7_in);
+    drive.turnLeft(83_deg, {{0, 0.75}});
     drive.setToleranceParams(std::nullopt, std::nullopt, 3_s);
     drive.goForward(2.55_tile, {{0, 1}});
     drive.resetToleranceParams();
@@ -55,12 +55,12 @@ void Routes::left() {
     drive.turnRight(40_deg);
     
 
-    drive.setToleranceParams(std::nullopt, std::nullopt, 2_s);
-    drive.goForward(5_in, {{0, 0.75}} );
+    drive.setToleranceParams(std::nullopt, std::nullopt, 1.5_s);
+    drive.goForward(7_in, {{0, 0.75}} );
     drive.resetToleranceParams();
 
     effectors.outtake();
-    effectors.delay(200_ms);
+    effectors.delay(350_ms);
     effectors.stopIntake();
 
     while (true) {
