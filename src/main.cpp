@@ -44,12 +44,13 @@ void initialize() {
 void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-
-    Routes::left();
 };
 
 // Operation control (driver)
 void opcontrol() {
+    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+
     bool isEnabled = false;
     effectors.disablePiston();
 

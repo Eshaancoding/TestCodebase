@@ -43,7 +43,7 @@ void Routes::left() {
     drive.goForward(4_in, {{0, 1}}, {{0.5, [](){
         effectors.outtake();
     } }} );
-    effectors.delay(50_ms);
+    effectors.delay(100_ms);
     effectors.stopIntake();
     drive.goBackward(6_in);
     
@@ -77,8 +77,14 @@ void Routes::left() {
 
     // spin the roller
     effectors.outtake();
-    effectors.delay(350_ms);
+    effectors.delay(550_ms);
     effectors.stopIntake();
+
+    // expand
+    drive.goBackward(4_in);
+    drive.turnLeft(45_deg);
+    effectors.expand();
+    effectors.expand(false);
 
     // cata reset
     while (true) {
