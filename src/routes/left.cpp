@@ -40,9 +40,8 @@ void Routes::left() {
     }
 
     // spin roller    
-    drive.goForward(4_in, {{0, 1}}, {{0.5, [](){
-        effectors.outtake();
-    } }} );
+    drive.goForward(4_in);
+    effectors.outtake();
     effectors.delay(300_ms);
     effectors.stopIntake();
     drive.goBackward(8_in);
