@@ -3,5 +3,5 @@
 
 void Routes::test() {
     drive.goForward(1_in);
-    effectors.delay(500_ms);
+    //effectors.delay(500_ms);
 }
