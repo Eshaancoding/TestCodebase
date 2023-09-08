@@ -42,10 +42,10 @@ extern PID HeadingPID;  // declared in parameters.cpp
 // ============================================================
 
 // drive
-#define LEFT_TOP_MOTOR     17 
-#define LEFT_BOTTOM_MOTOR  1
-#define RIGHT_TOP_MOTOR      8
-#define RIGHT_BOTTOM_MOTOR   3
+#define LEFT_TOP_MOTOR     11
+#define LEFT_BOTTOM_MOTOR  20
+#define RIGHT_TOP_MOTOR      1
+#define RIGHT_BOTTOM_MOTOR   10
 
 extern MotorGroup leftMotorGroup;
 extern MotorGroup rightMotorGroup;

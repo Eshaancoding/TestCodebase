@@ -69,5 +69,5 @@ void autonomous() {
 void opcontrol() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-    Routes::left();
+    // Routes::left();
 }
