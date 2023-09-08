@@ -41,33 +41,47 @@ void initialize() {
 
 // Autonomous Mode
 void autonomous() {
-    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-    Effectors eff;
-
-    while (true) {
-        // if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) {
-        //     eff.shoot();
-        // }
-        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_A)) {
-            eff.cataOne.move_velocity(-600);
-            eff.cataTwo.move_velocity(600);
-        }
-        else {
-            eff.cataOne.move_velocity(0);
-            eff.cataTwo.move_velocity(0);
-        }
-        Control::printController(0, "Val: %f", (float)eff.rotSensor.get_angle());
-        
-
-        pros::delay(10);
-    }
-
 };
 
 // Operation control (driver)
 void opcontrol() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-    // Routes::left();
+    Effectors eff;
+    
+    Console::printBrain(1, "Running");
+    okapi::Controller control;
+
+    while (true) {
+        
+        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_L1)) {
+            eff.intake();
+        }
+        else {
+            eff.resetIntake();
+        }
+
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) {
+            eff.shoot();
+        }
+        eff.reset();
+        Console::printBrain(3, "Get data: %d", (int)control.getDigital(okapi::ControllerDigital::A));
+        
+        // if (control.getDigital(okapi::ControllerDigital::A)) {
+        //     Console::printBrain(0, "Digital press");
+        //     eff.cataOne.move_velocity(-200);
+        //     eff.cataTwo.move_velocity(200);
+        // }
+        // else {
+        //     Console::printBrain(0, "Digital not press");
+        //     eff.cataOne.move_velocity(0);
+        //     eff.cataTwo.move_velocity(0);
+        // }
+        Control::printController(0, "Val: %f", (float)eff.rotSensor.get_angle());
+        
+
+        pros::delay(10);
+    }
+
+
 }
