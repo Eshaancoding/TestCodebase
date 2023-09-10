@@ -45,27 +45,30 @@ void autonomous() {
 
 // Operation control (driver)
 void opcontrol() {
-    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-    Effectors eff;
+    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+    Drive drive;
     
     Console::printBrain(1, "Running");
     okapi::Controller control;
 
     while (true) {
+        double heading = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+        double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         
-        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_L1)) {
-            eff.intake();
-        }
-        else {
-            eff.resetIntake();
-        }
+        drive.moveArcade(distance, heading);
+        
+        // if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_L1)) {
+        //     eff.intake();
+        // }
+        // else {
+        //     eff.resetIntake();
+        // }
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) {
-            eff.shoot();
-        }
-        eff.reset();
-        Console::printBrain(3, "Get data: %d", (int)control.getDigital(okapi::ControllerDigital::A));
+        // if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) {
+        //     eff.shoot();
+        // }
+        // eff.reset();
         
         // if (control.getDigital(okapi::ControllerDigital::A)) {
         //     Console::printBrain(0, "Digital press");
@@ -77,7 +80,6 @@ void opcontrol() {
         //     eff.cataOne.move_velocity(0);
         //     eff.cataTwo.move_velocity(0);
         // }
-        Control::printController(0, "Val: %f", (float)eff.rotSensor.get_angle());
         
 
         pros::delay(10);
