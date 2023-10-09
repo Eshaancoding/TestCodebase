@@ -2,11 +2,11 @@
 
 void Effectors::reset () {
     if (state == CataState::RESETTING) {
-        cataOne.move_velocity(-100);
-        cataTwo.move_velocity(100);
+        cataOne.move_velocity(100);
+        cataTwo.move_velocity(-100);
         pros::delay(100);
-        while (rotSensor.get_angle() > 4900) {
-            pros::delay(10);
+        while (rotSensor.get_angle() > 2335) {
+            pros::delay(5);
         }
         state = CataState::SHOOTING;
         cataOne.move_velocity(0);
@@ -16,9 +16,9 @@ void Effectors::reset () {
 
 void Effectors::shoot () {
     if (state == CataState::SHOOTING) {
-        cataOne.move_velocity(-100);
-        cataTwo.move_velocity(100);
-        pros::delay(100);
+        cataOne.move_velocity(100);
+        cataTwo.move_velocity(-100);
+        pros::delay(300);
         state = CataState::RESETTING;
     }
 }

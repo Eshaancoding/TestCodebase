@@ -51,12 +51,20 @@ void opcontrol() {
     
     Console::printBrain(1, "Running");
     okapi::Controller control;
+    Effectors eff;
 
     while (true) {
         double heading = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
         double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         
         drive.moveArcade(distance, heading);
+        
+        Console::printBrain(2, (double)eff.rotSensor.get_angle(), "Rotation sensor value");
+        
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B)) {
+            eff.piston.set_value((int)!eff.isActive);
+            eff.isActive = !eff.isActive;
+        }
         
         // if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_L1)) {
         //     eff.intake();
@@ -65,10 +73,10 @@ void opcontrol() {
         //     eff.resetIntake();
         // }
 
-        // if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) {
-        //     eff.shoot();
-        // }
-        // eff.reset();
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) {
+            eff.shoot();
+        }
+        eff.reset();
         
         // if (control.getDigital(okapi::ControllerDigital::A)) {
         //     Console::printBrain(0, "Digital press");
