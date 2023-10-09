@@ -5,8 +5,9 @@ void Effectors::reset () {
         cataOne.move_velocity(100);
         cataTwo.move_velocity(-100);
         pros::delay(100);
-        while (rotSensor.get_angle() > 2335) {
+        while (rotSensor.get_angle() > 15150) {
             pros::delay(5);
+            Console::printBrain(4, (double)rotSensor.get_angle(), "Adi shenagains:");
         }
         state = CataState::SHOOTING;
         cataOne.move_velocity(0);
