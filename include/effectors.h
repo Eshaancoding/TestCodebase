@@ -32,7 +32,12 @@ public:
         isActive(false),
         rotSensor(3),
         state (CataState::RESETTING)
-    { rotSensor.set_position(0); };
+    { 
+        rotSensor.set_position(0); 
+        cataOne.set_brake_mode(pros::motor_brake_mode_e_t::E_MOTOR_BRAKE_BRAKE);
+        cataTwo.set_brake_mode(pros::motor_brake_mode_e_t::E_MOTOR_BRAKE_BRAKE);
+        
+    };
     ~Effectors() = default;
     void shoot ();
     void intake ();
