@@ -22,28 +22,37 @@ public:
     CataState state;
 
     pros::ADIDigitalOut piston;
-    bool isActive;
+    bool wingsActive;
+    bool intakeActive;
 
     Effectors () : 
         cataOne(8, pros::E_MOTOR_GEAR_RED), 
         cataTwo(13, pros::E_MOTOR_GEAR_RED), 
         intakeMotor(4, pros::E_MOTOR_GEAR_BLUE),
         piston('A'),
-        isActive(false),
         rotSensor(3),
-        state (CataState::RESETTING)
+        wingsActive(false),
+        intakeActive(false),
+        state(CataState::RESETTING)
     { 
+        
         rotSensor.set_position(0); 
         cataOne.set_brake_mode(pros::motor_brake_mode_e_t::E_MOTOR_BRAKE_BRAKE);
         cataTwo.set_brake_mode(pros::motor_brake_mode_e_t::E_MOTOR_BRAKE_BRAKE);
         
     };
     ~Effectors() = default;
-    void shoot ();
-    void intake ();
-    void resetIntake ();
-    void reset ();
+    // cata
+    void shootCata ();
+    void resetCata ();
+
+    // wings
+    void wingsToggle ();
+
+    // intake
+    void intakeToggle ();
+
+    
 };
 
 #endif
-// clockwise pos 

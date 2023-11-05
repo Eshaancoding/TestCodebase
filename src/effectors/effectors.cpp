@@ -1,6 +1,7 @@
 #include "effectors.h"
 
-void Effectors::reset () {
+// CATAPAULT
+void Effectors::resetCata () {
     if (state == CataState::RESETTING) {
         cataOne.move_velocity(100);
         cataTwo.move_velocity(-100);
@@ -15,7 +16,7 @@ void Effectors::reset () {
     }
 }
 
-void Effectors::shoot () {
+void Effectors::shootCata () {
     if (state == CataState::SHOOTING) {
         cataOne.move_velocity(100);
         cataTwo.move_velocity(-100);
@@ -24,10 +25,14 @@ void Effectors::shoot () {
     }
 }
 
-void Effectors::intake () {
-    intakeMotor.move_velocity(-600);
-}
-void Effectors::resetIntake () {
-    intakeMotor.move_velocity(0);
+// WINGS
+void Effectors::wingsToggle () {
+    wingsActive = !wingsActive;
+    piston.set_value(wingsActive); // there's a get value here in piston
 }
 
+// INTAKE
+void Effectors::intakeToggle () {
+    intakeActive = !intakeActive;
+    intakeMotor.move_velocity(intakeActive ? -600 : 0);
+}
