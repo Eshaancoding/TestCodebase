@@ -33,6 +33,6 @@ void Effectors::wingsToggle () {
 void Effectors::intakeToggle () {
     intakeActive = !intakeActive;
     
-    intakeMotor.move_velocity(intakeActive ? 600 : 0);
+    intakeMotor.move_velocity(intakeActive ? -600 : 0);
     intakeMotorTwo.move_velocity(intakeActive ? 600 : 0);
 }
