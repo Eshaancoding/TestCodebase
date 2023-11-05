@@ -6,10 +6,8 @@ void Effectors::resetCata () {
         cataOne.move_velocity(100);
         cataTwo.move_velocity(-100);
         pros::delay(100);
-        while (rotSensor.get_angle() > 15150) {
+        while (rotSensor.get_angle() > 15150)
             pros::delay(5);
-            Console::printBrain(4, (double)rotSensor.get_angle(), "Adi shenagains:");
-        }
         state = CataState::SHOOTING;
         cataOne.move_velocity(0);
         cataTwo.move_velocity(0);
@@ -34,5 +32,7 @@ void Effectors::wingsToggle () {
 // INTAKE
 void Effectors::intakeToggle () {
     intakeActive = !intakeActive;
-    intakeMotor.move_velocity(intakeActive ? -600 : 0);
+    
+    intakeMotor.move_velocity(intakeActive ? 600 : 0);
+    intakeMotorTwo.move_velocity(intakeActive ? 600 : 0);
 }

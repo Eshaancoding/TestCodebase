@@ -42,30 +42,18 @@ extern PID HeadingPID;  // declared in parameters.cpp
 // ============================================================
 
 // drive
-#define LEFT_TOP_MOTOR     11
-#define LEFT_BOTTOM_MOTOR  20
-#define RIGHT_TOP_MOTOR      1
-#define RIGHT_BOTTOM_MOTOR   10
+#define LEFT_TOP_MOTOR     7
+#define LEFT_BOTTOM_MOTOR  6
+#define RIGHT_TOP_MOTOR      12
+#define RIGHT_BOTTOM_MOTOR   11
 
-extern MotorGroup leftMotorGroup;
-extern MotorGroup rightMotorGroup;
+extern okapi::MotorGroup leftMotorGroup;
+extern okapi::MotorGroup rightMotorGroup;
 
 class Drive; // will be defined later
 extern Drive drive;
 
 // effectors
-#define CATA_MOTOR          9
-#define CATA_MOTOR_TWO      10
-#define INTAKE_MOTOR        6
-#define INTAKE_MOTOR_TWO    5
-
-#define PISTON_ENABLE       'B'
-
-#define LIMITSWITCH         'A'
-
-#define EXPANSIONONE        'C'
-#define EXPANSIONTWO        'D'
-
 class Effectors;
 extern Effectors effectors;
 

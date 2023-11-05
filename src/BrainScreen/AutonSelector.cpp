@@ -2,6 +2,7 @@
 #include "display/lv_conf.h"
 #include "display/lv_core/lv_obj.h"
 #include "display/lv_objx/lv_label.h"
+#include "logo.c"
 
 namespace AutonSelector {
     bool selectedSide = false;
@@ -100,8 +101,8 @@ namespace AutonSelector {
             isLeft ? LEFT : RIGHT, 
             isRisky ? RISKY : SAFE, 
             !isDonePrompt ? NOTREADY : 
-            shouldTest ? TEST : 
-            ROUTE};
+            shouldTest ? TEST : ROUTE
+        };
     }
 
     void init () {
@@ -112,7 +113,12 @@ namespace AutonSelector {
         riskyButton = createButton("Risky", 25, 100, 100, 50);
         nonRiskyButton = createButton("Not Risky", 150, 100, 100, 50);
         testButton = createButton("Test", 25, 175, 225, 50);
-        goButton = createButton("Confirm", 270, 25, 190, 200, false);
+        goButton = createButton("Confirm", 270, 175, 190, 50, false);
+
+        // LV_IMG_DECLARE(logo);
+
+        // lv_obj_t* img = lv_img_create(lv_scr_act(), NULL);
+        // lv_img_set_src(img, &logo);
 
         lv_btn_set_action(leftButton, LV_BTN_ACTION_CLICK, setLeft);
         lv_btn_set_action(rightButton, LV_BTN_ACTION_CLICK, setRight);
@@ -130,8 +136,4 @@ namespace AutonSelector {
         newStyle->body.radius = 35;
         lv_btn_set_style(goButton, LV_BTN_STYLE_REL, newStyle);
     } 
-
-
-    
-
 }

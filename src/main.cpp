@@ -41,15 +41,8 @@ void initialize() {
 
 // Autonomous Mode
 void autonomous() {
+
 };
-
-// Operation control (driver)
-
-// void opcontrol () {
-//     pros::Motor 
-// }
-
-// Pistons A - B
 
 void opcontrol() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
@@ -59,16 +52,27 @@ void opcontrol() {
     okapi::Controller control;
     Effectors eff;
 
+    // auto state = waitForValidState();
+    // Console::printBrain(0, "Starting!");
+
+    int i = 0;
     while (true) {
+
+        i += 1;
         double heading = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
         double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+
+        Console::printBrain(0, (double)heading, "Heading Contr: ");
+        Console::printBrain(0, (double)distance, "Distance Contr: ");
 
         drive.moveArcade(distance, heading);
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) eff.wingsToggle();
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B)) eff.intakeToggle();
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) eff.shootCata();
-        eff.resetCata();
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B)) {
+            eff.intakeToggle();
+        }
+        // if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) eff.shootCata();
+        // eff.resetCata();
 
         pros::delay(10);
     }

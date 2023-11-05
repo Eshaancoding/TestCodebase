@@ -18,6 +18,7 @@ public:
     pros::Motor cataOne;
     pros::Motor cataTwo;
     pros::Motor intakeMotor;
+    pros::Motor intakeMotorTwo;
     pros::Rotation rotSensor;
     CataState state;
 
@@ -26,9 +27,10 @@ public:
     bool intakeActive;
 
     Effectors () : 
-        cataOne(8, pros::E_MOTOR_GEAR_RED), 
-        cataTwo(13, pros::E_MOTOR_GEAR_RED), 
-        intakeMotor(4, pros::E_MOTOR_GEAR_BLUE),
+        cataOne(1, pros::E_MOTOR_GEAR_RED),
+        cataTwo(2, pros::E_MOTOR_GEAR_RED), 
+        intakeMotor(9, pros::E_MOTOR_GEAR_BLUE),    
+        intakeMotorTwo(10, pros::E_MOTOR_GEAR_BLUE),
         piston('A'),
         rotSensor(3),
         wingsActive(false),
@@ -51,8 +53,6 @@ public:
 
     // intake
     void intakeToggle ();
-
-    
 };
 
 #endif
