@@ -3,14 +3,14 @@
 // CATAPAULT
 void Effectors::resetCata () {
     if (state == CataState::RESETTING) {
-        cataOne.move_velocity(100);
-        cataTwo.move_velocity(-100);
-        pros::delay(100);
-        while (rotSensor.get_angle() > 15150)
-            pros::delay(5);
-        state = CataState::SHOOTING;
-        cataOne.move_velocity(0);
-        cataTwo.move_velocity(0);
+        if (rotSensor.get_angle() > 15000) {
+            cataOne.move_velocity(100);
+            cataTwo.move_velocity(-100);
+        } else {
+            state = CataState::SHOOTING;
+            cataOne.move_velocity(0);
+            cataTwo.move_velocity(0);
+        }
     }
 }
 

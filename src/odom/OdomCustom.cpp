@@ -6,86 +6,52 @@
 #include "okapi/impl/device/rotarysensor/adiEncoder.hpp"
 #include "parameters.h"
 #include "OdomOkapi.h"
+#include "Console.h"
 
-void OdomCustom::MainLoop () {
-    // get sensor values and diff
-    // double le = leftEncoder->get();
-    // double re = rightEncoder->get();
+#define PI 3.14159265
+#define WHEEL_DIA 2.763715082
 
-    // // convert sensor values to inches
-    // double leftDeltaLength = (le - previousLeftEncoder)/360.0 * WHEEL_DIM.convert(okapi::inch) * pi;
-    // double rightDeltaLength = (re - previousRightEncoder)/360.0 * WHEEL_DIM.convert(okapi::inch) * pi;
+namespace OdomCustom {
+    std::atomic<okapi::QAngle> currentAngle = 0_deg;
+    std::atomic<okapi::QLength> xPos = 0_in;
+    std::atomic<okapi::QLength> yPos = 0_in;
+    okapi::RotationSensor enc (16);
+    double prevEnc = 0.0;
+    int index = 0;
 
-    // // delta theta
-    // QAngle deltaTheta = (leftDeltaLength - rightDeltaLength) / (WHEEL_TRACK.convert(okapi::inch)) * okapi::radian;
-    
-    // // mid delta
-    // double midDeltaLength = 0;
-    // if (middleEncoder != nullptr) {
-    //     double me = middleEncoder->get();
-    //     midDeltaLength = (me - previousMidEncoder)/360.0 * WHEEL_DIM.convert(okapi::inch) * pi;
-    //     previousMidEncoder = me;
+    void MainLoop () {
+        enc.reset();
+        pros::delay(2000);
+        double offsetEnc = enc.get();
 
-    //     midDeltaLength -= (deltaTheta.convert(okapi::radian) * TRACKING_WHEEL_BACK.convert(okapi::inch)); // correct for angle change
-    // }
+        while (true) {
+            double currentEnc = (enc.get() - offsetEnc)/360;            
+            double diff = currentEnc - prevEnc;
 
-    // // apply xpos & ypos
-    // double forwardAvg = (leftDeltaLength + rightDeltaLength) / 2;
-    // xPos += ((forwardAvg * okapi::cos(currentAngle)) - (midDeltaLength * okapi::sin(currentAngle))) * okapi::inch;
-    // yPos += ((forwardAvg * okapi::sin(currentAngle)) + (midDeltaLength * okapi::cos(currentAngle))) * okapi::inch;
+            Console::printBrain(0, currentEnc, "Curr: ");
+            Console::printBrain(1, prevEnc, "Prev: ");
+            Console::printBrain(2, diff, "Diff: ");
+            Console::printBrain(3, xPos, "Inches: ");
 
-    // // apply delta
-    // currentAngle += deltaTheta;
-    // currentAngle = OdomMath::constrainAngle180(currentAngle);
+            // this is... kinda temporary
+            xPos = xPos.load() + ((diff * PI * WHEEL_DIA) * 1_in);
 
-    // // set previous encoder value
-    // previousLeftEncoder = le;
-    // previousRightEncoder = re;
-}
+            prevEnc = currentEnc; 
+            pros::delay(50);
 
-OdomCustom::OdomCustom () {
-    xPos = 0_in;
-    yPos = 0_in; 
-    currentAngle = 0_deg;
-
-    leftEncoder = new okapi::ADIEncoder({LEFT_TRACKING_WHEEL_TOP, LEFT_TRACKING_WHEEL_BOTTOM});
-    rightEncoder = new okapi::ADIEncoder({RIGHT_TRACKING_WHEEL_TOP, RIGHT_TRACKING_WHEEL_BOTTOM});
-
-    if (MID_TRACKING_WHEEL_BOTTOM != ' ' && MID_TRACKING_WHEEL_TOP != ' ') {
-        middleEncoder = new okapi::ADIEncoder({MID_TRACKING_WHEEL_TOP, MID_TRACKING_WHEEL_BOTTOM});
+            index += 1;
+        }
     }
-}
 
-okapi::OdomState OdomCustom::getPos() { 
-    return {xPos, yPos, currentAngle};
-}
-
-void OdomCustom::setPos(okapi::OdomState state) {
-    xPos = state.x;
-    yPos = state.y;
-    currentAngle = OdomMath::constrainAngle180(state.theta);
-
-    leftEncoder->reset();
-    rightEncoder->reset();
-    previousLeftEncoder = 0;
-    previousRightEncoder = 0;
-
-    if (middleEncoder != nullptr) {
-        middleEncoder->reset();
-        previousMidEncoder = 0;
+    // get position
+    okapi::OdomState getPos () {
+        return {xPos.load(), yPos.load(), currentAngle.load()};
     }
-}
 
-double OdomCustom :: getLeftRevs () {
-    return leftEncoder->get() / 360.0;
-}
-
-double OdomCustom :: getRightRevs () {
-    return rightEncoder->get() / 360.0; 
-}
-
-double OdomCustom :: getMiddleRevs () {
-    if (MID_TRACKING_WHEEL_BOTTOM != ' ' && MID_TRACKING_WHEEL_TOP != ' ') {
-        return middleEncoder->get() / 360.0;
-    } else return 0.0;
-}
+    // set position
+    void setPos (okapi::OdomState state) {
+        xPos = state.x;
+        yPos = state.y;
+        currentAngle = state.theta;
+    }
+};

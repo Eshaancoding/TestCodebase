@@ -6,6 +6,7 @@
 #include "effectors.h"
 #include "drive.h"
 #include "controller.h"
+#include "odom/OdomCustom.h"
 #include "pros/misc.h"
 #include "routes.h"
 
@@ -37,11 +38,12 @@ AutonSelector::State waitForValidState () {
 // When robot initializes. 
 void initialize() {
     // AutonSelector::init(); 
+    Task task (OdomCustom::MainLoop);
 }
 
 // Autonomous Mode
 void autonomous() {
-
+    auto state = waitForValidState();
 };
 
 void opcontrol() {
@@ -52,27 +54,31 @@ void opcontrol() {
     okapi::Controller control;
     Effectors eff;
 
-    // auto state = waitForValidState();
-    // Console::printBrain(0, "Starting!");
+    bool isReversed = false;
 
     int i = 0;
     while (true) {
 
         i += 1;
         double heading = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+        heading *= 0.5; // adi sensitivity
         double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-
-        Console::printBrain(0, (double)heading, "Heading Contr: ");
-        Console::printBrain(0, (double)distance, "Distance Contr: ");
+        distance *= isReversed ? -1 : 1;
 
         drive.moveArcade(distance, heading);
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) eff.wingsToggle();
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+            isReversed = !isReversed;
+        }
+
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) {
+            eff.wingsToggle();
+        }
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B)) {
             eff.intakeToggle();
         }
-        // if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) eff.shootCata();
-        // eff.resetCata();
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) eff.shootCata();
+        eff.resetCata();
 
         pros::delay(10);
     }

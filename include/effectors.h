@@ -27,12 +27,12 @@ public:
     bool intakeActive;
 
     Effectors () : 
-        cataOne(1, pros::E_MOTOR_GEAR_RED),
-        cataTwo(2, pros::E_MOTOR_GEAR_RED), 
-        intakeMotor(9, pros::E_MOTOR_GEAR_BLUE),    
-        intakeMotorTwo(10, pros::E_MOTOR_GEAR_BLUE),
+        cataOne(2, pros::E_MOTOR_GEAR_RED),
+        cataTwo(19, pros::E_MOTOR_GEAR_RED), 
+        intakeMotor(12, pros::E_MOTOR_GEAR_BLUE),    
+        intakeMotorTwo(18, pros::E_MOTOR_GEAR_BLUE),
         piston('A'),
-        rotSensor(3),
+        rotSensor(15),
         wingsActive(false),
         intakeActive(false),
         state(CataState::RESETTING)
