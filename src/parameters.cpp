@@ -27,14 +27,11 @@ PID HeadingPID = PID(
     Heading_FACTOR
 );
 
-
+// gearing and brake mode are set in initialize
 MotorGroup leftMotorGroup = okapi::MotorGroup({-LEFT_TOP_MOTOR, -LEFT_BOTTOM_MOTOR});
 MotorGroup rightMotorGroup = okapi::MotorGroup({RIGHT_TOP_MOTOR, RIGHT_BOTTOM_MOTOR});
-
 
 // *********** FOR TESTING PURPOSES ***********
 Drive drive = Drive();
 
 Effectors effectors = Effectors();
-
-OdomSim simulation = OdomSim();

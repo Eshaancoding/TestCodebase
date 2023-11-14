@@ -15,7 +15,6 @@
 
 #include "pid.h"
 #include "Odom/OdomOkapi.h"
-#include "Odom/OdomSim.h"
 
 // ==========================================================
 // =========================== PID ==========================
@@ -94,20 +93,5 @@ extern OdomOkapi odometery;
 #define DISTANCE_TOLERANCE 1_in 
 #define ANGLE_TOLERANCE 1_deg
 #define TIME_TOLERANCE 300_s // ADJUST THIS A LITTLE LESS
-// =============================================================
-// ====================== Odom Simulation ======================
-// =============================================================
-
-#define ENABLE_ODOMSIM false // WILL DISABLE ACTUAL MOVEMENT FORWARD :O
-
-#define ACC 3_in
-#define MAX_VEL 10_in
-#define DECEL_CONSTANT 0.3
-
-#define ACC_ANG 2_deg
-#define MAX_ACC_ANG 30_deg
-#define ANGLE_DECEL_CONSTANT 0.3
-
-extern OdomSim simulation;
 
 #endif

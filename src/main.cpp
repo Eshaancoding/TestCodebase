@@ -37,7 +37,11 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    // AutonSelector::init(); 
+    leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
+    rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
+    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+    OdomCustom::init(); 
     Task task (OdomCustom::MainLoop);
 }
 
@@ -47,8 +51,6 @@ void autonomous() {
 };
 
 void opcontrol() {
-    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
-    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
     Drive drive;
     
     okapi::Controller control;
@@ -69,7 +71,6 @@ void opcontrol() {
         i += 1;
 
         double heading = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-        heading *= 0.5; // adi sensitivity
         double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         distance *= isReversed ? -1 : 1;
         drive.moveArcade(distance, heading);
@@ -78,17 +79,10 @@ void opcontrol() {
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
         // drive.moveTank(left, right);
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-            isReversed = !isReversed;
-        }
-
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) {
-            eff.wingsToggle();
-        }
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B)) {
-            eff.intakeToggle();
-        }
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) eff.shootCata();
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) isReversed = !isReversed;
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A))   eff.wingsToggle(); 
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B))   eff.intakeToggle();
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2))  eff.shootCata();
         eff.resetCata();
 
         pros::delay(10);

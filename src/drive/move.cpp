@@ -32,15 +32,11 @@ void Drive::move (
     HeadingPID.reset();
 
     // get starting position
-    okapi::OdomState startingPos;
-    if (ENABLE_ODOMSIM) startingPos = simulation.getPos();
-    else                startingPos = OdomCustom::getPos();
+    okapi::OdomState startingPos = OdomCustom::getPos();
 
     // get target position and distance/angle error 
     auto targetPos = isRelative ? add(startingPos, point) : point;
-    
     QLength distErr = Math::distance(startingPos, targetPos);
-
     QAngle angleErr = Math::anglePoint(startingPos, targetPos, distanceActivated);
 
     // record original distance and angle error as well as time
@@ -54,17 +50,16 @@ void Drive::move (
     distanceAvg.step(distErr.convert(inch));
     headingAvg.step(angleErr.convert(radian));
 
-    // record previous factors + clear line
-    double prevDistanceFact = DistancePID.getFactor();
-    double prevHeadingFact = HeadingPID.getFactor();
-
-    if (ODOM_DEBUG) Console::printBrain(4, "");
+    // record previous factors 
+    double prevDistanceFact = DistancePID.getFactor(); // get the previous factor for setting at the end
+    double prevHeadingFact = HeadingPID.getFactor();   // get the previous factor for setting at the end
+    if (ODOM_DEBUG) Console::printBrain(4, ""); // clear line
 
     // =================== Main loop ==================
 
     while (true) { 
 
-        // determine which percent change (used for callback map and factor mapto use; by default distance
+        // determine which percent change (used for callback map and factor map to use; by default uses distance
         double percentChange;
         if (distanceActivated) 
             percentChange = abs(distErr.convert(inch)-origDistErr.convert(inch))/(abs(origDistErr.convert(inch)));
@@ -105,14 +100,12 @@ void Drive::move (
         if (distanceActivated) distancePower = DistancePID.step(distErr.convert(inch));
         if (headingActivated)  headingPower  = HeadingPID.step(angleErr.convert(radian));
 
-        // add to sim
-        if (ENABLE_ODOMSIM) simulation.step(distancePower, headingPower);
-        else                Drive::moveArcade(distancePower, -headingPower);
+        // Actually drive
+        Drive::moveArcade(distancePower, -headingPower);
         
         // update error
         okapi::OdomState newPos;
-        if (ENABLE_ODOMSIM) newPos = simulation.getPos();
-        else                newPos = OdomCustom::getPos();
+        newPos = OdomCustom::getPos();
         distErr = Math::distance(newPos, targetPos);
         angleErr = Math::anglePoint(newPos, targetPos, distanceActivated);
 
@@ -148,7 +141,7 @@ void Drive::move (
     HeadingPID.setFactor(prevHeadingFact);
     DistancePID.setFactor(prevDistanceFact);
 
-    if (!ENABLE_ODOMSIM) Drive::moveArcade(0, 0);
+    Drive::moveArcade(0, 0); // reset!
 
     pros::delay(100);
 

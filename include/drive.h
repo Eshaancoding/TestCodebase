@@ -47,8 +47,8 @@ public:
      */
     void moveArcade (double distance, double heading) {
         distance *= 600; heading *= 400;
-        leftMotorGroup.moveVelocity(distance + heading);    // maybe use voltage? 
-        rightMotorGroup.moveVelocity(distance - heading);   // maybe use voltage?
+        leftMotorGroup.moveVelocity(distance + heading);    
+        rightMotorGroup.moveVelocity(distance - heading);   
     }
 
     /**
@@ -59,8 +59,8 @@ public:
      */
     void moveTank (double left, double right) {
         left *= 600; right *= 600;
-        leftMotorGroup.moveVelocity(left);     // maybe use voltage? 
-        rightMotorGroup.moveVelocity(right);   // maybe use voltage?
+        leftMotorGroup.moveVelocity(left);     
+        rightMotorGroup.moveVelocity(right);   
     }
 
     /**

@@ -8,6 +8,7 @@
 using namespace std;
 
 namespace OdomCustom {
+    void init ();
     void MainLoop ();
 
     okapi::OdomState getPos();

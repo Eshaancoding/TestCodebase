@@ -20,19 +20,22 @@ namespace OdomCustom {
     okapi::RotationSensor enc (16);
     double prevAng = 0.0;
     double prevEnc = 0.0;
+    double offsetEnc = 0.0;
+    double offsetIMU = 0.0;
 
-    void MainLoop () {
+    void init () {
         enc.reset();
         imu.calibrate();
-        double offsetEnc = enc.get();
-        double offsetIMU = imu.get() * PI/180;
-    
+        offsetEnc = enc.get();
+        offsetIMU = imu.get() * PI/180;
+    }
+
+    void MainLoop () {
         while (true) {
             // get change in encoder
             double currentEnc = (enc.get() - offsetEnc)/360;            
             double diff = currentEnc - prevEnc;
             diff *= PI * WHEEL_DIA; // convert to inches
-
 
             // get change in angle
             double currentAng = ((imu.get() * PI / 180) - offsetIMU);
@@ -42,12 +45,11 @@ namespace OdomCustom {
             currentAngle = currentAng * okapi::radian;
 
             Console::printBrain(8, OdomCustom::getPos(), "pos: ");
+
             // set previous values
             prevEnc = currentEnc; 
             prevAng = currentAng;
             pros::delay(50);
-
-
         }
 
         /*
@@ -59,50 +61,7 @@ namespace OdomCustom {
         left: negative x
         take into account the 180 thing, angle goes from -180 to 180
         */
-        
-
-        // while (true) {
-        //     // get change in encoder
-        //     double currentEnc = (enc.get() - offsetEnc)/360;            
-        //     double diff = currentEnc - prevEnc;
-        //     diff *= PI * WHEEL_DIA; // convert to inches
-
-        //     // get change in angle
-        //     double currentAng = ((imu.get() * PI / 180) - offsetIMU);
-        //     double diffAng = currentAng - prevAng;            
-            
-        //     // MAKE SURE IT IS IN RADIANS :D
-
-        //     // calculate radius
-        //     double radius = diff / diffAng;            
-
-        //     // find delta x and y
-        //     double deltaXPos = diffAng == 0 ? 0 : (2 * pow(sin(diffAng/2), 2) * radius);
-        //     double deltaYPos = diffAng == 0 ? diff : (2 * sin(diffAng/2) * cos(diffAng/2) * radius);
-
-
-        //     // do relative to absolute coordinate
-        //     // could be reverse counterclockwise to clockwise
-        //     // xPos = ((deltaXPos - xPos.load().convert(okapi::inch)) * cos(diffAng) +  (deltaYPos - yPos.load().convert(okapi::inch)) * sin(diffAng)) * 1_in;
-        //     // yPos = (-(deltaXPos - xPos.load().convert(okapi::inch)) * sin(diffAng) + (deltaYPos - yPos.load().convert(okapi::inch)) * cos(diffAng)) * 1_in;
-        //     yPos = (yPos.load().convert(okapi::inch) + deltaYPos * cos(currentAng)) * 1_in;
-        //     xPos = (xPos.load().convert(okapi::inch) + deltaXPos * sin(currentAng)) * 1_in;
-
-        //     // debug
-        //     Console::printBrain(0, diffAng, "theta delta: ");
-        //     Console::printBrain(1, deltaXPos, "x delta: ");
-        //     Console::printBrain(2, deltaYPos, "y delta: ");
-        //     Console::printBrain(5, currentEnc, "current enc: ");
-        //     Console::printBrain(6, currentAng, "current ang: ");
-
-        //     // set previous values
-        //     prevEnc = currentEnc; 
-        //     prevAng = currentAng;
-        //     pros::delay(50);
-        // }
     }
-
-    // right = clockwise = +
 
     // get position
     okapi::OdomState getPos () {

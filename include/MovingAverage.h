@@ -22,7 +22,9 @@ public:
         if (avgs.size() > n) avgs.erase(avgs.begin());
     }
 
-    double value () { return std::reduce(avgs.begin(), avgs.end()) / avgs.size(); };
+    double value () { 
+        return std::reduce(avgs.begin(), avgs.end()) / avgs.size(); 
+    };
 
 };
 
