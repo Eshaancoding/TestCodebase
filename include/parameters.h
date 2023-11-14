@@ -71,7 +71,7 @@ extern Effectors eff;
 #define Distance_N          25
 #define Heading_N           100
 
-#define COURSE_CORRECTION   false
+#define COURSE_CORRECTION   true
 
 #define DISTANCE_TOLERANCE 1_in 
 #define ANGLE_TOLERANCE 1_deg

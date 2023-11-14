@@ -63,8 +63,8 @@ void opcontrol() {
     // pros::delay(100);
     // drive.goForward(2_tile);
     // drive.goBackward(1_tile);
-    drive.turnRight(90_deg);
-    drive.goForward(1_tile);
+    // drive.turnRight(90_deg);
+    // drive.goForward(1_tile);
 
     // while (true) {
     //     double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);

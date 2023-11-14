@@ -31,8 +31,6 @@ QAngle Math::anglePoint(OdomState currentState, Point p1, bool restrict) {
     } else {
         auto ang = Math::restrictAngle180(okapi::atan2(xDiff, yDiff) - currentState.theta);
 
-        Console::printBrain(7, "xDiff: %.3f yDiff %.3f theta: %.3f", xDiff.convert(okapi::inch), yDiff.convert(okapi::inch), okapi::atan2(xDiff, yDiff).convert(okapi::degree));
-
         if (!restrict) return ang;
 
         if (okapi::abs(ang) > 90_deg) 

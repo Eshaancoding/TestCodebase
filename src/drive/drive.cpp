@@ -52,7 +52,7 @@ void Drive::turnRight (
     std::map<double, std::function<void()>> callbackMap
 ) {
     okapi::OdomState startingPos = OdomCustom::getPos();
-    Point absolute = Math::findPointOffset({startingPos.x, startingPos.y, startingPos.theta + ang}, 2_tile);
+    Point absolute = Math::findPointOffset({startingPos.x, startingPos.y, startingPos.theta + ang}, 20_tile);
 
     // convert from factor map to multiple of factor map cause thats cringe
     map<double, pair<double, double>> map;
@@ -79,7 +79,7 @@ void Drive::faceToPoint (
 ) {
     map<double, pair<double, double>> map;
     for (auto i : factorMap) {
-        map[i.first] = {1, i.second};
+        map[i.first] = {Distance_FACTOR, i.second};
     }
 
     move(point, isRelative, true, false, map, callbackMap);
@@ -94,7 +94,7 @@ void Drive::goToPoint (
     // convert from factor map to multiple of factor map cause not doing so is cringe
     map<double, pair<double, double>> map;
     for (auto i : factorMap) {
-        map[i.first] = {i.second, 1}; 
+        map[i.first] = {i.second, Heading_FACTOR}; 
     }
 
     // wait... this is weird we are activating heading too!
