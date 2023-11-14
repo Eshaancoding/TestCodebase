@@ -33,8 +33,6 @@ MotorGroup rightMotorGroup = okapi::MotorGroup({RIGHT_TOP_MOTOR, RIGHT_BOTTOM_MO
 
 
 // *********** FOR TESTING PURPOSES ***********
-OdomOkapi odometery = OdomOkapi();
-
 Drive drive = Drive();
 
 Effectors effectors = Effectors();

@@ -24,7 +24,6 @@ namespace OdomCustom {
     void MainLoop () {
         enc.reset();
         imu.calibrate();
-        pros::delay(2000);
         double offsetEnc = enc.get();
         double offsetIMU = imu.get() * PI/180;
     
@@ -40,12 +39,26 @@ namespace OdomCustom {
             double changeAng = (currentAng - prevAng);
             xPos = (xPos.load().convert(okapi::inch) + diff * sin(currentAng)) * 1_in;
             yPos = (yPos.load().convert(okapi::inch) + diff * cos(currentAng)) * 1_in;
+            currentAngle = currentAng * okapi::radian;
 
+            Console::printBrain(8, OdomCustom::getPos(), "pos: ");
             // set previous values
             prevEnc = currentEnc; 
             prevAng = currentAng;
             pros::delay(50);
+
+
         }
+
+        /*
+        forward: positive y
+        backward: negative y 
+        +90 deg: clockwise 
+        -90 deg: counterclockwise
+        right: positive x
+        left: negative x
+        take into account the 180 thing, angle goes from -180 to 180
+        */
         
 
         // while (true) {
@@ -79,8 +92,6 @@ namespace OdomCustom {
         //     Console::printBrain(0, diffAng, "theta delta: ");
         //     Console::printBrain(1, deltaXPos, "x delta: ");
         //     Console::printBrain(2, deltaYPos, "y delta: ");
-            Console::printBrain(3, xPos.load().convert(okapi::inch), "x: ");
-            Console::printBrain(4, yPos.load().convert(okapi::inch), "y: ");
         //     Console::printBrain(5, currentEnc, "current enc: ");
         //     Console::printBrain(6, currentAng, "current ang: ");
 

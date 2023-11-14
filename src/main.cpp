@@ -58,41 +58,39 @@ void opcontrol() {
 
     int i = 0;
     
-    // pros::delay(5000);
+    pros::delay(5000);
     // drive.goForward(2_tile);
     // pros::delay(100);
     // drive.goBackward(1_tile);
 
-    drive.turnRight(90_deg);
+    // drive.turnRight(90_deg);
 
     while (true) {
+        i += 1;
 
+        double heading = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+        heading *= 0.5; // adi sensitivity
+        double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        distance *= isReversed ? -1 : 1;
+        drive.moveArcade(distance, heading);
 
-        // i += 1;
+        // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+        // drive.moveTank(left, right);
 
-        // double heading = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-        // heading *= 0.5; // adi sensitivity
-        // double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        // distance *= isReversed ? -1 : 1;
-        // drive.moveArcade(distance, heading);
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+            isReversed = !isReversed;
+        }
 
-        // // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        // // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-        // // drive.moveTank(left, right);
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) {
+            eff.wingsToggle();
+        }
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B)) {
+            eff.intakeToggle();
+        }
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) eff.shootCata();
+        eff.resetCata();
 
-        // if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-        //     isReversed = !isReversed;
-        // }
-
-        // if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A)) {
-        //     eff.wingsToggle();
-        // }
-        // if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B)) {
-        //     eff.intakeToggle();
-        // }
-        // if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) eff.shootCata();
-        // eff.resetCata();
-
-        // pros::delay(10);
+        pros::delay(10);
     }
 }

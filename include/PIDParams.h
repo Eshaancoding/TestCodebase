@@ -2,7 +2,7 @@
 #define PIDPARAM
 
 // angle
-#define Heading_P            0.025
+#define Heading_P            0.015
 #define Heading_I            0
 #define Heading_D            0.1
 #define Heading_MINERRDISI   0.5 // min error to disable I (in rad)

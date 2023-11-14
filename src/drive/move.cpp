@@ -9,6 +9,7 @@
 #include "parameters.h"
 #include "pros/adi.h"
 #include "effectors.h"
+#include "odom/OdomCustom.h"
 
 Point add (okapi::OdomState orig, Point p) {
     p.x += orig.x;
@@ -33,7 +34,7 @@ void Drive::move (
     // get starting position
     okapi::OdomState startingPos;
     if (ENABLE_ODOMSIM) startingPos = simulation.getPos();
-    else                startingPos = odometery.getPos();
+    else                startingPos = OdomCustom::getPos();
 
     // get target position and distance/angle error 
     auto targetPos = isRelative ? add(startingPos, point) : point;
@@ -111,7 +112,7 @@ void Drive::move (
         // update error
         okapi::OdomState newPos;
         if (ENABLE_ODOMSIM) newPos = simulation.getPos();
-        else                newPos = odometery.getPos();
+        else                newPos = OdomCustom::getPos();
         distErr = Math::distance(newPos, targetPos);
         angleErr = Math::anglePoint(newPos, targetPos, distanceActivated);
 
@@ -124,7 +125,7 @@ void Drive::move (
             Console::printBrain(0, "Dist err: %.3f in Ang err: %.3f deg", distErr.convert(inch), angleErr.convert(degree));
             Console::printBrain(1, "D: %.3f H: %.3f", distancePower, headingPower);
             Console::printBrain(2, targetPos, "Target Pos");
-            Console::printBrain(3, simulation.getPos(), "Pos");
+            Console::printBrain(3, OdomCustom::getPos(), "Pos");
         }
 
         // check on if we should stop or not

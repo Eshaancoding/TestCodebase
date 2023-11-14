@@ -5,6 +5,7 @@
 #include "okapi/api/units/QAngle.hpp"
 #include "okapi/api/units/QLength.hpp"
 #include "parameters.h"
+#include "odom/OdomCustom.h"
 
 // basically we define a bunch of functions that just wraps around the moveToPoint function
 
@@ -16,7 +17,7 @@ void Drive::goForward (
     // get starting position and then offset
     okapi::OdomState startingPos;
     if (ENABLE_ODOMSIM) startingPos = simulation.getPos();
-    else                startingPos = odometery.getPos();
+    else                startingPos = OdomCustom::getPos();
     Point absolute = Math::findPointOffset(startingPos, distance);
 
     // convert from factor map to multiple of factor map cause not doing so is cringe
@@ -53,8 +54,8 @@ void Drive::turnRight (
 ) {
     okapi::OdomState startingPos;
     if (ENABLE_ODOMSIM) startingPos = simulation.getPos();
-    else                startingPos = odometery.getPos();
-    Point absolute = Math::findPointOffset({startingPos.x, startingPos.y, startingPos.theta + ang}, 1_in);
+    else                startingPos = OdomCustom::getPos();
+    Point absolute = Math::findPointOffset({startingPos.x, startingPos.y, startingPos.theta - ang}, 1_in);
 
     // convert from factor map to multiple of factor map cause thats cringe
     map<double, pair<double, double>> map;
