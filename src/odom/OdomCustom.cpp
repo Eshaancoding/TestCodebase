@@ -55,8 +55,6 @@ namespace OdomCustom {
             yPos = (yPos.load().convert(okapi::inch) + diff * cos(currentAng)) * 1_in;
             currentAngle = currentAng * okapi::radian;
 
-            Console::printBrain(8, OdomCustom::getPos(), "pos: ");
-
             // set previous values
             prevEnc = currentEnc; 
             prevAng = currentAng;

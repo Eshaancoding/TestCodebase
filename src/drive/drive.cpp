@@ -52,7 +52,7 @@ void Drive::turnRight (
     std::map<double, std::function<void()>> callbackMap
 ) {
     okapi::OdomState startingPos = OdomCustom::getPos();
-    Point absolute = Math::findPointOffset({startingPos.x, startingPos.y, startingPos.theta + ang}, 1_in);
+    Point absolute = Math::findPointOffset({startingPos.x, startingPos.y, startingPos.theta + ang}, 2_tile);
 
     // convert from factor map to multiple of factor map cause thats cringe
     map<double, pair<double, double>> map;

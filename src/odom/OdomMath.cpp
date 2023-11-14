@@ -1,4 +1,5 @@
 #include "Odom/Math.h"
+#include "Console.h"
 
 QAngle Math::restrictAngle180(QAngle angle) {
     // >= 180, goes negative (-180)
@@ -23,12 +24,14 @@ QLength Math::distance(OdomState p1, Point p2) {
  */
 
 QAngle Math::anglePoint(OdomState currentState, Point p1, bool restrict) {
-    QLength xDiff = p1.x - currentState.x;
-    QLength yDiff = p1.y - currentState.y;
+    QLength xDiff = p1.x - currentState.x; // 0
+    QLength yDiff = p1.y - currentState.y; // 20
     if (xDiff == 0_in && yDiff == 0_in) { // on same point!
         return 0_deg;
     } else {
-        auto ang = Math::restrictAngle180(okapi::atan2(yDiff, xDiff) - currentState.theta);
+        auto ang = Math::restrictAngle180(okapi::atan2(xDiff, yDiff) - currentState.theta);
+
+        Console::printBrain(7, "xDiff: %.3f yDiff %.3f theta: %.3f", xDiff.convert(okapi::inch), yDiff.convert(okapi::inch), okapi::atan2(xDiff, yDiff).convert(okapi::degree));
 
         if (!restrict) return ang;
 
@@ -40,9 +43,10 @@ QAngle Math::anglePoint(OdomState currentState, Point p1, bool restrict) {
 }
 
 Point Math::findPointOffset(OdomState state, QLength dist) {
+    
     return {
-        state.x + okapi::cos(state.theta) * dist,
-        state.y + okapi::sin(state.theta) * dist,
+        state.x + okapi::sin(state.theta) * dist,
+        state.y + okapi::cos(state.theta) * dist,
     };
 
 }

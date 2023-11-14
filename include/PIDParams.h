@@ -2,7 +2,7 @@
 #define PIDPARAM
 
 // angle
-#define Heading_P            0.015
+#define Heading_P            0.255
 #define Heading_I            0
 #define Heading_D            0.1
 #define Heading_MAXPOWER     1
