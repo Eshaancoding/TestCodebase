@@ -80,9 +80,9 @@ void opcontrol() {
         // drive.moveTank(left, right);
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) isReversed = !isReversed;
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A))   eff.wingsToggle(); 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B))   eff.intakeToggle();
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2))  eff.shootCata();
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A))    eff.wingsToggle(); 
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B))    eff.intakeToggle();
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2))   eff.shootCata();
         eff.resetCata();
 
         pros::delay(10);

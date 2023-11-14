@@ -15,9 +15,7 @@ void Drive::goForward (
     std::map<double, std::function<void()>> callbackMap
 ) {
     // get starting position and then offset
-    okapi::OdomState startingPos;
-    if (ENABLE_ODOMSIM) startingPos = simulation.getPos();
-    else                startingPos = OdomCustom::getPos();
+    okapi::OdomState startingPos = OdomCustom::getPos();
     Point absolute = Math::findPointOffset(startingPos, distance);
 
     // convert from factor map to multiple of factor map cause not doing so is cringe
@@ -52,10 +50,8 @@ void Drive::turnRight (
     std::map<double, double> factorMap,
     std::map<double, std::function<void()>> callbackMap
 ) {
-    okapi::OdomState startingPos;
-    if (ENABLE_ODOMSIM) startingPos = simulation.getPos();
-    else                startingPos = OdomCustom::getPos();
-    Point absolute = Math::findPointOffset({startingPos.x, startingPos.y, startingPos.theta - ang}, 1_in);
+    okapi::OdomState startingPos = OdomCustom::getPos();
+    Point absolute = Math::findPointOffset({startingPos.x, startingPos.y, startingPos.theta + ang}, 1_in);
 
     // convert from factor map to multiple of factor map cause thats cringe
     map<double, pair<double, double>> map;

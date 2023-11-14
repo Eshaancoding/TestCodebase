@@ -1,11 +1,9 @@
 #include "odom/OdomCustom.h"
-#include "Odom/OdomOkapi.h"
 #include "okapi/api/units/QAngle.hpp"
 #include "okapi/api/units/QLength.hpp"
 #include "okapi/api/util/mathUtil.hpp"
 #include "okapi/impl/device/rotarysensor/adiEncoder.hpp"
 #include "parameters.h"
-#include "OdomOkapi.h"
 #include "Console.h"
 
 #define PI 3.14159265

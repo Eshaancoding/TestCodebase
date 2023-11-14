@@ -63,8 +63,6 @@ extern Effectors effectors;
 // debug
 #define ODOM_DEBUG      true
 
-// wheeeeels
-
 // tracking wheel ports
 #define LEFT_TRACKING_WHEEL_TOP       'A'
 #define LEFT_TRACKING_WHEEL_BOTTOM    'B'
@@ -77,8 +75,6 @@ extern Effectors effectors;
 #define TRACKING_WHEEL_TRACK    2_in    // Distance from the center of the left tracking wheel to the center of the right tracking wheel
 #define TRACKING_WHEEL_DIM      0.5_in  // Diameter of tracking wheel
 #define TRACKING_WHEEL_BACK     0_in    // distance from the center of rotation and the back tracking wheel (won't activate unless mid works)
-
-extern OdomOkapi odometery;
 
 // =============================================================
 // ======================= ROUTE PARAMS ========================
@@ -93,5 +89,6 @@ extern OdomOkapi odometery;
 #define DISTANCE_TOLERANCE 1_in 
 #define ANGLE_TOLERANCE 1_deg
 #define TIME_TOLERANCE 300_s // ADJUST THIS A LITTLE LESS
+
 
 #endif
