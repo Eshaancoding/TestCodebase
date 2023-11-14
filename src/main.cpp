@@ -20,12 +20,13 @@ AutonSelector::State waitForValidState () {
     // constantly check state change
     while (true) { 
         auto stateCheck = AutonSelector::getState();             
+        auto isCalibrating = OdomCustom::isCalibrating();
  
-        if (stateCheck.status == AutonSelector::TEST) {
+        if (stateCheck.status == AutonSelector::TEST && !isCalibrating) {
             state = stateCheck;
             break;
         }
-        else if (stateCheck.status == AutonSelector::ROUTE) {
+        else if (stateCheck.status == AutonSelector::ROUTE && !isCalibrating) {
             state = stateCheck;
             break;
         }
@@ -49,6 +50,8 @@ void initialize() {
 void autonomous() {
     auto state = waitForValidState();
 };
+
+// you disabled the factor map thing
 
 void opcontrol() {
     Drive drive;

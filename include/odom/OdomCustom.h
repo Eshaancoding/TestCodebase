@@ -13,6 +13,7 @@ namespace OdomCustom {
 
     okapi::OdomState getPos();
     void setPos (okapi::OdomState state);
+    bool isCalibrating ();
 
     double getRevs  ();
 };

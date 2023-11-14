@@ -98,8 +98,7 @@ void Drive::move (
         Drive::moveArcade(distancePower, headingPower);
         
         // update error
-        okapi::OdomState newPos;
-        newPos = OdomCustom::getPos();
+        okapi::OdomState newPos = OdomCustom::getPos();
         distErr = Math::distance(newPos, targetPos);
         angleErr = Math::anglePoint(newPos, targetPos, distanceActivated);
 

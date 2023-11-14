@@ -13,6 +13,7 @@ namespace OdomCustom {
     std::atomic<okapi::QAngle> currentAngle = 0_deg;
     std::atomic<okapi::QLength> xPos = 0_in;
     std::atomic<okapi::QLength> yPos = 0_in;
+    std::atomic<bool> calibrating;
 
     okapi::IMU imu (13, okapi::IMUAxes::z);
     okapi::RotationSensor enc (16);
@@ -22,11 +23,12 @@ namespace OdomCustom {
     double offsetIMU = 0.0;
 
     void init () {
+        calibrating = true;
         enc.reset();
         imu.calibrate();
         offsetEnc = enc.get();
         offsetIMU = imu.get() * PI/180;
-
+        calibrating = false;
     }
 
     /*
@@ -72,5 +74,10 @@ namespace OdomCustom {
         xPos = state.x;
         yPos = state.y;
         currentAngle = state.theta;
+    }
+
+    // calibrating
+    bool isCalibrating () {
+        return calibrating.load();
     }
 };
