@@ -44,12 +44,6 @@ void Drive::move (
     QLength origDistErr = distErr;
     QAngle origAngleErr = angleErr;
 
-    // initialize Moving Average (for determining stop)
-    MovingAverage distanceAvg (Distance_N);
-    MovingAverage headingAvg (Heading_N);
-    distanceAvg.step(distErr.convert(inch));
-    headingAvg.step(angleErr.convert(radian));
-
     // record previous factors 
     double prevDistanceFact = DistancePID.getFactor(); // get the previous factor for setting at the end
     double prevHeadingFact = HeadingPID.getFactor();   // get the previous factor for setting at the end
@@ -101,17 +95,13 @@ void Drive::move (
         if (headingActivated)  headingPower  = HeadingPID.step(angleErr.convert(radian));
 
         // Actually drive
-        Drive::moveArcade(distancePower, -headingPower);
+        Drive::moveArcade(distancePower, headingPower);
         
         // update error
         okapi::OdomState newPos;
         newPos = OdomCustom::getPos();
         distErr = Math::distance(newPos, targetPos);
         angleErr = Math::anglePoint(newPos, targetPos, distanceActivated);
-
-        // add to moving average function 
-        distanceAvg.step(distErr.convert(inch));
-        headingAvg.step(angleErr.convert(radian));
 
         // debug if we need to 
         if (ODOM_DEBUG) {

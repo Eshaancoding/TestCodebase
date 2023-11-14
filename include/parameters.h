@@ -1,18 +1,5 @@
 #ifndef PARAMETERS
 #define PARAMETERS
-
-// *********************** NOTES ***********************
-//* Remember that you DID NOT INITIALIZE ODOMETERY!! 
-//* This was for (TESTING PURPOSES)
-//* Decrease time tolerance! Increased it because of delay (also adjust PID params)
-//* ALSO change the fact that the delay for each iteration is monstrously high
-//* Remeber that enable sim is enabled; thus removing the move voltage/motor stuff now
-//* ALSO NTOE THAT YOU NEED TO CHECK COORD SIYSTEM OF ODOM OKAPI
-//*     VEX coordinate system is REALLY weird... (face y direction to where the bot is facing rn)
-//*     Make it so that by default the y direction of the robot faces the y direction
-//* Ideally... give doxygen comments in everywhere
-// *****************************************************
-
 #include "pid.h"
 #include "Odom/OdomOkapi.h"
 

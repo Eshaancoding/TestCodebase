@@ -43,7 +43,7 @@ public:
      * @brief move arcade
      * 
      * @param distance the distance (forward/backward)
-     * @param heading  the heading (left/right)  ** + counter clockwise **
+     * @param heading  the heading (left/right)  ** + clockwise **
      */
     void moveArcade (double distance, double heading) {
         distance *= 600; heading *= 400;
