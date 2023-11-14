@@ -41,7 +41,7 @@ extern Drive drive;
 
 // effectors
 class Effectors;
-extern Effectors effectors;
+extern Effectors eff;
 
 // ============================================================
 // ======================= ODOM PARAMS ========================

@@ -54,11 +54,9 @@ void autonomous() {
 // you disabled the factor map thing
 
 void opcontrol() {
-    Drive drive;
-    Effectors eff;
 
     bool isReversed = false;
-    Control::printController(0, "Not Reversed");
+    Control::printController(0, "Forward");
 
     // drive.goForward(2_tile);
     // pros::delay(100);
@@ -78,7 +76,7 @@ void opcontrol() {
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
             isReversed = !isReversed;
             if (isReversed) Control::printController(0, "Reversed");
-            else            Control::printController(0, "Not Reversed");
+            else            Control::printController(0, "Forward");
         }
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A))    eff.wingsToggle(); 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B))    eff.intakeToggle();
