@@ -52,25 +52,18 @@ void autonomous() {
 
 void opcontrol() {
     Drive drive;
-    
-    okapi::Controller control;
     Effectors eff;
 
     bool isReversed = false;
+    Control::printController(0, "Not Reversed");
 
-    int i = 0;
-    
-    pros::delay(5000);
     // drive.goForward(2_tile);
     // pros::delay(100);
     // drive.goBackward(1_tile);
-
     // drive.turnRight(90_deg);
 
     while (true) {
-        i += 1;
-
-        double heading = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+        double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
         double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         distance *= isReversed ? -1 : 1;
         drive.moveArcade(distance, heading);
@@ -79,7 +72,11 @@ void opcontrol() {
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
         // drive.moveTank(left, right);
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) isReversed = !isReversed;
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+            isReversed = !isReversed;
+            if (isReversed) Control::printController(0, "Reversed");
+            else            Control::printController(0, "Not Reversed");
+        }
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A))    eff.wingsToggle(); 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B))    eff.intakeToggle();
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2))   eff.shootCata();

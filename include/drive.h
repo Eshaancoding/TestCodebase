@@ -28,7 +28,7 @@ private:
      * @param distanceActivated whether to activate distance (i.e enable robot to go forward/backward)
      * @param factorMap factormap. note that there's a pair, the first number is for the distance factor and second number in the pair is for the heading factor
      * @param callbackMap callbackm ap that is used to execute functions in the middle of the run. (ex: turning on an intake)
-     */
+    **/
     void move (
         Point point, 
         bool isRelative=true,

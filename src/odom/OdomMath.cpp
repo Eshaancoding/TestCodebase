@@ -19,7 +19,7 @@ QLength Math::distance(OdomState p1, Point p2) {
 }
 
 /**
- * 
+ * computes the difference in angle between target point and current robot position (along with theta)
  */
 
 QAngle Math::anglePoint(OdomState currentState, Point p1, bool restrict) {

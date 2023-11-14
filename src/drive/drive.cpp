@@ -6,6 +6,7 @@
 #include "okapi/api/units/QLength.hpp"
 #include "parameters.h"
 #include "odom/OdomCustom.h"
+#include "PIDParams.h"
 
 // basically we define a bunch of functions that just wraps around the moveToPoint function
 
@@ -21,7 +22,7 @@ void Drive::goForward (
     // convert from factor map to multiple of factor map cause not doing so is cringe
     map<double, pair<double, double>> map;
     for (auto i : factorMap) {
-        map[i.first] = {i.second, 1}; 
+        map[i.first] = {i.second, Heading_FACTOR}; 
     }
 
     // wait... this is weird we are activating heading too!
@@ -30,7 +31,7 @@ void Drive::goForward (
     // we have to disable the heading somewhere at the end BECAUSE angle point becomes larger and larger as it grows closer to the point!
     double disablePoint = DISABLEPOINT; 
     if (map.find(disablePoint) == map.end()) { // not found in map
-        map[disablePoint] = {1, 0}; // completely disables heading! only allows distance
+        map[disablePoint] = {Distance_FACTOR, 0}; // completely disables heading! only allows distance
     }
 
     move(absolute, false, COURSE_CORRECTION, true, map, callbackMap);
@@ -56,7 +57,7 @@ void Drive::turnRight (
     // convert from factor map to multiple of factor map cause thats cringe
     map<double, pair<double, double>> map;
     for (auto i : factorMap) {
-        map[i.first] = {1, i.second};
+        map[i.first] = {0, i.second};
     }
 
     move(absolute, false, true, false, map, callbackMap);

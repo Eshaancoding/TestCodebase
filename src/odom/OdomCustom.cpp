@@ -26,7 +26,18 @@ namespace OdomCustom {
         imu.calibrate();
         offsetEnc = enc.get();
         offsetIMU = imu.get() * PI/180;
+
     }
+
+    /*
+    forward: positive y
+    backward: negative y 
+    +90 deg: clockwise 
+    -90 deg: counterclockwise
+    right: positive x
+    left: negative x
+    take into account the 180 thing, angle goes from -180 to 180
+    */
 
     void MainLoop () {
         while (true) {
@@ -49,16 +60,6 @@ namespace OdomCustom {
             prevAng = currentAng;
             pros::delay(50);
         }
-
-        /*
-        forward: positive y
-        backward: negative y 
-        +90 deg: clockwise 
-        -90 deg: counterclockwise
-        right: positive x
-        left: negative x
-        take into account the 180 thing, angle goes from -180 to 180
-        */
     }
 
     // get position

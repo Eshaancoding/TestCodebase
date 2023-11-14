@@ -60,20 +60,20 @@ void Drive::move (
         else                   
             percentChange = abs(angleErr.convert(radian)-origAngleErr.convert(radian))/(abs(origAngleErr.convert(radian)));
 
-        // go through factor map
-        for (auto itr = factorMap.begin(); itr != factorMap.end(); itr++) {
-            if (itr->first < percentChange && percentChange <= 1) {
-                if (distanceActivated) DistancePID.setFactor(get<0>(itr->second));
-                if (headingActivated) HeadingPID.setFactor(get<1>(itr->second));
+        // go through factor map; commented because you have weird code for factors
+        // for (auto itr = factorMap.begin(); itr != factorMap.end(); itr++) {
+        //     if (itr->first < percentChange && percentChange <= 1) {
+        //         if (distanceActivated) DistancePID.setFactor(get<0>(itr->second));
+        //         if (headingActivated) HeadingPID.setFactor(get<1>(itr->second));
 
-                /// TEST 
-                if (ODOM_DEBUG)
-                    Console::printBrain(4, "Setting D Factor: %.3f and H Factor: %.3f at %.3f", get<0>(itr->second), get<1>(itr->second), percentChange);
+        //         /// TEST 
+        //         if (ODOM_DEBUG)
+        //             Console::printBrain(4, "Setting D Factor: %.3f and H Factor: %.3f at %.3f", get<0>(itr->second), get<1>(itr->second), percentChange);
 
-                factorMap.erase(itr);
-                break;
-            }
-        }
+        //         factorMap.erase(itr);
+        //         break;
+        //     }
+        // }
 
         // go through callback map
         for (auto itr = callbackMap.begin(); itr != callbackMap.end(); itr++) {
