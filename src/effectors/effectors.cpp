@@ -30,9 +30,13 @@ void Effectors::wingsToggle () {
 }
 
 // INTAKE
-void Effectors::intakeToggle () {
-    intakeActive = !intakeActive;
-    
-    intakeMotor.move_velocity(intakeActive ? -600 : 0);
-    intakeMotorTwo.move_velocity(intakeActive ? 600 : 0);
+void Effectors::intakeToggle (bool reverse) {
+    if (reverse) {
+        intakeMotor.move_velocity(600);
+        intakeMotorTwo.move_velocity(-600);
+    } else {
+        intakeActive = !intakeActive;
+        intakeMotor.move_velocity(intakeActive ? -600  : 0);
+        intakeMotorTwo.move_velocity(intakeActive ? 600 : 0);
+    }
 }

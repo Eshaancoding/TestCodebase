@@ -11,9 +11,9 @@
 // I could make this a namespace idk why im making it a class
 class Drive {
 private:
-    QLength distanceTol = DISTANCE_TOLERANCE;
-    QAngle angleTol = ANGLE_TOLERANCE;
-    QTime timeTol = TIME_TOLERANCE;
+    QLength distanceTol;
+    QAngle angleTol;
+    QTime timeTol;
 
     /**
      * @brief Essentially goes to the point but in general this houses the PID for both distance and heading

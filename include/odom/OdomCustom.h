@@ -8,11 +8,15 @@
 using namespace std;
 
 namespace OdomCustom {
-    void init ();
+    void init (QAngle init_angle);
     void MainLoop ();
 
     okapi::OdomState getPos();
-    void setPos (okapi::OdomState state);
+    void setPos (
+        std::optional<okapi::QLength> x=std::nullopt, 
+        std::optional<okapi::QLength> y=std::nullopt, 
+        std::optional<okapi::QAngle> angle=std::nullopt
+    );
     bool isCalibrating ();
 
     double getRevs  ();

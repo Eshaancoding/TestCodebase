@@ -17,18 +17,20 @@ namespace OdomCustom {
 
     okapi::IMU imu (13, okapi::IMUAxes::z);
     okapi::RotationSensor enc (16);
+    okapi::QAngle intialAngle;
     double prevAng = 0.0;
     double prevEnc = 0.0;
     double offsetEnc = 0.0;
     double offsetIMU = 0.0;
 
-    void init () {
+    void init (QAngle init_angle) {
         calibrating = true;
         enc.reset();
         imu.calibrate();
         offsetEnc = enc.get();
         offsetIMU = imu.get() * PI/180;
         calibrating = false;
+        intialAngle = init_angle;
     }
 
     /*
@@ -53,7 +55,7 @@ namespace OdomCustom {
             double changeAng = (currentAng - prevAng);
             xPos = (xPos.load().convert(okapi::inch) + diff * sin(currentAng)) * 1_in;
             yPos = (yPos.load().convert(okapi::inch) + diff * cos(currentAng)) * 1_in;
-            currentAngle = currentAng * okapi::radian;
+            currentAngle = (currentAng * okapi::radian) + intialAngle;
 
             // set previous values
             prevEnc = currentEnc; 
@@ -68,10 +70,13 @@ namespace OdomCustom {
     }
 
     // set position
-    void setPos (okapi::OdomState state) {
-        xPos = state.x;
-        yPos = state.y;
-        currentAngle = state.theta;
+    void setPos (std::optional<okapi::QLength> x, std::optional<okapi::QLength> y, std::optional<okapi::QAngle> angle) {
+        if (x) xPos = *x;
+        if (y) yPos = *y;
+        if (angle) {
+            currentAngle = *angle;
+            intialAngle = angle;
+        }
     }
 
     // calibrating

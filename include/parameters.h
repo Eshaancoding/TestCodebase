@@ -75,7 +75,7 @@ extern Effectors eff;
 
 #define DISTANCE_TOLERANCE 1_in 
 #define ANGLE_TOLERANCE 1_deg
-#define TIME_TOLERANCE 300_s // ADJUST THIS A LITTLE LESS
+#define TIME_TOLERANCE 3_s // ADJUST THIS A LITTLE LESS
 
 
 #endif

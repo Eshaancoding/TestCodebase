@@ -52,7 +52,7 @@ public:
     void wingsToggle ();
 
     // intake
-    void intakeToggle ();
+    void intakeToggle (bool reverse=false);
 };
 
 #endif

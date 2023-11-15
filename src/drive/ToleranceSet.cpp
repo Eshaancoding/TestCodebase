@@ -8,8 +8,10 @@ void Drive::setToleranceParams(std::optional<QLength> distanceTolP, std::optiona
     if (angleTolP) 
         angleTol = *angleTolP;
 
-    if (timeTolP) 
+    if (timeTolP) {
         timeTol = *timeTolP;
+        Console::printBrain(7, timeTol.convert(okapi::millisecond), "milli sec time tol set");
+    }
 }
 
 void Drive::resetToleranceParams () {
