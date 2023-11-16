@@ -17,20 +17,16 @@ namespace OdomCustom {
 
     okapi::IMU imu (13, okapi::IMUAxes::z);
     okapi::RotationSensor enc (16);
-    okapi::QAngle intialAngle;
-    double prevAng = 0.0;
     double prevEnc = 0.0;
     double offsetEnc = 0.0;
-    double offsetIMU = 0.0;
 
     void init (QAngle init_angle) {
         calibrating = true;
         enc.reset();
         imu.calibrate();
-        offsetEnc = enc.get();
-        offsetIMU = imu.get() * PI/180;
+        imu.reset(0);
         calibrating = false;
-        intialAngle = init_angle;
+        offsetEnc = enc.get();
     }
 
     /*
@@ -51,16 +47,14 @@ namespace OdomCustom {
             diff *= PI * WHEEL_DIA; // convert to inches
 
             // get change in angle
-            double currentAng = ((imu.get() * PI / 180) - offsetIMU);
-            double changeAng = (currentAng - prevAng);
+            double currentAng = (imu.get() * PI / 180);
             xPos = (xPos.load().convert(okapi::inch) + diff * sin(currentAng)) * 1_in;
             yPos = (yPos.load().convert(okapi::inch) + diff * cos(currentAng)) * 1_in;
-            currentAngle = (currentAng * okapi::radian) + intialAngle;
+            currentAngle = currentAng * okapi::radian;
 
             // set previous values
             prevEnc = currentEnc; 
-            prevAng = currentAng;
-            pros::delay(50);
+            pros::delay(25); // test this shit
         }
     }
 
@@ -75,7 +69,7 @@ namespace OdomCustom {
         if (y) yPos = *y;
         if (angle) {
             currentAngle = *angle;
-            intialAngle = angle;
+            imu.reset((*angle).convert(okapi::degree));
         }
     }
 
