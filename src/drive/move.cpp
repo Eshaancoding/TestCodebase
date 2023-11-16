@@ -118,7 +118,6 @@ void Drive::move (
             if (ODOM_DEBUG) Console::printBrain(4, "Stopped due to heading/distance threshold reached.");
             break;
         }
-        Console::printBrain(8, timeTol.convert(okapi::millisecond), "time tol: ");
         if ((pros::millis() - start) >= timeTol.convert(okapi::millisecond)) {
             if (ODOM_DEBUG) Console::printBrain(4, "Stopped because exceeded time limit");
             break;

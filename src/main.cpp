@@ -58,26 +58,28 @@ void opcontrol() {
     bool isReversed = false;
     Control::printController(0, "Forward    ");
 
-    while (true) {
-        double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-        double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        distance *= isReversed ? -1 : 1;
-        drive.moveArcade(distance, heading);
+    drive.turnLeft(90_deg);
 
-        // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-        // drive.moveTank(left, right);
+    // while (true) {
+    //     double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+    //     double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+    //     distance *= isReversed ? -1 : 1;
+    //     drive.moveArcade(distance, heading);
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-            isReversed = !isReversed;
-            if (isReversed) Control::printController(0, "Reversed");
-            else            Control::printController(0, "Forward    ");
-        }
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A))    eff.wingsToggle(); 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B))    eff.intakeToggle();
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2))   eff.shootCata();
-        eff.resetCata();
+    //     // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+    //     // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+    //     // drive.moveTank(left, right);
 
-        pros::delay(10);
-    }
+    //     if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+    //         isReversed = !isReversed;
+    //         if (isReversed) Control::printController(0, "Reversed");
+    //         else            Control::printController(0, "Forward    ");
+    //     }
+    //     if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A))    eff.wingsToggle(); 
+    //     if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B))    eff.intakeToggle();
+    //     if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2))   eff.shootCata();
+    //     eff.resetCata();
+
+    //     pros::delay(10);
+    // }
 }

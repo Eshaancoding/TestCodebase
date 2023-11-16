@@ -10,7 +10,6 @@ void Drive::setToleranceParams(std::optional<QLength> distanceTolP, std::optiona
 
     if (timeTolP) {
         timeTol = *timeTolP;
-        Console::printBrain(7, timeTol.convert(okapi::millisecond), "milli sec time tol set");
     }
 }
 

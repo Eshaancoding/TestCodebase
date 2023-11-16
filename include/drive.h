@@ -46,7 +46,7 @@ public:
      * @param heading  the heading (left/right)  ** + clockwise **
      */
     void moveArcade (double distance, double heading) {
-        distance *= 600; heading *= 400;
+        distance *= 600; heading *= 600;
         leftMotorGroup.moveVelocity(distance + heading);    
         rightMotorGroup.moveVelocity(distance - heading);   
     }

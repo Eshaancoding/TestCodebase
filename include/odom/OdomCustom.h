@@ -8,7 +8,7 @@
 using namespace std;
 
 namespace OdomCustom {
-    void init (QAngle init_angle);
+    void init (QAngle init_angle=0_deg);
     void MainLoop ();
 
     okapi::OdomState getPos();
