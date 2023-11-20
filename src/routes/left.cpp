@@ -7,49 +7,32 @@
 #include "odom/OdomCustom.h"
 
 void Routes::left() {
-    
-    OdomCustom::setPos(0_in, 0_in, 45_deg);
-    
-    eff.intakeToggle();
+     
+    OdomCustom::setPos(0_in, 0_in, -135_deg);
     eff.wingsToggle();
-    drive.goBackward(12_in, {}, {{0.6, [](){
-        eff.wingsToggle();
-    } }});
-    drive.turnRight(145_deg);
-    eff.intakeToggle(true); // reverse = always on
+    eff.setIntake();
     
-    // AY SLAM THAT 
-    drive.setToleranceParams(nullopt, nullopt, 1_s);
-    drive.goForward(0.8_tile);
-
-    // turn back, return, then turn again
-    drive.setToleranceParams(nullopt, nullopt, 0.75_s);
-    drive.goBackward(10_in);
-    drive.resetToleranceParams();
-    eff.intakeToggle();
-    drive.turnRight(180_deg);
-    drive.setToleranceParams(nullopt, nullopt, 1_s);
-    drive.goBackward(1_tile, {{0, 1.1}});
-    
-    // slam that shit again
-    drive.goForward(8.5_in);
-    drive.resetToleranceParams();
-
-    OdomCustom::setPos(0_in, 0_in);
-    drive.faceToPoint({-10_in, 0_in}, false, {{0, 0.9}});  
-
-    OdomCustom::setPos(0_in, 0_in, 90_deg);
-    drive.goBackward(2.4_tile, {}, {{0.8, [](){
+    // get the ball out of preload zone
+    drive.goBackward(12_in, {}, {{0.7, [](){
         eff.wingsToggle();
     }}});
-
-    drive.setToleranceParams(nullopt, nullopt, 1.5_s);
-    drive.turnRight(20_deg);
+    
+    // set the triball into the our goal
+    drive.turnRight(15_deg);
+    drive.setToleranceParams(nullopt, nullopt, 1_s);
+    eff.setIntake(true);
+    drive.goForward(20_in);
     drive.resetToleranceParams();
 
+    // go back to the center.
+    drive.goBackward(8_in);
+    // OdomCustom::setPos(0_in, 0_in);
+    drive.faceToPoint({-5_tile, -5_tile},true); // test if isRelative works
+    drive.goBackward(1_tile);
     
-    // eff.wingsToggle();
-    // drive.turnLeft(90_deg);
-    // eff.wingsToggle();
-    // drive.goForward(2_tile);
+    // put those triballs
+    drive.faceToPoint({0_tile, -5_tile}, true);
+    eff.wingsToggle();
+    drive.goBackward(1_tile);
+    eff.wingsToggle();
 }

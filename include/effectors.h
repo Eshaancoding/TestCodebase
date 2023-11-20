@@ -53,6 +53,7 @@ public:
 
     // intake
     void intakeToggle (bool reverse=false);
+    void setIntake (bool isReverse=false, bool isOff=false);
 };
 
 #endif
