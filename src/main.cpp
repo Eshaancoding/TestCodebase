@@ -49,7 +49,7 @@ void initialize() {
 
 // Autonomous Mode
 void autonomous() {
-    Routes::right();
+    Routes::leftRisky();
 };
 
 // you disabled the factor map thing

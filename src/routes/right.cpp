@@ -54,9 +54,4 @@ void Routes::right() {
         eff.wingsToggle();
     }}});
     drive.resetToleranceParams();
-    
-    // eff.wingsToggle();
-    // drive.turnLeft(90_deg);
-    // eff.wingsToggle();
-    // drive.goForward(2_tile);
 }

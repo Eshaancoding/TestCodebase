@@ -6,8 +6,10 @@
 
 namespace Routes {
     void test (); // test function
-    void left ();   // when robot is on the left side of the goal (long side, can directly do roller)
-    void right ();  // when robot is on the right side of the goal (short side, have to move to do roller)
+    void left ();   
+    void leftRisky ();   
+    void right ();  
+    void rightRisky ();   
 };
 
 #endif
