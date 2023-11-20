@@ -7,6 +7,14 @@
 #include "odom/OdomCustom.h"
 
 void Routes::left() {
+
+    while (true) {
+        eff.resetCata();
+        if (eff.state == CataState::SHOOTING) { 
+            break;
+        }
+        pros::delay(20);
+    }
      
     OdomCustom::setPos(0_in, 0_in, -135_deg);
     eff.wingsToggle();
@@ -18,21 +26,35 @@ void Routes::left() {
     }}});
     
     // set the triball into the our goal
-    drive.turnRight(15_deg);
-    drive.setToleranceParams(nullopt, nullopt, 1_s);
+    drive.turnRight(20_deg);
+    drive.setToleranceParams(nullopt, nullopt, 1.5_s);
+    drive.goForward(2_tile);
     eff.setIntake(true);
-    drive.goForward(20_in);
     drive.resetToleranceParams();
 
     // go back to the center.
     drive.goBackward(8_in);
-    // OdomCustom::setPos(0_in, 0_in);
-    drive.faceToPoint({-5_tile, -5_tile},true); // test if isRelative works
-    drive.goBackward(1_tile);
+    drive.turnLeft(180_deg);
+    eff.setIntake(false, true);
+
+    drive.setToleranceParams(nullopt, nullopt, 1_s);
+    drive.goBackward(10_in, {{0, 1.3}});
+    drive.resetToleranceParams();
+
+    drive.goForward(8_in);
+    drive.faceToPoint({-5_tile, -5_tile},true);
+    drive.goBackward(1.5_tile);
     
     // put those triballs
     drive.faceToPoint({0_tile, -5_tile}, true);
-    eff.wingsToggle();
-    drive.goBackward(1_tile);
-    eff.wingsToggle();
+
+    // manually do cata
+    eff.cataOne.move_velocity(100);
+    eff.cataTwo.move_velocity(-100);
+    pros::delay(300); 
+    eff.cataOne.move_velocity(0);
+    eff.cataTwo.move_velocity(0);
+
+    drive.goBackward(1.4_tile);
+    eff.state = CataState::RESETTING;
 }
