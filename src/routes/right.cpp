@@ -10,13 +10,13 @@ void Routes::right() {
     
     OdomCustom::setPos(0_in, 0_in, 45_deg);
     
-    eff.intakeToggle();
+    eff.setIntake();
+
     eff.wingsToggle();
-    drive.goBackward(12_in, {}, {{0.6, [](){
+    drive.goBackward(14_in, {}, {{0.6, [](){
         eff.wingsToggle();
     } }});
     drive.turnRight(145_deg);
-    eff.intakeToggle(true); // reverse = always on
     
     // AY SLAM THAT 
     drive.setToleranceParams(nullopt, nullopt, 1_s);
@@ -24,29 +24,33 @@ void Routes::right() {
 
     // turn back, return, then turn again
     drive.setToleranceParams(nullopt, nullopt, 0.75_s);
+
+    eff.setIntake(true);
     drive.goBackward(10_in);
-    drive.resetToleranceParams();
-    eff.intakeToggle();
-    drive.turnRight(180_deg);
-    drive.setToleranceParams(nullopt, nullopt, 1_s);
-    drive.goBackward(1_tile, {{0, 1.1}});
-    
+    eff.setIntake(false, true);
+
     // slam that shit again
-    drive.goForward(8.5_in);
+    drive.resetToleranceParams();
+    drive.turnRight(170_deg);
+    drive.setToleranceParams(nullopt, nullopt, 1.2_s);
+    drive.goBackward(1_tile, {{0, 1.4}});
+    
+    drive.goForward(7_in);
     drive.resetToleranceParams();
 
     OdomCustom::setPos(0_in, 0_in);
-    drive.faceToPoint({-3_tile, 0_in}, false, {{0, 0.9}});  
+    drive.faceToPoint({-30_tile, 0_in}, false, {{0, 0.9}});  
 
     OdomCustom::setPos(0_in, 0_in, 90_deg);
-    drive.goBackward(2.4_tile, {}, {{0.8, [](){
-        eff.wingsToggle();
-    }}});
 
     drive.setToleranceParams(nullopt, nullopt, 1.5_s);
-    drive.turnRight(20_deg);
-    drive.resetToleranceParams();
+    drive.goBackward(2.4_tile);
 
+    drive.setToleranceParams(nullopt, nullopt, 1.5_s);
+    drive.turnRight(20_deg, {}, {{0.5, [](){
+        eff.wingsToggle();
+    }}});
+    drive.resetToleranceParams();
     
     // eff.wingsToggle();
     // drive.turnLeft(90_deg);
