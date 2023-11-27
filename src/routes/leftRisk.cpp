@@ -11,6 +11,7 @@ void Routes::leftRisky () {
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
 
 
+    // ================== SHOOTS CATA ================== 
     while (true) {
         eff.resetCata();
         if (eff.state == CataState::SHOOTING) { 
@@ -32,6 +33,7 @@ void Routes::leftRisky () {
         }
         pros::delay(20);
     }
+    // ================== DONE SHOOT CATA ================== 
 
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);

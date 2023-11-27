@@ -13,6 +13,13 @@
 void disabled() {}
 void competition_initialize() {}
 
+/*
+
+Hi adi if you want an intro to the codebase,
+you could head up to the README I documented some stuff
+
+*/
+
 // Auton Selector wait state function (helper for autonomous and opcontrol)
 AutonSelector::State waitForValidState () {
     AutonSelector::State state;
@@ -60,15 +67,22 @@ void opcontrol() {
     Control::printController(0, "Forward    ");
 
     while (true) {
+        // ======================== Arcade ======================== 
         double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
         double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         distance *= isReversed ? -1 : 1;
+
+        // Robot turning to fast? Note that heading is from -1 to 1
+        // heading *= 0.5; // 50% speed
+
         drive.moveArcade(distance, heading);
 
+        // ======================== Tank ======================== 
         // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
         // drive.moveTank(left, right);
 
+        // ======================== Other Controls ======================== 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
             isReversed = !isReversed;
             if (isReversed) Control::printController(0, "Reversed");

@@ -53,7 +53,7 @@ public:
 
     // intake
     void intakeToggle (bool reverse=false);
-    void setIntake (bool isReverse=false, bool isOff=false);
+    void setIntake (bool isReverse=false, bool isOff=false); // SIMPLER version of intake; use this for auton
 };
 
 #endif
