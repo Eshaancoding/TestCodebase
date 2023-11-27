@@ -14,10 +14,10 @@ void disabled() {}
 void competition_initialize() {}
 
 /*
-
+*************************************************************
 Hi adi if you want an intro to the codebase,
 you could head up to the README I documented some stuff
-
+*************************************************************
 */
 
 // Auton Selector wait state function (helper for autonomous and opcontrol)
