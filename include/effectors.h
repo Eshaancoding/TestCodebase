@@ -12,6 +12,12 @@ enum CataState {
     SHOOTING
 };
 
+enum IntakeState {
+    INTAKE,
+    OUTTAKE,
+    INACTIVE
+};
+
 // I could make this a namespace idk why im making it a class
 class Effectors {
 public:
@@ -24,7 +30,7 @@ public:
 
     pros::ADIDigitalOut piston;
     bool wingsActive;
-    bool intakeActive;
+    IntakeState intakeActive;
 
     Effectors () : 
         cataOne(2, pros::E_MOTOR_GEAR_RED),
@@ -34,7 +40,7 @@ public:
         piston('A'),
         rotSensor(15),
         wingsActive(false),
-        intakeActive(false),
+        intakeActive(INACTIVE),
         state(CataState::RESETTING)
     { 
         

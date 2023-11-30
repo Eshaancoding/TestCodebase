@@ -102,6 +102,7 @@ void opcontrol() {
         }
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A))    eff.wingsToggle(); 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B))    eff.intakeToggle();
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_X))    eff.intakeToggle(true);
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2))   eff.shootCata();
         eff.resetCata();
 

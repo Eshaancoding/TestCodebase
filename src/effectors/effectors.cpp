@@ -31,13 +31,30 @@ void Effectors::wingsToggle () {
 
 // INTAKE
 void Effectors::intakeToggle (bool reverse) {
-    if (reverse) {
-        intakeMotor.move_velocity(600);
-        intakeMotorTwo.move_velocity(-600);
-    } else {
-        intakeActive = !intakeActive;
-        intakeMotor.move_velocity(intakeActive ? -600  : 0);
-        intakeMotorTwo.move_velocity(intakeActive ? 600 : 0);
+    float reverseFactor = 1;
+    if (intakeActive == IntakeState::INTAKE && reverse) {
+        reverseFactor = -1; 
+        intakeMotor.move_velocity(intakeActive ? -600 * reverseFactor : 0);
+        intakeMotorTwo.move_velocity(intakeActive ? 600 * reverseFactor : 0);
+        intakeActive = IntakeState::OUTTAKE;
+    } 
+    else if (intakeActive == IntakeState::OUTTAKE && !reverse) {
+        intakeMotor.move_velocity(intakeActive ? -600 * reverseFactor : 0);
+        intakeMotorTwo.move_velocity(intakeActive ? 600 * reverseFactor : 0);
+        intakeActive = IntakeState::INTAKE;
+    }
+    else if (intakeActive == IntakeState::INACTIVE) {
+        reverseFactor = reverse ? -1 : 1; 
+        intakeMotor.move_velocity(intakeActive ? -600 * reverseFactor : 0);
+        intakeMotorTwo.move_velocity(intakeActive ? 600 * reverseFactor : 0);
+        intakeActive = reverse ? IntakeState::OUTTAKE : IntakeState::INTAKE;
+    }
+    else if ((intakeActive == IntakeState::INTAKE && !reverse) || 
+             (intakeActive == IntakeState::OUTTAKE && reverse))
+    {
+        intakeMotor.move_velocity(0);
+        intakeMotorTwo.move_velocity(0);
+        intakeActive = IntakeState::INACTIVE;
     }
 }
 
