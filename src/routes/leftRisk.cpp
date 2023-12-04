@@ -19,12 +19,18 @@ void Routes::leftRisky () {
         }
         pros::delay(20);
     }
-     
+
+    leftMotorGroup.moveVelocity(-100);
+    rightMotorGroup.moveVelocity(-600);
+
     eff.cataOne.move_velocity(100);
     eff.cataTwo.move_velocity(-100);
     pros::delay(300); 
     eff.cataOne.move_velocity(0);
     eff.cataTwo.move_velocity(0);
+    leftMotorGroup.moveVelocity(0);
+    rightMotorGroup.moveVelocity(0);
+    eff.state = CataState::RESETTING;
 
     while (true) {
         eff.resetCata();

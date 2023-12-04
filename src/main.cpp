@@ -52,10 +52,16 @@ void initialize() {
     drive.resetToleranceParams();
     OdomCustom::init(); 
     Task task (OdomCustom::MainLoop);
+
+    // AutonSelector::init();
 }
 
 // Autonomous Mode
 void autonomous() {
+    // auto state = waitForValidState();
+    // if (state.side == AutonSelector::SideState::LEFT) Routes::left();
+    // else Routes::right();
+
     Routes::leftRisky();
 };
 

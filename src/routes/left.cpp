@@ -17,6 +17,10 @@ void Routes::left() {
     }
      
     OdomCustom::setPos(0_in, 0_in, -135_deg);
+    
+    drive.goForward(8_in);
+    
+
     eff.wingsToggle();
     eff.setIntake();
     
@@ -55,6 +59,6 @@ void Routes::left() {
     eff.cataOne.move_velocity(0);
     eff.cataTwo.move_velocity(0);
 
-    drive.goBackward(1.4_tile);
+    drive.goBackward(1.15_tile, {{0, 0.8}});
     eff.state = CataState::RESETTING;
 }
