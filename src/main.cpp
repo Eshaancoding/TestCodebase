@@ -63,6 +63,9 @@ void autonomous() {
     // else Routes::right();
 
     Routes::leftRisky();
+    // Routes::skills();
+    // Routes::rightRisky();
+    // Routes::right();
 };
 
 // you disabled the factor map thing
@@ -72,6 +75,10 @@ void opcontrol() {
     bool isReversed = false;
     Control::printController(0, "Forward    ");
 
+    // ================== COAST ================== 
+    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+
     while (true) {
         // ======================== Arcade ======================== 
         double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
@@ -79,7 +86,6 @@ void opcontrol() {
         distance *= isReversed ? -1 : 1;
 
         // Robot turning to fast? Note that heading is from -1 to 1
-        // heading *= 0.5; // 50% speed
 
         drive.moveArcade(distance, heading);
 

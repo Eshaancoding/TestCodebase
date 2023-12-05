@@ -59,8 +59,8 @@ void Effectors::intakeToggle (bool reverse) {
 }
 
 void Effectors::setIntake (bool isReverse, bool isOff) {
-    float powOne = (isReverse ? 1 : -1) * !isOff * 600;
-    float powTwo = (isReverse ? -1 : 1) * !isOff * 600;
-    intakeMotor.move_velocity(powOne);
-    intakeMotorTwo.move_velocity(powTwo);
+    float powOne = (isReverse ? 1 : -1) * !isOff * 12000;
+    float powTwo = (isReverse ? -1 : 1) * !isOff * 12000;
+    intakeMotor.move_voltage(powOne);
+    intakeMotorTwo.move_voltage(powTwo);
 }

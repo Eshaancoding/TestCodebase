@@ -10,6 +10,7 @@ namespace Routes {
     void leftRisky ();   
     void right ();  
     void rightRisky ();   
+    void skills ();
 };
 
 #endif
