@@ -53,6 +53,7 @@ void Routes::leftRisky () {
     pros::delay(800);
     drive.moveArcade(0, 0);
     eff.wingsToggle();
+    pros::delay(300);
 
     // ================= SPIN SUCH THAT IT GETS THE TRIBALL OUT ================= 
     OdomCustom::setPos(0_in, 0_in);
