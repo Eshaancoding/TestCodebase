@@ -7,17 +7,17 @@
 #include "odom/OdomCustom.h"
 
 void Routes::rightRisky () {
-    // OdomCustom::setPos(0_in, 0_in, -45_deg);
+    OdomCustom::setPos(0_in, 0_in, 45_deg);
 
     eff.setIntake(false, false);
 
     eff.wingsToggle();
     // get the ball out of preload zone
-    drive.goBackward(12_in, {}, {{0.75, [](){
+    drive.goBackward(14_in, {}, {{0.9, [](){
         eff.wingsToggle();
     }}});
     
-    pros::delay(200);
+    pros::delay(800);
     drive.turnRight(160_deg, {{0, 0.5}});
     
     // AY SLAM THAT 
@@ -28,7 +28,7 @@ void Routes::rightRisky () {
     drive.setToleranceParams(nullopt, nullopt, 0.75_s);
 
     eff.setIntake(true);
-    drive.goBackward(10_in);
+    drive.goBackward(8_in);
     eff.setIntake(false, true);
 
     OdomCustom::setPos(0_in, 0_in);

@@ -62,10 +62,7 @@ void autonomous() {
     // if (state.side == AutonSelector::SideState::LEFT) Routes::left();
     // else Routes::right();
 
-    Routes::leftRisky();
-    // Routes::skills();
-    // Routes::rightRisky();
-    // Routes::right();
+    Routes::rightRisky();
 };
 
 // you disabled the factor map thing
