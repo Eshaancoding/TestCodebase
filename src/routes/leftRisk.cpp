@@ -72,7 +72,7 @@ void Routes::leftRisky () {
     int i = 0;
     while (true) {
         pros::delay(100);
-        drive.moveArcade(-0.6, 0);
+        drive.moveArcade(-0.4, 0);
 
         double currentValue = eff.rotSensor.get_position();
         Console::printBrain(5, currentValue - prevValue, "test");

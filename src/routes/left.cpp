@@ -59,6 +59,26 @@ void Routes::left() {
     eff.cataOne.move_velocity(0);
     eff.cataTwo.move_velocity(0);
 
-    drive.goBackward(1.15_tile, {{0, 0.8}});
+    // ===================== GO FORWARD ===================== 
+    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+    double prevValue = eff.rotSensor.get_position();
+    int i = 0;
+    while (true) {
+        pros::delay(100);
+        drive.moveArcade(-0.4, 0);
+
+        double currentValue = eff.rotSensor.get_position();
+        Console::printBrain(5, currentValue - prevValue, "test");
+        if (abs(currentValue - prevValue) > 10 && i > 10) {
+            Console::printBrain(6, "broken");
+            drive.moveArcade(0,0);
+            break;
+        }
+        i += 1;
+
+        prevValue = currentValue;
+    }    
+
     eff.state = CataState::RESETTING;
 }

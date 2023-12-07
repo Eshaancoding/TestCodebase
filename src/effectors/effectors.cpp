@@ -34,19 +34,20 @@ void Effectors::intakeToggle (bool reverse) {
     float reverseFactor = 1;
     if (intakeActive == IntakeState::INTAKE && reverse) {
         reverseFactor = -1; 
-        intakeMotor.move_velocity(intakeActive ? -600 * reverseFactor : 0);
-        intakeMotorTwo.move_velocity(intakeActive ? 600 * reverseFactor : 0);
+        intakeMotor.move_velocity(-600 * reverseFactor);
+        intakeMotorTwo.move_velocity(600 * reverseFactor);
         intakeActive = IntakeState::OUTTAKE;
     } 
     else if (intakeActive == IntakeState::OUTTAKE && !reverse) {
-        intakeMotor.move_velocity(intakeActive ? -600 * reverseFactor : 0);
-        intakeMotorTwo.move_velocity(intakeActive ? 600 * reverseFactor : 0);
+        reverseFactor = 1;
+        intakeMotor.move_velocity(-600 * reverseFactor);
+        intakeMotorTwo.move_velocity(600 * reverseFactor);
         intakeActive = IntakeState::INTAKE;
     }
     else if (intakeActive == IntakeState::INACTIVE) {
         reverseFactor = reverse ? -1 : 1; 
-        intakeMotor.move_velocity(intakeActive ? -600 * reverseFactor : 0);
-        intakeMotorTwo.move_velocity(intakeActive ? 600 * reverseFactor : 0);
+        intakeMotor.move_velocity(-600 * reverseFactor);
+        intakeMotorTwo.move_velocity(600 * reverseFactor);
         intakeActive = reverse ? IntakeState::OUTTAKE : IntakeState::INTAKE;
     }
     else if ((intakeActive == IntakeState::INTAKE && !reverse) || 
