@@ -53,16 +53,16 @@ void initialize() {
     OdomCustom::init(); 
     Task task (OdomCustom::MainLoop);
 
-    // AutonSelector::init();
+    AutonSelector::init();
 }
 
 // Autonomous Mode
 void autonomous() {
     // auto state = waitForValidState();
-    // if (state.side == AutonSelector::SideState::LEFT) Routes::left();
-    // else Routes::right();
-
-    Routes::leftRisky();
+    // if (state.side == AutonSelector::SideState::LEFT && state.risky == AutonSelector::RiskyState::RISKY) Routes::leftRisky();
+    // else if (state.side == AutonSelector::SideState::LEFT && state.risky == AutonSelector::RiskyState::SAFE) Routes::left();
+    // else if (state.side == AutonSelector::SideState::RIGHT && state.risky == AutonSelector::RiskyState::SAFE) Routes::right();
+    Routes::rightRisky();
 };
 
 // you disabled the factor map thing

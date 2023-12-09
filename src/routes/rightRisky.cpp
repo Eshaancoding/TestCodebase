@@ -11,30 +11,40 @@ void Routes::rightRisky () {
 
     eff.setIntake(false, false);
 
+    auto outreach_param = 12_in;
+
+    drive.goForward(outreach_param);
+    drive.goBackward(1_tile + outreach_param + 6_in, {{0, 0.7}});
+
+    drive.turnLeft(42_deg, {{0, 0.7}});
     eff.wingsToggle();
     // get the ball out of preload zone
-    drive.goBackward(14_in, {}, {{0.9, [](){
+    drive.goBackward(20_in, {}, {{0.75, [](){
         eff.wingsToggle();
     }}});
+
+    pros::delay(300);
+    drive.turnLeft(45_deg);
+    pros::delay(300);
+    drive.turnRight(180_deg);
+
+    // auto dist_param = 8_in;    
+
+    // drive.setToleranceParams(nullopt, nullopt, 1_s);
+    // eff.setIntake(true, false);
+    // drive.goForward(dist_param);
+    // drive.goBackward(dist_param);
+    // drive.turnLeft(180_deg);
     
-    pros::delay(800);
-    drive.turnRight(160_deg, {{0, 0.5}});
+    // // SLAM
+    // drive.moveArcade(-1, 0);
+    // pros::delay(2000); 
+    // drive.moveArcade(0,0);
+    // pros::delay(100);
+
+    // drive.setToleranceParams(nullopt, nullopt, 1_s);
+    // drive.goForward(dist_param);    
+
+    // eff.setIntake(false, true);
     
-    // AY SLAM THAT 
-    drive.setToleranceParams(nullopt, nullopt, 1_s);
-    drive.goForward(0.8_tile);
-
-    // turn back, return, then turn again
-    drive.setToleranceParams(nullopt, nullopt, 0.75_s);
-
-    eff.setIntake(true);
-    drive.goBackward(8_in);
-    eff.setIntake(false, true);
-
-    OdomCustom::setPos(0_in, 0_in);
-    drive.faceToPoint({-30_tile, 0_in}, false, {{0, 0.8}});  
-
-    OdomCustom::setPos(0_in, 0_in, 90_deg);
-
-
 }

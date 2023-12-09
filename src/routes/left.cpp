@@ -47,7 +47,9 @@ void Routes::left() {
 
     drive.goForward(8_in);
     drive.faceToPoint({-5_tile, -5_tile},true);
-    drive.goBackward(1.5_tile);
+    drive.setToleranceParams(nullopt, nullopt, 0.75_s);
+    drive.goBackward(1.2_tile);
+    drive.resetToleranceParams();
     
     // put those triballs
     drive.faceToPoint({0_tile, -5_tile}, true);
