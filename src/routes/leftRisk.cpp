@@ -45,7 +45,7 @@ void Routes::leftRisky () {
 
     // ================= GO FORWARD A LIL ================= 
     eff.wingsToggle();
-    drive.goBackward(3_in);
+    drive.goBackward(1_in);
     pros::delay(100);
 
     // ================= SPIN SUCH THAT IT GETS THE TRIBALL OUT ================= 

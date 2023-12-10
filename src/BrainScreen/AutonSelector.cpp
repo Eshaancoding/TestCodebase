@@ -112,7 +112,7 @@ namespace AutonSelector {
         rightButton = createButton("Right", 150, 25, 100, 50);
         riskyButton = createButton("Risky", 25, 100, 100, 50);
         nonRiskyButton = createButton("Not Risky", 150, 100, 100, 50);
-        testButton = createButton("Test", 25, 175, 225, 50);
+        testButton = createButton("Skill", 25, 175, 225, 50);
         goButton = createButton("Confirm", 270, 175, 190, 50, false);
 
         // LV_IMG_DECLARE(logo);
