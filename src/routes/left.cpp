@@ -57,9 +57,9 @@ void Routes::left() {
     // manually do cata
     eff.cataOne.move_velocity(100);
     eff.cataTwo.move_velocity(-100);
-    pros::delay(300); 
-    eff.cataOne.move_velocity(0);
-    eff.cataTwo.move_velocity(0);
+    pros::delay(100); 
+    eff.cataOne.move_voltage(0);
+    eff.cataTwo.move_voltage(0);
 
     // ===================== GO FORWARD ===================== 
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);

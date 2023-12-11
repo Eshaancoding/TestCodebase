@@ -47,7 +47,9 @@ public:
         rotSensor.set_position(0); 
         cataOne.set_brake_mode(pros::motor_brake_mode_e_t::E_MOTOR_BRAKE_BRAKE);
         cataTwo.set_brake_mode(pros::motor_brake_mode_e_t::E_MOTOR_BRAKE_BRAKE);
-        
+        // this is for resetting
+        // cataOne.move_voltage(1000);
+        // cataTwo.move_voltage(-1000);
     };
     ~Effectors() = default;
     // cata

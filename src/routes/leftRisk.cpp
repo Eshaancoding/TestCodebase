@@ -27,8 +27,8 @@ void Routes::leftRisky () {
     eff.cataOne.move_velocity(100);
     eff.cataTwo.move_velocity(-100);
     pros::delay(300); 
-    eff.cataOne.move_velocity(0);
-    eff.cataTwo.move_velocity(0);
+    eff.cataOne.move_voltage(0);
+    eff.cataTwo.move_voltage(0);
     leftMotorGroup.moveVelocity(0);
     rightMotorGroup.moveVelocity(0);
     pros::delay(300);
