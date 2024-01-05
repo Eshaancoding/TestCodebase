@@ -14,7 +14,7 @@ void Routes::skills () {
         eff.cataOne.move_velocity(100);
         eff.cataTwo.move_velocity(-100);
         pros::delay(300);
-        // reset cata
+        // reset slapper
         eff.state = CataState::RESETTING;
         while (true) {
             eff.resetCata();

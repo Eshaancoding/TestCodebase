@@ -54,7 +54,7 @@ void Routes::left() {
     // put those triballs
     drive.faceToPoint({0_tile, -5_tile}, true);
 
-    // manually do cata
+    // manually do slapper
     eff.cataOne.move_velocity(100);
     eff.cataTwo.move_velocity(-100);
     pros::delay(100); 

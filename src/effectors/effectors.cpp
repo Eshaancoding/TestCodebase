@@ -1,9 +1,9 @@
 #include "effectors.h"
 
 void Effectors::punch () {
-    cata.move_velocity(-100);
+    slapper.move_velocity(-100);
     pros::delay(200);
-    cata.move_velocity(0);
+    slapper.move_velocity(0);
 }
 
 // WINGS

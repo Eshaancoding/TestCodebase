@@ -14,7 +14,7 @@ enum IntakeState {
 // I could make this a namespace idk why im making it a class
 class Effectors {
 public:
-    pros::Motor cata;
+    pros::Motor slapper;
     pros::Motor intakeMotor;
     pros::Rotation rotSensor;
 
@@ -24,8 +24,8 @@ public:
     IntakeState intakeActive;
 
     Effectors () : 
-        cata(2, pros::E_MOTOR_GEAR_RED),
-        intakeMotor(12, pros::E_MOTOR_GEAR_GREEN),    
+        slapper(12, pros::E_MOTOR_GEAR_RED),
+        intakeMotor(19, pros::E_MOTOR_GEAR_GREEN),    
         piston('A'),
         ptoPiston('B'),
         rotSensor(15),
