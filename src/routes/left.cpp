@@ -8,14 +8,6 @@
 
 void Routes::left() {
 
-    while (true) {
-        eff.resetCata();
-        if (eff.state == CataState::SHOOTING) { 
-            break;
-        }
-        pros::delay(20);
-    }
-     
     OdomCustom::setPos(0_in, 0_in, -135_deg);
     
     drive.goForward(8_in);
@@ -54,33 +46,6 @@ void Routes::left() {
     // put those triballs
     drive.faceToPoint({0_tile, -5_tile}, true);
 
-    // manually do slapper
-    eff.cataOne.move_velocity(100);
-    eff.cataTwo.move_velocity(-100);
-    pros::delay(100); 
-    eff.cataOne.move_voltage(0);
-    eff.cataTwo.move_voltage(0);
-
     // ===================== GO FORWARD ===================== 
-    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-    double prevValue = eff.rotSensor.get_position();
-    int i = 0;
-    while (true) {
-        pros::delay(100);
-        drive.moveArcade(-0.4, 0);
-
-        double currentValue = eff.rotSensor.get_position();
-        Console::printBrain(5, currentValue - prevValue, "test");
-        if (abs(currentValue - prevValue) > 10 && i > 10) {
-            Console::printBrain(6, "broken");
-            drive.moveArcade(0,0);
-            break;
-        }
-        i += 1;
-
-        prevValue = currentValue;
-    }    
-
-    eff.state = CataState::RESETTING;
+    // figure this out    
 }
