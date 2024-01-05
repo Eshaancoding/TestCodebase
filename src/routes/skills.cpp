@@ -54,10 +54,4 @@ void Routes::skills () {
     drive.moveArcade(-1, 0);
     pros::delay(2000); 
     drive.moveArcade(0, 0);
-
-   
-
-
-    
-
 }

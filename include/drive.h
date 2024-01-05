@@ -47,8 +47,11 @@ public:
      */
     void moveArcade (double distance, double heading) {
         distance *= 600; heading *= 600;
+        leftPTOMotor.moveVelocity(distance + heading);
         leftMotorGroup.moveVelocity(distance + heading);    
+
         rightMotorGroup.moveVelocity(distance - heading);   
+        rightPTOMotor.moveVelocity(distance - heading);
     }
 
     /**
@@ -59,8 +62,11 @@ public:
      */
     void moveTank (double left, double right) {
         left *= 600; right *= 600;
+        leftPTOMotor.moveVelocity(left);
         leftMotorGroup.moveVelocity(left);     
+
         rightMotorGroup.moveVelocity(right);   
+        rightPTOMotor.moveVelocity(right);
     }
 
     /**

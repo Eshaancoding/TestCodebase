@@ -46,10 +46,17 @@ AutonSelector::State waitForValidState () {
 // When robot initializes. 
 void initialize() {
     AutonSelector::init();
+
+    leftPTOMotor.setGearing(AbstractMotor::gearset::blue);
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
     rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
+    rightPTOMotor.setGearing(AbstractMotor::gearset::blue);
+
+    leftPTOMotor.setBrakeMode(AbstractMotor::brakeMode::coast);
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+    rightPTOMotor.setBrakeMode(AbstractMotor::brakeMode::coast);
+
     drive.resetToleranceParams();
     OdomCustom::init(); 
     Task task (OdomCustom::MainLoop);
@@ -68,8 +75,8 @@ void autonomous() {
 // you disabled the factor map thing
 
 void opcontrol() {
-    bool isCoast = true;
-    bool isReversed = false;
+    bool isPTOEnabled = false;
+    bool isIntaking = false;
     Control::printController(0, "Forward    ");
 
     // ================== COAST ================== 
@@ -78,43 +85,40 @@ void opcontrol() {
 
     while (true) {
         // ======================== Arcade ======================== 
-        double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-        double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        distance *= isReversed ? -1 : 1;
-
-        // Robot turning to fast? Note that heading is from -1 to 1
-
-        drive.moveArcade(distance, heading);
+        // double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+        // double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        // distance *= isReversed ? -1 : 1;
 
         // ======================== Tank ======================== 
-        // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-        // drive.moveTank(left, right);
+        double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+        drive.moveTank(left, right);
 
         // ======================== Other Controls ======================== 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-            isReversed = !isReversed;
-            if (isReversed) Control::printController(0, "Reversed");
-            else            Control::printController(0, "Forward    ");
-        }
-
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-            isCoast = !isCoast;
-            if (isCoast) {
-                leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
-                rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
-            } 
-            else {
-                leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-                rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) {
+            if (isPTOEnabled) {
+                eff.assemblyDown();
+                eff.setPTO(false);
+            } else {
+                eff.setPTO(true);
+                eff.assemblyUp();
             }
         }
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_A))    eff.wingsToggle(); 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B))    eff.intakeToggle();
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_X))    eff.intakeToggle(true);
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2))   eff.shootCata();
-        eff.resetCata();
+
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1)) eff.wingsToggle();
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2)) {
+            isIntaking = !isIntaking;
+            eff.setIntake(false, isIntaking);
+        }
+
+        // if (Control::getButtonPressed())
 
         pros::delay(10);
     }
 }
+
+// R2: macro to go up and PTO and shit. Make sure you go back down.
+// L1: wings
+// L2: move intake (no outtake)
+
+// R1: Shooting (adi wants some fancy shit)
