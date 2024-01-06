@@ -41,7 +41,9 @@ public:
         shootState(DORMANT),
         intakeActive(INACTIVE)
     { 
-        rotSensor.set_position(0); 
+        slapper.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+
+         
     };
     ~Effectors() = default;
 
@@ -60,6 +62,7 @@ public:
     void assemblyDown ();
 
     // shooting with puncher
+    void resetShoot ();
     void toggleShootingState ();
     void stepShootMotor ();
 

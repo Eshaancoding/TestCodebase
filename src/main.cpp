@@ -61,6 +61,8 @@ void initialize() {
     OdomCustom::init(); 
     Task task (OdomCustom::MainLoop);
 
+    eff.resetShoot();
+
 }
 
 // Autonomous Mode

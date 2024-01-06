@@ -83,10 +83,10 @@ void Effectors::stepShootMotor () {
         slapper.move_velocity(0);
     }
     else if (shootState == ShootState::STOPPING) {
-        int val = rotSensor.get_angle()/100;
+        int val = rotSensor.get_position()/100;
         Console::printBrain(2, val, "val:");
         
-        if (abs(val) > 20) {
+        if (abs(val) > 5) {
             shootState = ShootState::STOPPING;
             slapper.move_velocity(-100);
         } else {
@@ -94,4 +94,21 @@ void Effectors::stepShootMotor () {
             slapper.move_velocity(0);
         }
     }
+}
+
+void Effectors::resetShoot() {
+    // reset slapper
+    rotSensor.set_position(0); 
+    double prevRotSensorVal = 0;
+    slapper.move_velocity(-100);
+    pros::delay(400);
+    while (true) {
+        pros::delay(100);
+        double currentRotSensor = rotSensor.get_position();
+        Console::printBrain(4, abs(currentRotSensor - prevRotSensorVal));
+        if (abs(currentRotSensor - prevRotSensorVal) < 1000) break;
+        prevRotSensorVal = currentRotSensor;
+    }
+    slapper.move_velocity(0);
+    rotSensor.set_position(0);
 }
