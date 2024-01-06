@@ -45,7 +45,7 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    AutonSelector::init();
+    // AutonSelector::init();
 
     leftPTOMotor.setGearing(AbstractMotor::gearset::blue);
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
@@ -65,11 +65,11 @@ void initialize() {
 
 // Autonomous Mode
 void autonomous() {
-    auto state = waitForValidState();
-    if (state.side == AutonSelector::SideState::LEFT && state.risky == AutonSelector::RiskyState::RISKY) Routes::leftRisky();
-    else if (state.side == AutonSelector::SideState::LEFT && state.risky == AutonSelector::RiskyState::SAFE) Routes::left();
-    else if (state.side == AutonSelector::SideState::RIGHT && state.risky == AutonSelector::RiskyState::SAFE) Routes::right();
-    else if (state.status == AutonSelector::TEST) Routes::skills();
+    // auto state = waitForValidState();
+    // if (state.side == AutonSelector::SideState::LEFT && state.risky == AutonSelector::RiskyState::RISKY) Routes::leftRisky();
+    // else if (state.side == AutonSelector::SideState::LEFT && state.risky == AutonSelector::RiskyState::SAFE) Routes::left();
+    // else if (state.side == AutonSelector::SideState::RIGHT && state.risky == AutonSelector::RiskyState::SAFE) Routes::right();
+    // else if (state.status == AutonSelector::TEST) Routes::skills();
 };
 
 // you disabled the factor map thing
@@ -95,6 +95,7 @@ void opcontrol() {
         drive.moveTank(left, right);
 
         // ======================== Other Controls ======================== 
+        // macro for toggling raising or lowering
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) {
             if (isPTOEnabled) {
                 eff.assemblyDown();
@@ -105,13 +106,30 @@ void opcontrol() {
             }
         }
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1)) eff.wingsToggle();
+        // wings toggle
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1)) 
+            eff.wingsToggle();
+
+        // toggle intake
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2)) {
             isIntaking = !isIntaking;
             eff.setIntake(false, isIntaking);
         }
 
-        // if (Control::getButtonPressed())
+        // slapper test
+        // Console::printBrain(1, OdomCustom::distanceGet(), "Enc: ");
+        // if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+        //     eff.slapper.move_velocity(-100);
+        // }
+        // else {
+        //     eff.slapper.move_velocity(0);
+        // }
+
+        // actual slapper
+        Console::printBrain(0, (int)eff.slapper.get_position(), "Test:");
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1))
+            eff.toggleShootingState();
+        eff.stepShootMotor();
 
         pros::delay(10);
     }

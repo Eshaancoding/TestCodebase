@@ -20,13 +20,21 @@ namespace OdomCustom {
     double prevEnc = 0.0;
     double offsetEnc = 0.0;
 
+    double distanceGet () {
+        return (leftMotorGroup.getPosition() + rightMotorGroup.getPosition())/2;
+    }
+
+    double angleGet () { // in angle
+        return imu.get() * PI / 180;
+    }
+
     void init (QAngle init_angle) {
         calibrating = true;
         enc.reset();
         imu.calibrate();
         imu.reset(0);
         calibrating = false;
-        offsetEnc = enc.get();
+        offsetEnc = distanceGet();
     }
 
     /*
@@ -42,12 +50,13 @@ namespace OdomCustom {
     void MainLoop () {
         while (true) {
             // get change in encoder
-            double currentEnc = (enc.get() - offsetEnc)/360;            
+            double enc_get = distanceGet(); // cheeeeeeeeeeck this
+            double currentEnc = (enc_get - offsetEnc)/360;            
             double diff = currentEnc - prevEnc;
             diff *= PI * WHEEL_DIA; // convert to inches
 
             // get change in angle
-            double currentAng = (imu.get() * PI / 180);
+            double currentAng = angleGet();
             xPos = (xPos.load().convert(okapi::inch) + diff * sin(currentAng)) * 1_in;
             yPos = (yPos.load().convert(okapi::inch) + diff * cos(currentAng)) * 1_in;
             currentAngle = currentAng * okapi::radian;

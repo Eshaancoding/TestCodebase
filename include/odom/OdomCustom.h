@@ -18,7 +18,8 @@ namespace OdomCustom {
         std::optional<okapi::QAngle> angle=std::nullopt
     );
     bool isCalibrating ();
-
+    double distanceGet ();
+    double angleGet ();
     double getRevs  ();
 };
 

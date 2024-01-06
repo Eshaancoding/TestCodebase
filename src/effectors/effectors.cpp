@@ -1,11 +1,5 @@
 #include "effectors.h"
 
-void Effectors::punch () {
-    slapper.move_velocity(-100);
-    pros::delay(200);
-    slapper.move_velocity(0);
-}
-
 // WINGS
 void Effectors::wingsToggle () {
     wingsActive = !wingsActive;
@@ -70,4 +64,34 @@ void Effectors::assemblyDown () {
     pros::delay(300);
     leftPTOMotor.moveVelocity(0);
     rightPTOMotor.moveVelocity(0);
+}
+
+void Effectors::toggleShootingState () {
+    if (shootState == ShootState::SHOOTING) {
+        shootState = ShootState::STOPPING;
+    }
+    else if (shootState == ShootState::DORMANT || shootState == ShootState::STOPPING) {
+        shootState = ShootState::SHOOTING;
+    }
+}
+
+void Effectors::stepShootMotor () {
+    if (shootState == ShootState::SHOOTING) {
+        slapper.move_velocity(-100);
+    }
+    else if (shootState == ShootState::DORMANT) {
+        slapper.move_velocity(0);
+    }
+    else if (shootState == ShootState::STOPPING) {
+        int val = rotSensor.get_angle()/100;
+        Console::printBrain(2, val, "val:");
+        
+        if (abs(val) > 20) {
+            shootState = ShootState::STOPPING;
+            slapper.move_velocity(-100);
+        } else {
+            shootState = ShootState::DORMANT;
+            slapper.move_velocity(0);
+        }
+    }
 }
