@@ -24,9 +24,11 @@ public:
     pros::Motor intakeMotor;
     
     pros::Rotation rotSensor;
+    pros::Rotation rotSensorFB;
 
     pros::ADIDigitalOut piston;
     pros::ADIDigitalOut ptoPiston;
+    pros::ADIDigitalOut endGame;
     bool wingsActive;
     IntakeState intakeActive;
     ShootState shootState;
@@ -36,14 +38,14 @@ public:
         intakeMotor(19, pros::E_MOTOR_GEAR_GREEN),    
         piston('A'),
         ptoPiston('B'),
+        endGame('C'),
         rotSensor(17),
+        rotSensorFB(9),
         wingsActive(false),
         shootState(DORMANT),
         intakeActive(INACTIVE)
     { 
         slapper.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-
-         
     };
     ~Effectors() = default;
 
@@ -65,6 +67,9 @@ public:
     void resetShoot ();
     void toggleShootingState ();
     void stepShootMotor ();
+
+    // lock
+    void lock ();
 
 };
 

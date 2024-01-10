@@ -87,25 +87,28 @@ void opcontrol() {
 
     while (true) {
         // ======================== Arcade ======================== 
-        // double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-        // double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+        double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         // distance *= isReversed ? -1 : 1;
 
         // ======================== Tank ======================== 
-        double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-        drive.moveTank(left, right);
+        // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+        drive.moveArcade(distance, heading);
 
         // ======================== Other Controls ======================== 
         // macro for toggling raising or lowering
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) {
             if (isPTOEnabled) {
                 eff.assemblyDown();
+                pros::delay(200);
                 eff.setPTO(false);
             } else {
                 eff.setPTO(true);
+                pros::delay(200);
                 eff.assemblyUp();
             }
+            isPTOEnabled = !isPTOEnabled;
         }
 
         // wings toggle
@@ -127,11 +130,16 @@ void opcontrol() {
         //     eff.slapper.move_velocity(0);
         // }
 
+        // Lock
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) eff.lock();
+
         // actual slapper
         Console::printBrain(0, (int)eff.slapper.get_position(), "Test:");
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1))
             eff.toggleShootingState();
         eff.stepShootMotor();
+
+        Console::printBrain(4, eff.rotSensorFB.get_position(), "Four bar position");
 
         pros::delay(10);
     }
@@ -142,3 +150,6 @@ void opcontrol() {
 // L2: move intake (no outtake)
 
 // R1: Shooting (adi wants some fancy shit)
+
+
+//  

@@ -51,17 +51,17 @@ void Effectors::setPTO (bool state) {
 }
 
 void Effectors::assemblyUp () {
-    leftPTOMotor.moveVelocity(-400);
-    rightPTOMotor.moveVelocity(400);
-    pros::delay(300);
+    leftPTOMotor.moveVelocity(-600);
+    rightPTOMotor.moveVelocity(-600);
+    pros::delay(5000);
     leftPTOMotor.moveVelocity(0);
     rightPTOMotor.moveVelocity(0);
 }
 
 void Effectors::assemblyDown () {
-    leftPTOMotor.moveVelocity(400);
-    rightPTOMotor.moveVelocity(-400);
-    pros::delay(300);
+    leftPTOMotor.moveVelocity(600);
+    rightPTOMotor.moveVelocity(-600);
+    pros::delay(5000);
     leftPTOMotor.moveVelocity(0);
     rightPTOMotor.moveVelocity(0);
 }
@@ -98,7 +98,7 @@ void Effectors::stepShootMotor () {
 
 void Effectors::resetShoot() {
     // reset slapper
-    rotSensor.set_position(0); 
+    rotSensor.set_position(0);
     double prevRotSensorVal = 0;
     slapper.move_velocity(-100);
     pros::delay(400);
@@ -111,4 +111,8 @@ void Effectors::resetShoot() {
     }
     slapper.move_velocity(0);
     rotSensor.set_position(0);
+}
+
+void Effectors::lock () {
+    endGame.set_value(1);
 }

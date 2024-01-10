@@ -15,13 +15,12 @@ namespace OdomCustom {
     std::atomic<okapi::QLength> yPos = 0_in;
     std::atomic<bool> calibrating;
 
-    okapi::IMU imu (13, okapi::IMUAxes::z);
-    okapi::RotationSensor enc (16);
+    okapi::IMU imu (8, okapi::IMUAxes::z);
     double prevEnc = 0.0;
     double offsetEnc = 0.0;
 
     double distanceGet () {
-        return (leftMotorGroup.getPosition() + rightMotorGroup.getPosition())/2;
+        return ((leftMotorGroup.getPosition() + rightMotorGroup.getPosition())/2) * 60 / 48;
     }
 
     double angleGet () { // in angle
@@ -30,7 +29,6 @@ namespace OdomCustom {
 
     void init (QAngle init_angle) {
         calibrating = true;
-        enc.reset();
         imu.calibrate();
         imu.reset(0);
         calibrating = false;
