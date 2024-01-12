@@ -8,7 +8,7 @@
 #define Distance_MAXPOWER    0.6
 #define Distance_MINPOWER    0
 #define Distance_FACTOR      1
-#define Distance_SLEW        0.010 // <=========== really important
+#define Distance_SLEW        0.007 // <=========== really important
 #define Distance_MINERRDISI  2.5  // min error to disable I, NOT NEEDED IF I = 0 
 
 // angle

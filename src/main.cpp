@@ -67,12 +67,14 @@ void initialize() {
 
 // Autonomous Mode
 void autonomous() {
+    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     // auto state = waitForValidState();
     // if (state.side == AutonSelector::SideState::LEFT && state.risky == AutonSelector::RiskyState::RISKY) Routes::leftRisky();
     // else if (state.side == AutonSelector::SideState::LEFT && state.risky == AutonSelector::RiskyState::SAFE) Routes::left();
     // else if (state.side == AutonSelector::SideState::RIGHT && state.risky == AutonSelector::RiskyState::SAFE) Routes::right();
     // else if (state.status == AutonSelector::TEST) Routes::skills();
-    drive.goForward(1_tile);
+    drive.goForward(2_tile);
 };
 
 // you disabled the factor map thing
