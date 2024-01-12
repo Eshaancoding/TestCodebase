@@ -7,46 +7,46 @@
 #include "odom/OdomCustom.h"
 
 void Routes::leftRisky () {
-    // OdomCustom::setPos(0_in, 0_in, 135_deg);
-    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+    OdomCustom::setPos(0_in, 0_in, -135_deg);
+    
+    drive.goForward(8_in);
+    
 
-    OdomCustom::setPos(0_in, 0_in, 135_deg);
-
-    // ================= GO BACK TO RESET ================= 
-    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
-    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
-    rightMotorGroup.moveVelocity(300);
-    leftMotorGroup.moveVelocity(0);
-    pros::delay(400);
-    rightMotorGroup.moveVelocity(0);
-    leftMotorGroup.moveVelocity(0);
-    pros::delay(200);
-
-    // ================= GO FORWARD A LIL ================= 
     eff.wingsToggle();
-    drive.goBackward(1_in);
-    pros::delay(100);
-
-    // ================= SPIN SUCH THAT IT GETS THE TRIBALL OUT ================= 
-    drive.moveArcade(0, -400);
-    pros::delay(800);
-    drive.moveArcade(0, 0);
-    eff.wingsToggle();
-    pros::delay(300);
-
-    // ================= SPIN SUCH THAT IT GETS THE TRIBALL OUT ================= 
-    OdomCustom::setPos(0_in, 0_in);
-    drive.faceToPoint({-10_tile, -10_tile}, true);
-
-    // ================= GO TO POSITION ================= 
+    eff.setIntake();
+    
+    // get the ball out of preload zone
+    drive.goBackward(12_in, {}, {{0.7, [](){
+        eff.wingsToggle();
+    }}});
+    
+    // set the triball into the our goal
+    drive.turnRight(20_deg);
     drive.setToleranceParams(nullopt, nullopt, 1.5_s);
-    drive.goBackward(16_in);
+    drive.goForward(2_tile);
+    eff.setIntake(true);
     drive.resetToleranceParams();
-    drive.faceToPoint({-1_tile, -10_tile}, true);
 
-    // ================= GO FORWARD ================= 
-    // figure this out 
+    // go back to the center.
+    drive.goBackward(8_in);
+    drive.turnLeft(180_deg);
+    eff.setIntake(false, true);
+
+    drive.setToleranceParams(nullopt, nullopt, 1_s);
+    drive.goBackward(10_in, {{0, 1.3}});
+    drive.resetToleranceParams();
+
+    drive.goForward(8_in);
+    drive.faceToPoint({-5_tile, -5_tile},true);
+    drive.setToleranceParams(nullopt, nullopt, 0.75_s);
+    drive.goBackward(1.2_tile);
+    drive.resetToleranceParams();
+    
+    // put those triballs
+    drive.faceToPoint({0_tile, -5_tile}, true);
+
+    // ===================== GO FORWARD ===================== 
+    // figure this out   
 
 }
 

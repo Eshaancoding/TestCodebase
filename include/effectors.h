@@ -36,12 +36,12 @@ public:
     bool isPTOEnabled;
 
     Effectors () : 
-        slapper(12, pros::E_MOTOR_GEAR_RED),
+        slapper(13, pros::E_MOTOR_GEAR_RED),
         intakeMotor(19, pros::E_MOTOR_GEAR_GREEN),    
         piston('A'),
         ptoPiston('B'),
         endGame('C'),
-        rotSensor(17),
+        rotSensor(18),
         rotSensorFB(9),
         wingsActive(false),
         shootState(DORMANT),

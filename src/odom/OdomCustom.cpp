@@ -7,7 +7,7 @@
 #include "Console.h"
 
 #define PI 3.14159265
-#define WHEEL_DIA 2.763715082
+#define WHEEL_DIA 2.500715082
 
 namespace OdomCustom {
     std::atomic<okapi::QAngle> currentAngle = 0_deg;
@@ -15,13 +15,13 @@ namespace OdomCustom {
     std::atomic<okapi::QLength> yPos = 0_in;
     std::atomic<bool> calibrating;
 
-    okapi::IMU imu (8, okapi::IMUAxes::z);
+    okapi::IMU imu (17, okapi::IMUAxes::z);
     double prevEnc = 0.0;
     double offsetEnc = 0.0;
 
     double distanceGet () {
-        Console::printBrain(2, leftMotorGroup.getPosition()/100, "Left motor: ");
-        return ((leftMotorGroup.getPosition()/100 + rightMotorGroup.getPosition()/100)/2) * 60 / 48;
+        Console::printBrain(2, leftMotorGroup.getPosition(), "Left motor: ");
+        return ((leftMotorGroup.getPosition() + rightMotorGroup.getPosition())/2) * 60 / 48;
     }
 
     double angleGet () { // in angle

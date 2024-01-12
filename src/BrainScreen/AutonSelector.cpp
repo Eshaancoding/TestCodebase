@@ -107,10 +107,10 @@ namespace AutonSelector {
     void init () {
         shouldTest = false;        
 
-        leftButton = createButton("Left", 25, 25, 100, 50);
-        rightButton = createButton("Right", 150, 25, 100, 50);
-        riskyButton = createButton("Qual", 25, 100, 100, 50);
-        nonRiskyButton = createButton("Elim", 150, 100, 100, 50);
+        leftButton = createButton("Off", 25, 25, 100, 50);
+        rightButton = createButton("Def", 150, 25, 100, 50);
+        riskyButton = createButton("Elim", 25, 100, 100, 50);
+        nonRiskyButton = createButton("Qual", 150, 100, 100, 50);
         testButton = createButton("Skill", 25, 175, 225, 50);
         goButton = createButton("Confirm", 270, 175, 190, 50, false);
 

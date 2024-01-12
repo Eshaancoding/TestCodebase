@@ -72,6 +72,7 @@ void autonomous() {
     // else if (state.side == AutonSelector::SideState::LEFT && state.risky == AutonSelector::RiskyState::SAFE) Routes::left();
     // else if (state.side == AutonSelector::SideState::RIGHT && state.risky == AutonSelector::RiskyState::SAFE) Routes::right();
     // else if (state.status == AutonSelector::TEST) Routes::skills();
+    drive.goForward(1_tile);
 };
 
 // you disabled the factor map thing
@@ -80,6 +81,7 @@ void opcontrol() {
     bool isPTOEnabled = false;
     bool isIntaking = false;
     Control::printController(0, "Forward    ");
+
 
     // ================== COAST ================== 
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
@@ -94,22 +96,12 @@ void opcontrol() {
         // ======================== Tank ======================== 
         // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-        drive.moveTank(distance, heading);
+        // drive.moveTank(distance, heading);
+        drive.moveArcade(distance, heading);
 
         // ======================== Other Controls ======================== 
         // macro for toggling raising or lowering
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) {
-            // if (isPTOEnabled) {
-            //     eff.setPTO(false);
-            // } else {
-            //     drive.moveArcade(-1, 0);
-            //     pros::delay(100);
-            //     eff.setPTO(true);
-            //     pros::delay(500);
-            //     drive.moveArcade(0, 0);
-            //     eff.assemblyUp();
-            // }
-            // isPTOEnabled = !isPTOEnabled;
             eff.togglePTO();
         }
 

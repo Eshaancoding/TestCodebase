@@ -121,7 +121,7 @@ void Effectors::resetShoot() {
         pros::delay(100);
         double currentRotSensor = rotSensor.get_position();
         Console::printBrain(4, abs(currentRotSensor - prevRotSensorVal));
-        if (abs(currentRotSensor - prevRotSensorVal) < 1000) break;
+        if (abs(currentRotSensor - prevRotSensorVal) < 850) break;
         prevRotSensorVal = currentRotSensor;
     }
     slapper.move_velocity(0);
@@ -137,11 +137,12 @@ void Effectors::togglePTO () {
         eff.assemblyDown();
         eff.setPTO(false);
     } else {
-        drive.moveArcade(-0.1, 0);
-        pros::delay(100);
+        // drive.moveArcade(-0.1, 0);
+        // pros::delay(100);
         eff.setPTO(true);
-        pros::delay(500);
-        drive.moveArcade(0, 0);
+        // pros::delay(500);
+        pros::delay(300);
+        // drive.moveArcade(0, 0);
         eff.assemblyUp();       
     }
 
