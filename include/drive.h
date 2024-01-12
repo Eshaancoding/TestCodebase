@@ -64,11 +64,12 @@ public:
      */
     void moveTank (double left, double right) {
         left *= 600; right *= 600;
-        leftPTOMotor.moveVelocity(left);
         leftMotorGroup.moveVelocity(left);     
-
         rightMotorGroup.moveVelocity(right);   
-        rightPTOMotor.moveVelocity(right);
+        if (!eff.returnPTOState()) {
+            rightPTOMotor.moveVelocity(right);
+            leftPTOMotor.moveVelocity(left);
+        }
     }
 
     /**
