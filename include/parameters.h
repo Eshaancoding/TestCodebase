@@ -77,8 +77,6 @@ extern Effectors eff;
 
 #define COURSE_CORRECTION   true
 
-#define DISTANCE_TOLERANCE 1_in 
-#define ANGLE_TOLERANCE 1_deg
 #define TIME_TOLERANCE 3_s // ADJUST THIS A LITTLE LESS
 
 
