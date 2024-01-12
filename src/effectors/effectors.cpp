@@ -1,4 +1,6 @@
 #include "effectors.h"
+#include "parameters.h"
+#include "drive.h"
 
 // WINGS
 void Effectors::wingsToggle () {
@@ -128,4 +130,24 @@ void Effectors::resetShoot() {
 
 void Effectors::lock () {
     endGame.set_value(1);
+}
+
+void Effectors::togglePTO () {
+    if (isPTOEnabled) {
+        eff.assemblyDown();
+        eff.setPTO(false);
+    } else {
+        drive.moveArcade(-0.1, 0);
+        pros::delay(100);
+        eff.setPTO(true);
+        pros::delay(500);
+        drive.moveArcade(0, 0);
+        eff.assemblyUp();       
+    }
+
+    isPTOEnabled = !isPTOEnabled;
+}
+
+bool Effectors::returnPTOState () {
+    return isPTOEnabled;
 }

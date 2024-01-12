@@ -21,7 +21,7 @@ namespace OdomCustom {
 
     double distanceGet () {
         Console::printBrain(2, leftMotorGroup.getPosition()/100, "Left motor: ");
-        return ((leftMotorGroup.getPosition()/100 + rightMotorGroup.getPosition()/100)/2) * 60- / 48;
+        return ((leftMotorGroup.getPosition()/100 + rightMotorGroup.getPosition()/100)/2) * 60 / 48;
     }
 
     double angleGet () { // in angle

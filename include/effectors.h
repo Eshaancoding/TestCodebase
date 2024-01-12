@@ -33,6 +33,8 @@ public:
     IntakeState intakeActive;
     ShootState shootState;
 
+    bool isPTOEnabled;
+
     Effectors () : 
         slapper(12, pros::E_MOTOR_GEAR_RED),
         intakeMotor(19, pros::E_MOTOR_GEAR_GREEN),    
@@ -43,7 +45,8 @@ public:
         rotSensorFB(9),
         wingsActive(false),
         shootState(DORMANT),
-        intakeActive(INACTIVE)
+        intakeActive(INACTIVE),
+        isPTOEnabled(false)
     { 
         slapper.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
     };
@@ -58,10 +61,13 @@ public:
 
     // pto
     void setPTO (bool state);
+    void togglePTO ();
+    bool returnPTOState ();
     
     // raise the entire assembly
     void assemblyUp ();
     void assemblyDown ();
+
 
     // shooting with puncher
     void resetShoot ();

@@ -109,8 +109,8 @@ namespace AutonSelector {
 
         leftButton = createButton("Left", 25, 25, 100, 50);
         rightButton = createButton("Right", 150, 25, 100, 50);
-        riskyButton = createButton("Risky", 25, 100, 100, 50);
-        nonRiskyButton = createButton("Safe", 150, 100, 100, 50);
+        riskyButton = createButton("Qual", 25, 100, 100, 50);
+        nonRiskyButton = createButton("Elim", 150, 100, 100, 50);
         testButton = createButton("Skill", 25, 175, 225, 50);
         goButton = createButton("Confirm", 270, 175, 190, 50, false);
 

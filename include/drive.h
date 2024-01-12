@@ -2,6 +2,7 @@
 #define DRIVE_H
 
 #include "Console.h"
+#include "effectors.h"
 #include "parameters.h"
 #include "main.h"
 #include <map>
@@ -47,11 +48,12 @@ public:
      */
     void moveArcade (double distance, double heading) {
         distance *= 600; heading *= 600;
-        leftPTOMotor.moveVelocity(distance + heading);
         leftMotorGroup.moveVelocity(distance + heading);    
-
         rightMotorGroup.moveVelocity(distance - heading);   
-        rightPTOMotor.moveVelocity(distance - heading);
+        if (!eff.returnPTOState()) {
+            leftPTOMotor.moveVelocity(distance + heading);
+            rightPTOMotor.moveVelocity(distance - heading);
+        }
     }
 
     /**

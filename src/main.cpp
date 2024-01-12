@@ -99,17 +99,18 @@ void opcontrol() {
         // ======================== Other Controls ======================== 
         // macro for toggling raising or lowering
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) {
-            if (isPTOEnabled) {
-                eff.setPTO(false);
-            } else {
-                drive.moveArcade(-1, 0);
-                pros::delay(100);
-                eff.setPTO(true);
-                pros::delay(500);
-                drive.moveArcade(0, 0);
-                eff.assemblyUp();
-            }
-            isPTOEnabled = !isPTOEnabled;
+            // if (isPTOEnabled) {
+            //     eff.setPTO(false);
+            // } else {
+            //     drive.moveArcade(-1, 0);
+            //     pros::delay(100);
+            //     eff.setPTO(true);
+            //     pros::delay(500);
+            //     drive.moveArcade(0, 0);
+            //     eff.assemblyUp();
+            // }
+            // isPTOEnabled = !isPTOEnabled;
+            eff.togglePTO();
         }
 
         // wings toggle
