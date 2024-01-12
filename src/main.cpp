@@ -87,25 +87,26 @@ void opcontrol() {
 
     while (true) {
         // ======================== Arcade ======================== 
-        double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+        double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
         double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         // distance *= isReversed ? -1 : 1;
 
         // ======================== Tank ======================== 
         // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-        drive.moveArcade(distance, heading);
+        drive.moveTank(distance, heading);
 
         // ======================== Other Controls ======================== 
         // macro for toggling raising or lowering
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) {
             if (isPTOEnabled) {
-                eff.assemblyDown();
-                pros::delay(200);
                 eff.setPTO(false);
             } else {
+                drive.moveArcade(-1, 0);
+                pros::delay(100);
                 eff.setPTO(true);
-                pros::delay(200);
+                pros::delay(500);
+                drive.moveArcade(0, 0);
                 eff.assemblyUp();
             }
             isPTOEnabled = !isPTOEnabled;
@@ -134,12 +135,12 @@ void opcontrol() {
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) eff.lock();
 
         // actual slapper
-        Console::printBrain(0, (int)eff.slapper.get_position(), "Test:");
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1))
             eff.toggleShootingState();
         eff.stepShootMotor();
 
         Console::printBrain(4, eff.rotSensorFB.get_position(), "Four bar position");
+        Console::printBrain(5, OdomCustom::getPos(), "Pos");
 
         pros::delay(10);
     }

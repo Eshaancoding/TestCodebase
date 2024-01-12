@@ -51,17 +51,30 @@ void Effectors::setPTO (bool state) {
 }
 
 void Effectors::assemblyUp () {
-    leftPTOMotor.moveVelocity(-600);
-    rightPTOMotor.moveVelocity(-600);
-    pros::delay(5000);
+    while (true) {
+        // leftPTOMotor.moveVelocity(-600);
+        // rightPTOMotor.moveVelocity(-600);
+        leftPTOMotor.moveVoltage(-12000);
+        rightPTOMotor.moveVoltage(-12000);
+
+        if (rotSensorFB.get_position() < 8000) {
+            Console::printBrain(6, "DONE");
+            break;
+        }
+        pros::delay(200);
+    }
     leftPTOMotor.moveVelocity(0);
     rightPTOMotor.moveVelocity(0);
 }
 
 void Effectors::assemblyDown () {
-    leftPTOMotor.moveVelocity(600);
-    rightPTOMotor.moveVelocity(-600);
-    pros::delay(5000);
+    while (true) {
+        leftPTOMotor.moveVelocity(300);
+        rightPTOMotor.moveVelocity(300);
+
+        if (rotSensorFB.get_position() > 30000) break;
+        pros::delay(200);
+    }
     leftPTOMotor.moveVelocity(0);
     rightPTOMotor.moveVelocity(0);
 }

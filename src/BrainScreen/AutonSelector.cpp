@@ -2,7 +2,6 @@
 #include "display/lv_conf.h"
 #include "display/lv_core/lv_obj.h"
 #include "display/lv_objx/lv_label.h"
-#include "logo.c"
 
 namespace AutonSelector {
     bool selectedSide = false;

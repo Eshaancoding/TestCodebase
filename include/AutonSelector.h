@@ -22,6 +22,4 @@ namespace AutonSelector {
     void init ();
 };
 
-
-
 #endif

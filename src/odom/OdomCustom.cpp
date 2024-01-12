@@ -20,7 +20,8 @@ namespace OdomCustom {
     double offsetEnc = 0.0;
 
     double distanceGet () {
-        return ((leftMotorGroup.getPosition() + rightMotorGroup.getPosition())/2) * 60 / 48;
+        Console::printBrain(2, leftMotorGroup.getPosition()/100, "Left motor: ");
+        return ((leftMotorGroup.getPosition()/100 + rightMotorGroup.getPosition()/100)/2) * 60- / 48;
     }
 
     double angleGet () { // in angle
@@ -48,6 +49,9 @@ namespace OdomCustom {
     void MainLoop () {
         while (true) {
             // get change in encoder
+            double di = distanceGet();
+            Console::printBrain(3, di, "distance: ");
+
             double enc_get = distanceGet(); // cheeeeeeeeeeck this
             double currentEnc = (enc_get - offsetEnc)/360;            
             double diff = currentEnc - prevEnc;
@@ -55,6 +59,7 @@ namespace OdomCustom {
 
             // get change in angle
             double currentAng = angleGet();
+            Console::printBrain(7, currentAng, "current ang: ");
             xPos = (xPos.load().convert(okapi::inch) + diff * sin(currentAng)) * 1_in;
             yPos = (yPos.load().convert(okapi::inch) + diff * cos(currentAng)) * 1_in;
             currentAngle = currentAng * okapi::radian;
@@ -65,7 +70,7 @@ namespace OdomCustom {
         }
     }
 
-    // get position
+    // get position-
     okapi::OdomState getPos () {
         return {xPos.load(), yPos.load(), currentAngle.load()};
     }
