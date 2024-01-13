@@ -61,7 +61,6 @@ void initialize() {
     OdomCustom::init(); 
     Task task (OdomCustom::MainLoop);
 
-    eff.resetShoot();
 
 }
 
@@ -80,6 +79,7 @@ void autonomous() {
 // you disabled the factor map thing
 
 void opcontrol() {
+    eff.resetShoot();
     bool isPTOEnabled = false;
     bool isIntaking = false;
     Control::printController(0, "Forward    ");
