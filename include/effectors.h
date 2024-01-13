@@ -35,6 +35,8 @@ public:
 
     bool isPTOEnabled;
 
+    bool lockEnabled;
+
     Effectors () : 
         slapper(13, pros::E_MOTOR_GEAR_RED),
         intakeMotor(19, pros::E_MOTOR_GEAR_GREEN),    
@@ -46,7 +48,8 @@ public:
         wingsActive(false),
         shootState(DORMANT),
         intakeActive(INACTIVE),
-        isPTOEnabled(false)
+        isPTOEnabled(false),
+        lockEnabled(false)
     { 
         slapper.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
     };

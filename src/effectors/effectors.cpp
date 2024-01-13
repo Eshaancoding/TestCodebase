@@ -131,7 +131,8 @@ void Effectors::resetShoot() {
 }
 
 void Effectors::lock () {
-    endGame.set_value(1);
+    lockEnabled = !lockEnabled;
+    endGame.set_value(lockEnabled);
 }
 
 void Effectors::togglePTO () {

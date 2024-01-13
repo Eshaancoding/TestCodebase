@@ -74,7 +74,7 @@ void autonomous() {
     // else if (state.side == AutonSelector::SideState::LEFT && state.risky == AutonSelector::RiskyState::SAFE) Routes::left();
     // else if (state.side == AutonSelector::SideState::RIGHT && state.risky == AutonSelector::RiskyState::SAFE) Routes::right();
     // else if (state.status == AutonSelector::TEST) Routes::skills();
-    Routes::qualDefensive();
+    Routes::elimOffensive();
 };
 
 // you disabled the factor map thing
@@ -98,8 +98,8 @@ void opcontrol() {
         // ======================== Tank ======================== 
         // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-        // drive.moveTank(distance, heading);
-        drive.moveArcade(distance, heading);
+        drive.moveTank(distance, heading);
+        // drive.moveArcade(distance, heading);
 
         // ======================== Other Controls ======================== 
         // macro for toggling raising or lowering
