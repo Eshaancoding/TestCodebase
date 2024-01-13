@@ -74,7 +74,7 @@ void autonomous() {
     // else if (state.side == AutonSelector::SideState::LEFT && state.risky == AutonSelector::RiskyState::SAFE) Routes::left();
     // else if (state.side == AutonSelector::SideState::RIGHT && state.risky == AutonSelector::RiskyState::SAFE) Routes::right();
     // else if (state.status == AutonSelector::TEST) Routes::skills();
-    Routes::qualOffensive();
+    Routes::qualDefensive();
 };
 
 // you disabled the factor map thing
