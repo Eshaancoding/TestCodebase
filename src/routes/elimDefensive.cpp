@@ -8,42 +8,33 @@
 
 void Routes::elimDefensive () {
     // note different corodinate system
-    OdomCustom::setPos(0_in, 0_in, -33.69_deg);
+    OdomCustom::setPos(0_in, 0_in, -41.01_deg);
     
     // go forward and outtake our match load
-    drive.goForward(3.4_tile, {{0, 1.7}, {0.7, 0.6}});
-    drive.turnRight(100_deg);
-    eff.setIntake(true);
-    pros::delay(1000);
-    eff.setIntake(false, true);
-    drive.turnLeft(100_deg);
-    
-    // intake the first triball and outtake
     eff.setIntake();
-    drive.goForward(5_in);
-    drive.turnRight(123_deg);
-    eff.setIntake(true);
-    pros::delay(1000);
-    eff.setIntake(false, true);
-
-    // make sure that you face the 90 degree angle
-    OdomCustom::setPos(0_in, 0_in);
-    drive.faceToPoint({0_tile, 20_tile}, true, {{0, 0.8}});
-
-    // get the last two
-    eff.setIntake();
-    drive.goForward(8_in);
-    drive.turnRight(90_deg);
-    eff.setIntake(true);
-    pros::delay(500);
-    eff.setIntake(false, true);
-    eff.wingsToggle();
-
-    // slam
-    drive.setToleranceParams(nullopt, nullopt, 1.7_s);
-    drive.goForward(2.2_tile, {{0, 1.4}}, {{0.7, [](){
-        eff.setIntake(true, false);
-    }}});
+    drive.goForward(1.5_tile, {{0, 1.3}});
     drive.resetToleranceParams();
+
+    drive.setToleranceParams(nullopt, nullopt, 0.5_s);
+    drive.turnRight(80_deg);
+    eff.setIntake(true, false);
+    pros::delay(1000);
+    eff.setIntake();
+    drive.setToleranceParams(nullopt, nullopt, 1_s);
+    drive.turnLeft(145_deg, {{0, 0.8}});
+
+    // get triball
+    drive.goForward(20_in);
+    drive.goBackward(20_in);
+    drive.turnRight(135_deg);
+    eff.setIntake(true, false);
+    pros::delay(1000);
+    eff.setIntake(false, true);
+
+    // then get the other two 
+    // drive.turnLeft(90_deg);
+    // eff.setIntake();
+    // drive.goForward()
+    
 }
 
