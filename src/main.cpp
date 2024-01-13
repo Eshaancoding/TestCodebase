@@ -45,7 +45,7 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    // AutonSelector::init();
+    AutonSelector::init();
 
     leftPTOMotor.setGearing(AbstractMotor::gearset::blue);
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
@@ -68,12 +68,13 @@ void initialize() {
 void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-    // auto state = waitForValidState();
-    // if (state.side == AutonSelector::SideState::LEFT && state.risky == AutonSelector::RiskyState::RISKY) Routes::leftRisky();
-    // else if (state.side == AutonSelector::SideState::LEFT && state.risky == AutonSelector::RiskyState::SAFE) Routes::left();
-    // else if (state.side == AutonSelector::SideState::RIGHT && state.risky == AutonSelector::RiskyState::SAFE) Routes::right();
-    // else if (state.status == AutonSelector::TEST) Routes::skills();
-    Routes::elimDefensive();
+    
+    auto state = waitForValidState();
+    if (state.side == AutonSelector::SideState::ELIM && state.risky == AutonSelector::RiskyState::DEFENSIVE) Routes::elimDefensive();
+    else if (state.side == AutonSelector::SideState::ELIM && state.risky == AutonSelector::RiskyState::OFFENSIVE) Routes::elimOffensive();
+    else if (state.side == AutonSelector::SideState::QUAL && state.risky == AutonSelector::RiskyState::DEFENSIVE) Routes::qualDefensive();
+    else if (state.side == AutonSelector::SideState::QUAL && state.risky == AutonSelector::RiskyState::OFFENSIVE) Routes::qualOffensive();
+    else if (state.status == AutonSelector::TEST) Routes::skills();
 };
 
 // you disabled the factor map thing
@@ -133,9 +134,6 @@ void opcontrol() {
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1))
             eff.toggleShootingState();
         eff.stepShootMotor();
-
-        Console::printBrain(4, eff.rotSensorFB.get_position(), "Four bar position");
-        Console::printBrain(5, OdomCustom::getPos(), "Pos");
 
         pros::delay(10);
     }

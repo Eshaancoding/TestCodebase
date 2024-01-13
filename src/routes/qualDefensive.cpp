@@ -29,13 +29,20 @@ void Routes::qualDefensive () {
     drive.goBackward(6_in);
     eff.setIntake(false, true);
 
-    //go to elevation bars
-    drive.turnRight(35_deg);
-    drive.goBackward(35_in);
-    
-    OdomCustom::setPos(0_in, 0_in);
-    drive.faceToPoint({20_tile, 0_tile}, true);
+    drive.faceToPoint({-20_tile, 0_tile}, true);
+    drive.goForward(2_tile);
+    eff.wingsToggle();
+    drive.setToleranceParams(nullopt, nullopt, 0.5_s);
+    drive.turnRight(30_deg);
+    drive.resetToleranceParams();
 
-    drive.goBackward(1.1_tile, {{0, 0.8}});
+    //go to elevation bars
+    // drive.turnRight(35_deg);
+    // drive.goBackward(35_in);
+    
+    // OdomCustom::setPos(0_in, 0_in);
+    // drive.faceToPoint({20_tile, 0_tile}, true);
+
+    // drive.goBackward(1.3_tile, {{0, 1.2}});
 
 }
