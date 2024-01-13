@@ -8,34 +8,28 @@
 #include "odom/OdomCustom.h"
 
 void Routes::skills () {
-    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+    eff.wingsToggle();
+    drive.goForward(16_in, {}, {{0.9, [](){
+        eff.wingsToggle();
+    }}});
+    pros::delay(500);
+    drive.turnRight(27_deg, {{0, 0.85}});
 
-    OdomCustom::setPos(0_in, 0_in, nullopt);
-    drive.faceToPoint({0_in, -10_tile}, true, {{0, 0.7}});
-    drive.goBackward(0.5_tile);
-    drive.turnLeft(90_deg);
-    drive.goBackward(5_tile);
-    drive.turnRight(90_deg);
-    drive.goBackward(3_tile);
-    drive.turnRight(45_deg);
-    drive.goBackward(1.41_tile);
-    drive.turnRight(45_deg);
+    eff.setIntake(true, false);
+    drive.setToleranceParams(nullopt, nullopt, 1_s);
+    drive.goForward(2.2_tile, {{0, 1.4}}, {{0.7, [](){
+        eff.setIntake(true, false);
+    }}});
+    drive.resetToleranceParams();
+    drive.goBackward(6_in);
 
-    // slam that shit
-    drive.moveArcade(-1, 0);
-    pros::delay(800); 
-    drive.moveArcade(0, 0);
-
-    drive.goForward(0.5_tile);
-    drive.turnLeft(90_deg);
-    drive.goForward(2_tile);
-    drive.turnLeft(90_deg); 
-    
-    drive.goForward(2_tile);
+    drive.turnLeft(45_deg);
+    drive.goBackward(6_in);
     drive.turnRight(90_deg);
 
-    drive.moveArcade(-1, 0);
-    pros::delay(2000); 
-    drive.moveArcade(0, 0);
+    eff.toggleShootingState();
+    while (true) {
+        eff.stepShootMotor();
+        pros::delay(50);
+    }
 }

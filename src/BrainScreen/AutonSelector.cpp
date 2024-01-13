@@ -69,7 +69,8 @@ namespace AutonSelector {
     }
 
     lv_res_t setSkill (lv_obj_t* obj) {
-        isOffensive = !isOffensive;
+        isOffensive = false;
+        isElim = false;
         shouldSkill = true;
         lv_btn_set_state(qualB, LV_BTN_STATE_REL);
         lv_btn_set_state(elimB, LV_BTN_STATE_REL);

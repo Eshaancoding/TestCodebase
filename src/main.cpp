@@ -77,7 +77,9 @@ void autonomous() {
     // if (state.offDefState == AutonSelector::OFFENSIVE) Console::printBrain(1, "Offensive.");
     // else if (state.offDefState == AutonSelector::DEFENSIVE) Console::printBrain(1, "Defensive.");
 
-    if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
+    if (state.status == AutonSelector::SKILL)
+        Routes::skills();
+    else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
         Routes::elimDefensive();
     else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
         Routes::elimOffensive();
@@ -94,7 +96,6 @@ void opcontrol() {
     bool isPTOEnabled = false;
     bool isIntaking = false;
     Control::printController(0, "Forward    ");
-
 
     // ================== COAST ================== 
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
@@ -128,15 +129,6 @@ void opcontrol() {
             eff.setIntake(false, isIntaking);
         }
 
-        // slapper test
-        // Console::printBrain(1, OdomCustom::distanceGet(), "Enc: ");
-        // if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-        //     eff.slapper.move_velocity(-100);
-        // }
-        // else {
-        //     eff.slapper.move_velocity(0);
-        // }
-
         // Lock
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) eff.lock();
 
@@ -152,8 +144,4 @@ void opcontrol() {
 // R2: macro to go up and PTO and shit. Make sure you go back down.
 // L1: wings
 // L2: move intake (no outtake)
-
 // R1: Shooting (adi wants some fancy shit)
-
-
-//  
