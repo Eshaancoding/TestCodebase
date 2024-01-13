@@ -13,14 +13,15 @@ void Routes::qualDefensive () {
 
     //get matchload triball out
     eff.wingsToggle();
-    drive.goForward(17_in, {}, {{0.8, [](){
+    drive.goForward(16_in, {}, {{0.9, [](){
         eff.wingsToggle();
     }}});
-    drive.turnLeft(30_deg, {{0, 0.7}});
+    pros::delay(500);
+    drive.turnLeft(27_deg, {{0, 0.85}});
 
     //score two triballs
     eff.setIntake(true, false);
-    drive.setToleranceParams(nullopt, nullopt, 1.7_s);
+    drive.setToleranceParams(nullopt, nullopt, 1_s);
     drive.goForward(2.2_tile, {{0, 1.4}}, {{0.7, [](){
         eff.setIntake(true, false);
     }}});
@@ -33,8 +34,8 @@ void Routes::qualDefensive () {
     drive.goBackward(35_in);
     
     OdomCustom::setPos(0_in, 0_in);
-    drive.faceToPoint({20_tile, 0_tile}, true, {{0, 0.8}});
+    drive.faceToPoint({20_tile, 0_tile}, true);
 
-    drive.goBackward(1.2_tile, {{0, 0.7}});
+    drive.goBackward(1.1_tile, {{0, 0.8}});
 
 }
