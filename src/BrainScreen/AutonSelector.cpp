@@ -97,8 +97,8 @@ namespace AutonSelector {
 
     State getState () { 
         return {
-            isLeft ? LEFT : RIGHT, 
-            isRisky ? RISKY : SAFE, 
+            isLeft ? ELIM : QUAL, 
+            isRisky ? OFFENSIVE : DEFENSIVE, 
             !isDonePrompt ? NOTREADY : 
             shouldTest ? TEST : ROUTE
         };

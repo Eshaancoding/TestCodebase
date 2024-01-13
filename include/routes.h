@@ -6,10 +6,10 @@
 
 namespace Routes {
     void test (); // test function
-    void left ();   
-    void leftRisky ();   
-    void right ();  
-    void rightRisky ();   
+    void elimOffensive ();   
+    void elimDefensive ();   
+    void qualOffensive ();  
+    void qualDefensive ();   
     void skills ();
 };
 

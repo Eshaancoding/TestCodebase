@@ -12,7 +12,7 @@
 #define Distance_MINERRDISI  2.5  // min error to disable I, NOT NEEDED IF I = 0 
 
 // angle
-#define Heading_P            0.255
+#define Heading_P            0.225
 #define Heading_I            0
 #define Heading_D            0.22
 #define Heading_MAXPOWER     1

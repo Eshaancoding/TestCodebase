@@ -116,7 +116,9 @@ void Effectors::resetShoot() {
     rotSensor.set_position(0);
     double prevRotSensorVal = 0;
     slapper.move_velocity(-100);
-    pros::delay(400);
+    setIntake();
+    pros::delay(300);
+    setIntake(false, true);
     while (true) {
         pros::delay(100);
         double currentRotSensor = rotSensor.get_position();
