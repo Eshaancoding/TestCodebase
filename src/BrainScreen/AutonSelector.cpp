@@ -4,19 +4,19 @@
 #include "display/lv_objx/lv_label.h"
 
 namespace AutonSelector {
-    bool selectedSide = false;
-    bool selectedRisky = false;
+    bool selectedQualElim = false;
+    bool selectedOffDef = false;
 
-    bool isRisky = false;
-    bool isLeft = false;
-    bool shouldTest = true;
+    bool isOffensive = false;
+    bool isElim = false;
+    bool shouldSkill = false;
     bool isDonePrompt = false;
 
-    lv_obj_t* leftButton;    
-    lv_obj_t* rightButton;    
-    lv_obj_t* riskyButton;    
-    lv_obj_t* nonRiskyButton;    
-    lv_obj_t* testButton;    
+    lv_obj_t* offensiveB;    
+    lv_obj_t* defensiveB;    
+    lv_obj_t* elimB;    
+    lv_obj_t* qualB;    
+    lv_obj_t* skillB;    
     lv_obj_t* goButton;    
 
 
@@ -33,61 +33,61 @@ namespace AutonSelector {
         return obj;
     }
 
-    lv_res_t setLeft (lv_obj_t* obj) {
-        isLeft = true;
-        selectedSide = true;
-        lv_btn_set_state(rightButton, LV_BTN_STATE_REL);
-        lv_btn_set_state(testButton, LV_BTN_STATE_REL);
+    lv_res_t setOffensive (lv_obj_t* obj) {
+        isOffensive = true;
+        selectedOffDef = true;
+        lv_btn_set_state(defensiveB, LV_BTN_STATE_REL);
+        lv_btn_set_state(skillB, LV_BTN_STATE_REL);
 
         return LV_RES_OK;
     }
 
-    lv_res_t setRight (lv_obj_t* obj) {
-        isLeft = false;
-        selectedSide = true;
-        lv_btn_set_state(leftButton, LV_BTN_STATE_REL);
-        lv_btn_set_state(testButton, LV_BTN_STATE_REL);
+    lv_res_t setDefensive (lv_obj_t* obj) {
+        isOffensive = false;
+        selectedOffDef = true;
+        lv_btn_set_state(offensiveB, LV_BTN_STATE_REL);
+        lv_btn_set_state(skillB, LV_BTN_STATE_REL);
 
         return LV_RES_OK;
     }
 
-    lv_res_t setRiskyFalse (lv_obj_t* obj) {
-        isRisky = false;
-        selectedRisky = true;
-        lv_btn_set_state(riskyButton, LV_BTN_STATE_REL);
-        lv_btn_set_state(testButton, LV_BTN_STATE_REL);
+    lv_res_t setQual (lv_obj_t* obj) {
+        isElim = false;
+        selectedQualElim = true;
+        lv_btn_set_state(elimB, LV_BTN_STATE_REL);
+        lv_btn_set_state(skillB, LV_BTN_STATE_REL);
 
         return LV_RES_OK;
     }
 
-    lv_res_t setRiskyTrue (lv_obj_t* obj) {
-        isRisky = true;
-        selectedRisky = true;
-        lv_btn_set_state(nonRiskyButton, LV_BTN_STATE_REL);
-        lv_btn_set_state(testButton, LV_BTN_STATE_REL);
+    lv_res_t setElim (lv_obj_t* obj) {
+        isElim = true;
+        selectedQualElim = true;
+        lv_btn_set_state(qualB, LV_BTN_STATE_REL);
+        lv_btn_set_state(skillB, LV_BTN_STATE_REL);
         return LV_RES_OK;
     }
 
-    lv_res_t setTest (lv_obj_t* obj) {
-        isRisky = !isRisky;
-        shouldTest = true;
-        lv_btn_set_state(nonRiskyButton, LV_BTN_STATE_REL);
-        lv_btn_set_state(riskyButton, LV_BTN_STATE_REL);
-        lv_btn_set_state(leftButton, LV_BTN_STATE_REL);
-        lv_btn_set_state(rightButton, LV_BTN_STATE_REL);
-        selectedRisky = false;
-        selectedSide = false;
+    lv_res_t setSkill (lv_obj_t* obj) {
+        isOffensive = !isOffensive;
+        shouldSkill = true;
+        lv_btn_set_state(qualB, LV_BTN_STATE_REL);
+        lv_btn_set_state(elimB, LV_BTN_STATE_REL);
+        lv_btn_set_state(offensiveB, LV_BTN_STATE_REL);
+        lv_btn_set_state(defensiveB, LV_BTN_STATE_REL);
+        selectedOffDef = false;
+        selectedQualElim = false;
 
         return LV_RES_OK;
     }
 
     lv_res_t confirm (lv_obj_t* obj) {
-        if (shouldTest || (selectedRisky && selectedSide)) {
-            lv_obj_del(leftButton);
-            lv_obj_del(rightButton);
-            lv_obj_del(riskyButton);
-            lv_obj_del(nonRiskyButton);
-            lv_obj_del(testButton);
+        if (shouldSkill || (selectedOffDef && selectedQualElim)) {
+            lv_obj_del(offensiveB);
+            lv_obj_del(defensiveB);
+            lv_obj_del(elimB);
+            lv_obj_del(qualB);
+            lv_obj_del(skillB);
             lv_obj_del(goButton);
             isDonePrompt = true;
         }
@@ -97,33 +97,32 @@ namespace AutonSelector {
 
     State getState () { 
         return {
-            isLeft ? ELIM : QUAL, 
-            isRisky ? OFFENSIVE : DEFENSIVE, 
+            isElim ? ELIM : QUAL, 
+            isOffensive ? OFFENSIVE : DEFENSIVE, 
             !isDonePrompt ? NOTREADY : 
-            shouldTest ? TEST : ROUTE
+            shouldSkill ? SKILL : ROUTE
         };
     }
 
     void init () {
-        shouldTest = false;        
+        shouldSkill = false;        
 
-        leftButton = createButton("Off", 25, 25, 100, 50);
-        rightButton = createButton("Def", 150, 25, 100, 50);
-        riskyButton = createButton("Elim", 25, 100, 100, 50);
-        nonRiskyButton = createButton("Qual", 150, 100, 100, 50);
-        testButton = createButton("Skill", 25, 175, 225, 50);
+        offensiveB = createButton("Off", 25, 25, 100, 50);
+        defensiveB = createButton("Def", 150, 25, 100, 50);
+        elimB = createButton("Elim", 25, 100, 100, 50);
+        qualB = createButton("Qual", 150, 100, 100, 50);
+        skillB = createButton("Skill", 25, 175, 225, 50);
         goButton = createButton("Confirm", 270, 175, 190, 50, false);
 
         // LV_IMG_DECLARE(logo);
-
         // lv_obj_t* img = lv_img_create(lv_scr_act(), NULL);
         // lv_img_set_src(img, &logo);
 
-        lv_btn_set_action(leftButton, LV_BTN_ACTION_CLICK, setLeft);
-        lv_btn_set_action(rightButton, LV_BTN_ACTION_CLICK, setRight);
-        lv_btn_set_action(riskyButton, LV_BTN_ACTION_CLICK, setRiskyTrue);
-        lv_btn_set_action(nonRiskyButton, LV_BTN_ACTION_CLICK, setRiskyFalse);
-        lv_btn_set_action(testButton, LV_BTN_ACTION_CLICK, setTest);
+        lv_btn_set_action(offensiveB, LV_BTN_ACTION_CLICK, setOffensive);
+        lv_btn_set_action(defensiveB, LV_BTN_ACTION_CLICK, setDefensive);
+        lv_btn_set_action(elimB, LV_BTN_ACTION_CLICK, setElim);
+        lv_btn_set_action(qualB, LV_BTN_ACTION_CLICK, setQual);
+        lv_btn_set_action(skillB, LV_BTN_ACTION_CLICK, setSkill);
         lv_btn_set_action(goButton, LV_BTN_ACTION_CLICK, confirm);
 
         // set style the go button

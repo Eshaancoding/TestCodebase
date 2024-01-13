@@ -66,7 +66,7 @@ void Drive::move (
                 if (distanceActivated) DistancePID.setFactor(get<0>(itr->second));
                 if (headingActivated) HeadingPID.setFactor(get<1>(itr->second));
 
-                /// TEST 
+                /// SKILL 
                 if (ODOM_DEBUG)
                     Console::printBrain(4, "Setting D Factor: %.3f and H Factor: %.3f at %.3f", get<0>(itr->second), get<1>(itr->second), percentChange);
 

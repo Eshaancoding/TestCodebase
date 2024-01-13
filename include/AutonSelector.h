@@ -8,13 +8,13 @@
 using namespace std;
 
 namespace AutonSelector {
-    enum SideState {ELIM=0, QUAL=1};
-    enum RiskyState {OFFENSIVE=0, DEFENSIVE=1};
-    enum Status {NOTREADY, TEST, ROUTE};
+    enum ElimQualState {ELIM=0, QUAL=1};
+    enum OffDefState {OFFENSIVE=0, DEFENSIVE=1};
+    enum Status {NOTREADY, SKILL, ROUTE};
 
     struct State {
-        SideState side;
-        RiskyState risky;
+        ElimQualState elimQualState;
+        OffDefState offDefState;
         Status status;
     };
 

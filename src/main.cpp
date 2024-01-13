@@ -29,7 +29,7 @@ AutonSelector::State waitForValidState () {
         auto stateCheck = AutonSelector::getState();             
         auto isCalibrating = OdomCustom::isCalibrating();
  
-        if (stateCheck.status == AutonSelector::TEST && !isCalibrating) {
+        if (stateCheck.status == AutonSelector::SKILL && !isCalibrating) {
             state = stateCheck;
             break;
         }
@@ -69,12 +69,22 @@ void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     
-    auto state = waitForValidState();
-    if (state.side == AutonSelector::SideState::ELIM && state.risky == AutonSelector::RiskyState::DEFENSIVE) Routes::elimDefensive();
-    else if (state.side == AutonSelector::SideState::ELIM && state.risky == AutonSelector::RiskyState::OFFENSIVE) Routes::elimOffensive();
-    else if (state.side == AutonSelector::SideState::QUAL && state.risky == AutonSelector::RiskyState::DEFENSIVE) Routes::qualDefensive();
-    else if (state.side == AutonSelector::SideState::QUAL && state.risky == AutonSelector::RiskyState::OFFENSIVE) Routes::qualOffensive();
-    else if (state.status == AutonSelector::TEST) Routes::skills();
+    auto state = waitForValidState();     
+
+    // if (state.elimQualState == AutonSelector::ElimQualState::ELIM) Console::printBrain(0, "Elim");
+    // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL) Console::printBrain(0, "Qual");
+    
+    // if (state.offDefState == AutonSelector::OFFENSIVE) Console::printBrain(1, "Offensive.");
+    // else if (state.offDefState == AutonSelector::DEFENSIVE) Console::printBrain(1, "Defensive.");
+
+    if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
+        Routes::elimDefensive();
+    else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
+        Routes::elimOffensive();
+    else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
+        Routes::qualDefensive();
+    else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
+        Routes::qualOffensive();
 };
 
 // you disabled the factor map thing

@@ -8,7 +8,7 @@
 
 void Routes::qualOffensive() {
     
-    OdomCustom::setPos(0_in, 0_in, -135_deg);
+    OdomCustom::setPos(0_in, 0_in, 45_deg);
     eff.setIntake();
     
     // go back to get the triball out
@@ -32,12 +32,18 @@ void Routes::qualOffensive() {
     // go a little bit back 
     drive.goBackward(8_in);
     eff.setIntake(false, true);
-    drive.turnLeft(45_deg);
-    
-    // go backwawrd to the red bar zone
-    drive.goBackward(1.4_tile);
-    drive.turnLeft(43_deg);
 
-    // go backward to touch
-    drive.goBackward(1.2_tile, {{0, 0.7}});
+    drive.faceToPoint({0_tile, 20_tile}, true);
+    drive.goForward(2_tile);
+    eff.wingsToggle();
+    drive.turnLeft(30_deg);
+
+    // drive.turnLeft(45_deg);
+    
+    // // go backwawrd to the red bar zone
+    // drive.goBackward(1.4_tile);
+    // drive.turnLeft(43_deg);
+
+    // // go backward to touch
+    // drive.goBackward(1.2_tile, {{0, 0.7}});
 }
