@@ -10,22 +10,6 @@
 void Routes::skills () {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-    // for (int i = 0; i < 43; i++) {
-    //     eff.cataOne.move_velocity(100);
-    //     eff.cataTwo.move_velocity(-100);
-    //     pros::delay(300);
-    //     // reset slapper
-    //     eff.state = CataState::RESETTING;
-    //     while (true) {
-    //         eff.resetCata();
-    //         if (eff.state == CataState::SHOOTING) { 
-    //             break;
-    //         }
-    //         pros::delay(20);
-    //     }
-    //     // delay
-    //     pros::delay(200);
-    // }
 
     OdomCustom::setPos(0_in, 0_in, nullopt);
     drive.faceToPoint({0_in, -10_tile}, true, {{0, 0.7}});
