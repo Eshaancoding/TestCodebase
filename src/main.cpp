@@ -63,6 +63,8 @@ void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     
+    drive.goForward(2_tile);
+    
     // auto state = waitForValidState();     
     // if (state.status == AutonSelector::SKILL)
     //     Routes::skills();
@@ -101,12 +103,19 @@ void opcontrol() {
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
         drive.moveArcade(distance, heading);
 
-        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_RIGHT))
+        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_LEFT))
             isShooting = !isShooting;
 
         if (isShooting) {
             eff.slapper.move_velocity(200);
             eff.smallerSlapper.move_velocity(-200);
+            pros::delay(100);
+            eff.slapper.move_velocity(0);
+            eff.smallerSlapper.move_velocity(0);
+            pros::delay(100);
+            eff.slapper.move_velocity(200);
+            eff.smallerSlapper.move_velocity(-200);
+            pros::delay(500);
         } else {
             eff.slapper.move_velocity(0);
             eff.smallerSlapper.move_velocity(0);

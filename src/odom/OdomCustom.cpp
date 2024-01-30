@@ -7,7 +7,7 @@
 #include "Console.h"
 
 #define PI 3.14159265
-#define WHEEL_DIA 2.500715082
+#define WHEEL_DIA 2.35
 
 namespace OdomCustom {
     std::atomic<okapi::QAngle> currentAngle = 0_deg;
@@ -20,7 +20,7 @@ namespace OdomCustom {
     double offsetEnc = 0.0;
 
     double distanceGet () {
-        return ((leftMotorGroup.getPosition() + rightMotorGroup.getPosition())/2) * 60 / 48;
+        return ((leftMotorGroup.getPosition() + rightMotorGroup.getPosition())/2);
     }
 
     double angleGet () { // in angle
@@ -53,6 +53,7 @@ namespace OdomCustom {
             double enc_get = distanceGet(); // cheeeeeeeeeeck this
             double currentEnc = (enc_get - offsetEnc)/360;            
             double diff = currentEnc - prevEnc;
+            
             diff *= PI * WHEEL_DIA; // convert to inches
 
             // get change in angle
@@ -64,6 +65,8 @@ namespace OdomCustom {
             // set previous values
             prevEnc = currentEnc; 
             pros::delay(25); // test this shit
+
+            Console::printBrain(2, distanceGet(), "Value: ");
         }
     }
 
