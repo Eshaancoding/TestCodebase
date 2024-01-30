@@ -34,7 +34,7 @@ void Drive::goForward (
         map[disablePoint] = {Distance_FACTOR, 0}; // completely disables heading! only allows distance
     }
 
-    move(absolute, false, COURSE_CORRECTION, true, map, callbackMap);
+    move(absolute, false, COURSE_CORRECTION, true, true, map, callbackMap);
 }
 
 
@@ -60,7 +60,7 @@ void Drive::turnRight (
         map[i.first] = {0, i.second};
     }
 
-    move(absolute, false, true, false, map, callbackMap);
+    move(absolute, false, true, false, true, map, callbackMap);
 }
 
 void Drive::turnLeft (
@@ -82,12 +82,13 @@ void Drive::faceToPoint (
         map[i.first] = {Distance_FACTOR, i.second};
     }
 
-    move(point, isRelative, true, false, map, callbackMap);
+    move(point, isRelative, true, false, true, map, callbackMap);
 }
 
 void Drive::goToPoint (
     Point point,
     bool isRelative,
+    bool isCC,
     std::map<double, double> factorMap,
     std::map<double, std::function<void()>> callbackMap
 ) {
@@ -106,5 +107,5 @@ void Drive::goToPoint (
         map[disablePoint] = {1, 0}; // completely disables heading! only allows distance
     }
 
-    move(point, isRelative, COURSE_CORRECTION, true, map, callbackMap);   
+    move(point, isRelative, COURSE_CORRECTION, true, !isCC, map, callbackMap);   
 }

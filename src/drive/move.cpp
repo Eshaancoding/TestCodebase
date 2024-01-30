@@ -10,6 +10,7 @@
 #include "pros/adi.h"
 #include "effectors.h"
 #include "odom/OdomCustom.h"
+#include "PIDParams.h"
 
 Point add (okapi::OdomState orig, Point p) {
     p.x += orig.x;
@@ -22,6 +23,7 @@ void Drive::move (
     bool isRelative,
     bool headingActivated, 
     bool distanceActivated,
+    bool setFactorCC,
     std::map<double, pair<double, double>> factorMap,
     std::map<double, std::function<void()>> callbackMap
 ) {
@@ -93,6 +95,9 @@ void Drive::move (
         double headingPower  = 0;
         if (distanceActivated) distancePower = DistancePID.step(distErr.convert(inch));
         if (headingActivated)  headingPower  = HeadingPID.step(angleErr.convert(radian));
+
+        if (headingActivated && distanceActivated && setFactorCC) 
+            headingPower *= COURSE_CORRECTION_FACTOR;
 
         // Actually drive
         Drive::moveArcade(distancePower, headingPower);

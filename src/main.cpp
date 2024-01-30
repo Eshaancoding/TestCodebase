@@ -63,7 +63,9 @@ void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     
-    drive.goForward(2_tile);
+    // drive.goForward(2_tile);
+    // drive.turnRight(135_deg);
+    Routes::skills();
     
     // auto state = waitForValidState();     
     // if (state.status == AutonSelector::SKILL)

@@ -35,6 +35,7 @@ private:
         bool isRelative=true,
         bool headingActivated=true, 
         bool distanceActivated=true,
+        bool setFactorCC=true,
         std::map<double, pair<double, double>> factorMap={},
         std::map<double, std::function<void()>> callbackMap={}
     );
@@ -142,6 +143,7 @@ public:
     void goToPoint (
         Point point,
         bool isRelative,
+        bool isCC=false,
         std::map<double, double> factorMap={},
         std::map<double, std::function<void()>> callbackMap={}
     );
