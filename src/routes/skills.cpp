@@ -8,6 +8,8 @@
 #include "odom/OdomCustom.h"
 
 void Routes::skills () {
+    OdomCustom::setPos(0_in, 0_in, -135_deg);
+
     drive.setToleranceParams(nullopt, nullopt, 0.5_s);
     drive.goForward(16_in);
     pros::delay(500);
@@ -24,8 +26,10 @@ void Routes::skills () {
     eff.setIntake(false, true);
 
     drive.turnLeft(45_deg);
+    
+    drive.faceToPoint({-10_tile, -10_tile}, true);
     drive.goBackward(12_in);
-    drive.turnRight(130_deg);
+    drive.faceToPoint({-5_tile, 50_tile}, true);
 
     drive.setToleranceParams(nullopt, nullopt, 1_s);
     drive.goBackward(8_in, {{0, 1.4}});

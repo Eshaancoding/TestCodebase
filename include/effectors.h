@@ -21,34 +21,35 @@ enum ShootState {
 class Effectors {
 public:
     pros::Motor slapper;
+    pros::Motor smallerSlapper;
+
     pros::Motor intakeMotor;
     
     pros::Rotation rotSensor;
     pros::Rotation rotSensorFB;
 
-    pros::ADIDigitalOut piston;
-    pros::ADIDigitalOut ptoPiston;
-    pros::ADIDigitalOut endGame;
+    pros::ADIDigitalOut wingsPiston;
+    pros::ADIDigitalOut fourBar;
+    
+    bool forBarActive;
     bool wingsActive;
     IntakeState intakeActive;
     ShootState shootState;
 
-    bool isPTOEnabled;
-
     bool lockEnabled;
 
     Effectors () : 
-        slapper(13, pros::E_MOTOR_GEAR_RED),
-        intakeMotor(19, pros::E_MOTOR_GEAR_GREEN),    
-        piston('A'),
-        ptoPiston('B'),
-        endGame('C'),
+        slapper(13, pros::E_MOTOR_GEAR_GREEN),
+        smallerSlapper(14, pros::E_MOTOR_GEAR_GREEN),
+        intakeMotor(5, pros::E_MOTOR_GEAR_GREEN),    
+        wingsPiston('B'),
+        fourBar('A'),
         rotSensor(18),
         rotSensorFB(9),
         wingsActive(false),
+        forBarActive(false),
         shootState(DORMANT),
         intakeActive(INACTIVE),
-        isPTOEnabled(false),
         lockEnabled(false)
     { 
         slapper.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
@@ -62,20 +63,13 @@ public:
     void intakeToggle (bool reverse=false);
     void setIntake (bool isReverse=false, bool isOff=false); // SIMPLER version of intake; use this for auton
 
-    // pto
-    void setPTO (bool state);
-    void togglePTO ();
-    bool returnPTOState ();
-    
-    // raise the entire assembly
-    void assemblyUp ();
-    void assemblyDown ();
-
-
     // shooting with puncher
     void resetShoot ();
     void toggleShootingState ();
     void stepShootMotor ();
+
+    // do four bar
+    void toggleFourBar ();
 
     // lock
     void lock ();

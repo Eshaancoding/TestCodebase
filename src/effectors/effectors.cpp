@@ -5,7 +5,13 @@
 // WINGS
 void Effectors::wingsToggle () {
     wingsActive = !wingsActive;
-    piston.set_value(wingsActive); // there's a get value here in piston
+    wingsPiston.set_value(wingsActive); // there's a get value here in piston
+}
+
+// toggle four bar
+void Effectors::toggleFourBar () {
+    forBarActive = !forBarActive;
+    fourBar.set_value(forBarActive);
 }
 
 // INTAKE
@@ -40,46 +46,6 @@ void Effectors::setIntake (bool isReverse, bool isOff) {
     intakeMotor.move_voltage(powOne);
 }
 
-// PTO
-void Effectors::setPTO (bool state) {
-    ptoPiston.set_value(state);
-    if (state == true) {
-        leftPTOMotor.setBrakeMode(AbstractMotor::brakeMode::brake);
-        rightPTOMotor.setBrakeMode(AbstractMotor::brakeMode::brake);
-    } else {
-        leftPTOMotor.setBrakeMode(AbstractMotor::brakeMode::coast);
-        rightPTOMotor.setBrakeMode(AbstractMotor::brakeMode::coast);
-    }
-}
-
-void Effectors::assemblyUp () {
-    while (true) {
-        // leftPTOMotor.moveVelocity(-600);
-        // rightPTOMotor.moveVelocity(-600);
-        leftPTOMotor.moveVoltage(-12000);
-        rightPTOMotor.moveVoltage(-12000);
-
-        if (rotSensorFB.get_position() < 8000) {
-            break;
-        }
-        pros::delay(200);
-    }
-    leftPTOMotor.moveVelocity(0);
-    rightPTOMotor.moveVelocity(0);
-}
-
-void Effectors::assemblyDown () {
-    while (true) {
-        leftPTOMotor.moveVelocity(300);
-        rightPTOMotor.moveVelocity(300);
-
-        if (rotSensorFB.get_position() > 30000) break;
-        pros::delay(200);
-    }
-    leftPTOMotor.moveVelocity(0);
-    rightPTOMotor.moveVelocity(0);
-}
-
 void Effectors::toggleShootingState () {
     if (shootState == ShootState::SHOOTING) {
         shootState = ShootState::STOPPING;
@@ -112,43 +78,16 @@ void Effectors::stepShootMotor () {
 void Effectors::resetShoot() {
     // reset slapper
     rotSensor.set_position(0);
-    double prevRotSensorVal = 0;
-    slapper.move_velocity(-100);
-    setIntake();
-    pros::delay(300);
-    setIntake(false, true);
-    while (true) {
-        pros::delay(100);
-        double currentRotSensor = rotSensor.get_position();
-        if (abs(currentRotSensor - prevRotSensorVal) < 850) break;
-        prevRotSensorVal = currentRotSensor;
-    }
-    slapper.move_velocity(0);
-    rotSensor.set_position(0);
+ 
+    // eff.slapper.move_velocity(100);
+    // eff.smallerSlapper.move_velocity(-100);
+
+    // while (rotSensor.get_position() < 8600) {
+    //     pros::delay(50);
+    // }
+
+    // slapper.move_velocity(0);
+    // smallerSlapper.move_velocity(0);
+
 }
 
-void Effectors::lock () {
-    lockEnabled = !lockEnabled;
-    endGame.set_value(lockEnabled);
-}
-
-void Effectors::togglePTO () {
-    if (isPTOEnabled) {
-        eff.assemblyDown();
-        eff.setPTO(false);
-    } else {
-        drive.moveArcade(-0.1, 0);
-        pros::delay(100);
-        eff.setPTO(true);
-        pros::delay(500);
-        pros::delay(300);
-        drive.moveArcade(0, 0);
-        eff.assemblyUp();       
-    }
-
-    isPTOEnabled = !isPTOEnabled;
-}
-
-bool Effectors::returnPTOState () {
-    return isPTOEnabled;
-}

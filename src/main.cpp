@@ -45,22 +45,16 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    AutonSelector::init();
+    // AutonSelector::init();
 
-    leftPTOMotor.setGearing(AbstractMotor::gearset::blue);
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
     rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
-    rightPTOMotor.setGearing(AbstractMotor::gearset::blue);
-
-    leftPTOMotor.setBrakeMode(AbstractMotor::brakeMode::coast);
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
-    rightPTOMotor.setBrakeMode(AbstractMotor::brakeMode::coast);
 
     drive.resetToleranceParams();
     OdomCustom::init(); 
     Task task (OdomCustom::MainLoop);
-
 
 }
 
@@ -69,29 +63,24 @@ void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     
-    auto state = waitForValidState();     
-
-    // if (state.elimQualState == AutonSelector::ElimQualState::ELIM) Console::printBrain(0, "Elim");
-    // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL) Console::printBrain(0, "Qual");
-    
-    // if (state.offDefState == AutonSelector::OFFENSIVE) Console::printBrain(1, "Offensive.");
-    // else if (state.offDefState == AutonSelector::DEFENSIVE) Console::printBrain(1, "Defensive.");
-
-    if (state.status == AutonSelector::SKILL)
-        Routes::skills();
-    else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
-        Routes::elimDefensive();
-    else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
-        Routes::elimOffensive();
-    else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
-        Routes::qualDefensive();
-    else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
-        Routes::qualOffensive();
+    // auto state = waitForValidState();     
+    // if (state.status == AutonSelector::SKILL)
+    //     Routes::skills();
+    // else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
+    //     Routes::elimDefensive();
+    // else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
+    //     Routes::elimOffensive();
+    // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
+    //     Routes::qualDefensive();
+    // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
+    //     Routes::qualOffensive();
 };
 
 // you disabled the factor map thing
 
 void opcontrol() {
+    bool isShooting = false;    
+
     eff.resetShoot();
     bool isPTOEnabled = false;
     bool isIntaking = false;
@@ -103,25 +92,34 @@ void opcontrol() {
 
     while (true) {
         // ======================== Arcade ======================== 
-        double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+        double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
         double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         // distance *= isReversed ? -1 : 1;
 
         // ======================== Tank ======================== 
         // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-        drive.moveTank(distance, heading);
-        // drive.moveArcade(distance, heading);
+        drive.moveArcade(distance, heading);
 
-        // ======================== Other Controls ======================== 
-        // macro for toggling raising or lowering
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) {
-            eff.togglePTO();
+        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_RIGHT))
+            isShooting = !isShooting;
+
+        if (isShooting) {
+            eff.slapper.move_velocity(200);
+            eff.smallerSlapper.move_velocity(-200);
+        } else {
+            eff.slapper.move_velocity(0);
+            eff.smallerSlapper.move_velocity(0);
         }
 
-        // wings toggle
+        // // ======================== Other Controls ======================== 
+        // // macro for toggling raising or lowering
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1)) 
             eff.wingsToggle();
+
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) {
+            eff.toggleFourBar();
+        }
 
         // toggle intake
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2)) {
@@ -129,15 +127,14 @@ void opcontrol() {
             eff.setIntake(false, isIntaking);
         }
 
-        // Lock
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) eff.lock();
-
-        // actual slapper
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1))
-            eff.toggleShootingState();
-        eff.stepShootMotor();
+        // // actual slapper
+        // if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1))
+        //     eff.toggleShootingState();
+        // eff.stepShootMotor();
 
         pros::delay(10);
+
+        Console::printBrain(0, OdomCustom::getPos(), "Get pos: ");
     }
 }
 

@@ -50,10 +50,6 @@ public:
         distance *= 600; heading *= 600;
         leftMotorGroup.moveVelocity(distance + heading);    
         rightMotorGroup.moveVelocity(distance - heading);   
-        if (!eff.returnPTOState()) {
-            leftPTOMotor.moveVelocity(distance + heading);
-            rightPTOMotor.moveVelocity(distance - heading);
-        }
     }
 
     /**
@@ -66,10 +62,6 @@ public:
         left *= 600; right *= 600;
         leftMotorGroup.moveVelocity(left);     
         rightMotorGroup.moveVelocity(right);   
-        if (!eff.returnPTOState()) {
-            rightPTOMotor.moveVelocity(right);
-            leftPTOMotor.moveVelocity(left);
-        }
     }
 
     /**
