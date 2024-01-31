@@ -105,23 +105,37 @@ void opcontrol() {
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
         drive.moveArcade(distance, heading);
 
-        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_LEFT))
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT))
             isShooting = !isShooting;
 
-        if (isShooting) {
+        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
             eff.slapper.move_velocity(200);
             eff.smallerSlapper.move_velocity(-200);
-            pros::delay(100);
-            eff.slapper.move_velocity(0);
-            eff.smallerSlapper.move_velocity(0);
-            pros::delay(100);
-            eff.slapper.move_velocity(200);
-            eff.smallerSlapper.move_velocity(-200);
-            pros::delay(500);
         } else {
             eff.slapper.move_velocity(0);
             eff.smallerSlapper.move_velocity(0);
         }
+
+        if (isShooting) {
+            eff.slapper.move_velocity(200);
+            eff.smallerSlapper.move_velocity(-200);
+
+            pros::delay(10000000);
+            // while (eff.smallerSlapper.get_position() < -600) {
+            //     Console::printBrain(0, eff.smallerSlapper.get_position(), "sdfsdf");
+            //     pros::delay(30);
+            // }
+            eff.slapper.move_velocity(0);
+            eff.smallerSlapper.move_velocity(0);
+
+            isShooting = !isShooting; // false
+
+        } else {
+            eff.slapper.move_velocity(0);
+            eff.smallerSlapper.move_velocity(0);
+        }
+
+    
 
         // // ======================== Other Controls ======================== 
         // // macro for toggling raising or lowering

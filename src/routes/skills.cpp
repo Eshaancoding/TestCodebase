@@ -21,6 +21,19 @@ void Routes::skills () {
     pros::delay(600);
     drive.moveTank(0, 0);
 
+
+    eff.toggleFourBar();
+    pros::delay(500);
+    eff.slapper.move_velocity(200);
+    eff.smallerSlapper.move_velocity(-200);
+    pros::delay(100);
+    eff.slapper.move_velocity(0);
+    eff.smallerSlapper.move_velocity(0);
+    pros::delay(100);
+    eff.slapper.move_velocity(200);
+    eff.smallerSlapper.move_velocity(-200);
+    pros::delay(500);
+
     // drive.turnLeft(45_deg);
     
     // drive.faceToPoint({-10_tile, -10_tile}, true);
