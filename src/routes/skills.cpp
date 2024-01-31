@@ -49,9 +49,9 @@ void Routes::skills () {
     // pros::delay(600);
     // drive.moveTank(0, 0);
 
-    eff.toggleShootingState();
-    while (true) {
-        eff.stepShootMotor();
-        pros::delay(50);
-    }
+    // eff.toggleShootingState();
+    // while (true) {
+    //     eff.stepShootMotor();
+    //     pros::delay(50);
+    // }
 }

@@ -84,8 +84,6 @@ void autonomous() {
 
 void opcontrol() {
     bool isShooting = false;    
-
-    eff.resetShoot();
     bool isPTOEnabled = false;
     bool isIntaking = false;
     Control::printController(0, "Forward    ");
@@ -108,34 +106,11 @@ void opcontrol() {
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT))
             isShooting = !isShooting;
 
-        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-            eff.slapper.move_velocity(200);
-            eff.smallerSlapper.move_velocity(-200);
-        } else {
-            eff.slapper.move_velocity(0);
-            eff.smallerSlapper.move_velocity(0);
-        }
-
         if (isShooting) {
-            eff.slapper.move_velocity(200);
-            eff.smallerSlapper.move_velocity(-200);
-
-            pros::delay(10000000);
-            // while (eff.smallerSlapper.get_position() < -600) {
-            //     Console::printBrain(0, eff.smallerSlapper.get_position(), "sdfsdf");
-            //     pros::delay(30);
-            // }
-            eff.slapper.move_velocity(0);
-            eff.smallerSlapper.move_velocity(0);
-
-            isShooting = !isShooting; // false
-
-        } else {
-            eff.slapper.move_velocity(0);
-            eff.smallerSlapper.move_velocity(0);
+            isShooting = eff.runSlapperSkill();
         }
 
-    
+        Console::printBrain(5, eff.rotSensorShooter.get_position(), "Encoder pos: ");
 
         // // ======================== Other Controls ======================== 
         // // macro for toggling raising or lowering

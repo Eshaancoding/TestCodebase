@@ -26,7 +26,7 @@ public:
     pros::Motor intakeMotor;
     
     pros::Rotation rotSensor;
-    pros::Rotation rotSensorFB;
+    pros::Rotation rotSensorShooter;
 
     pros::ADIDigitalOut wingsPiston;
     pros::ADIDigitalOut fourBar;
@@ -45,7 +45,7 @@ public:
         wingsPiston('B'),
         fourBar('A'),
         rotSensor(18),
-        rotSensorFB(9),
+        rotSensorShooter(11),
         wingsActive(false),
         forBarActive(false),
         shootState(DORMANT),
@@ -53,6 +53,7 @@ public:
         lockEnabled(false)
     { 
         slapper.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+        eff.rotSensorShooter.set_position(0);
     };
     ~Effectors() = default;
 
@@ -63,17 +64,14 @@ public:
     void intakeToggle (bool reverse=false);
     void setIntake (bool isReverse=false, bool isOff=false); // SIMPLER version of intake; use this for auton
 
-    // shooting with puncher
-    void resetShoot ();
-    void toggleShootingState ();
-    void stepShootMotor ();
-
     // do four bar
     void toggleFourBar ();
 
     // lock
     void lock ();
 
+    // skills run
+    bool runSlapperSkill ();
 };
 
 #endif

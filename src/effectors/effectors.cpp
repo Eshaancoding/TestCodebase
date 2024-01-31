@@ -1,5 +1,6 @@
 #include "effectors.h"
 #include "parameters.h"
+#include "controller.h"
 #include "drive.h"
 
 // WINGS
@@ -46,48 +47,27 @@ void Effectors::setIntake (bool isReverse, bool isOff) {
     intakeMotor.move_voltage(powOne);
 }
 
-void Effectors::toggleShootingState () {
-    if (shootState == ShootState::SHOOTING) {
-        shootState = ShootState::STOPPING;
-    }
-    else if (shootState == ShootState::DORMANT || shootState == ShootState::STOPPING) {
-        shootState = ShootState::SHOOTING;
-    }
-}
+bool Effectors::runSlapperSkill () {
+    // assumes that the slapper is at the end position... at the last tooth gear
+    eff.slapper.move_voltage(12000);
+    eff.smallerSlapper.move_voltage(-12000);
 
-void Effectors::stepShootMotor () {
-    if (shootState == ShootState::SHOOTING) {
-        slapper.move_velocity(-100);
-    }
-    else if (shootState == ShootState::DORMANT) {
-        slapper.move_velocity(0);
-    }
-    else if (shootState == ShootState::STOPPING) {
-        int val = rotSensor.get_position()/100;
-        
-        if (abs(val) > 5) {
-            shootState = ShootState::STOPPING;
-            slapper.move_velocity(-100);
-        } else {
-            shootState = ShootState::DORMANT;
-            slapper.move_velocity(0);
+    // 53600 too long 
+    while (eff.rotSensorShooter.get_position() < 53530) {
+        pros::delay(30);
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+            eff.slapper.move_voltage(0);
+            eff.smallerSlapper.move_voltage(0);
+            return false;
         }
     }
-}
 
-void Effectors::resetShoot() {
-    // reset slapper
-    rotSensor.set_position(0);
- 
-    // eff.slapper.move_velocity(100);
-    // eff.smallerSlapper.move_velocity(-100);
+    eff.slapper.move_velocity(0);
+    eff.smallerSlapper.move_velocity(0);
 
-    // while (rotSensor.get_position() < 8600) {
-    //     pros::delay(50);
-    // }
+    eff.rotSensorShooter.set_position(0);
 
-    // slapper.move_velocity(0);
-    // smallerSlapper.move_velocity(0);
-
+    pros::delay(150); // wait, should be at the end position again from previosu
+    return true;
 }
 
