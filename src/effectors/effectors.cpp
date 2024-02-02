@@ -50,10 +50,10 @@ void Effectors::setIntake (bool isReverse, bool isOff) {
 bool Effectors::runSlapperSkill () {
     // assumes that the slapper is at the end position... at the last tooth gear
     eff.slapper.move_voltage(12000);
-    eff.smallerSlapper.move_voltage(-12000);
+    eff.smallerSlapper.move_velocity(-100);
 
     // 53600 too long 
-    while (eff.rotSensorShooter.get_position() < 53530) {
+    while (true) {
         pros::delay(30);
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT)) {
             eff.slapper.move_voltage(0);

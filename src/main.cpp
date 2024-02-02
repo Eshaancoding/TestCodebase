@@ -63,6 +63,7 @@ void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     
+    eff.rotSensorShooter.set_position(0);
     // drive.goForward(2_tile);
     // drive.turnRight(135_deg);
     Routes::skills();
@@ -92,6 +93,8 @@ void opcontrol() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
 
+    eff.rotSensorShooter.set_position(0);
+
     while (true) {
         // ======================== Arcade ======================== 
         double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
@@ -110,10 +113,8 @@ void opcontrol() {
             isShooting = eff.runSlapperSkill();
         }
 
-        Console::printBrain(5, eff.rotSensorShooter.get_position(), "Encoder pos: ");
-
-        // // ======================== Other Controls ======================== 
-        // // macro for toggling raising or lowering
+        // ======================== Other Controls ======================== 
+        // macro for toggling raising or lowering
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1)) 
             eff.wingsToggle();
 
@@ -126,6 +127,43 @@ void opcontrol() {
             isIntaking = !isIntaking;
             eff.setIntake(false, isIntaking);
         }
+
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_UP)) {
+            Routes::macro();
+        }
+        double rot_sensor_val = eff.rotSensorShooter.get_position();
+        Console::printBrain(7, "Rot sensor shoot: %f", rot_sensor_val);
+
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+            // run unti goes up
+            // run up
+            eff.rotSensorShooter.set_position(0);
+            eff.slapper.move_voltage(12000*0.5);
+            eff.smallerSlapper.move_velocity(-100*0.5);
+            int count = 0;
+            while (true) {  
+                if (rot_sensor_val > 200 && count > 0) break;
+                if (rot_sensor_val < -6000 && count == 0) count++;
+
+                pros::delay(5);
+                rot_sensor_val = eff.rotSensorShooter.get_position();
+                Console::printBrain(7, "Rot sensor shoot: %f", rot_sensor_val);
+            }
+            eff.slapper.move_velocity(0);
+            eff.smallerSlapper.move_velocity(0);
+        }
+
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+            eff.slapper.move_voltage(12000);
+            eff.smallerSlapper.move_velocity(-100);
+        } else {
+            eff.slapper.move_voltage(0);
+            eff.smallerSlapper.move_velocity(0);
+        }
+
+        // run it at end of macro
+        // during auton (match) --> just spin a lil
+
 
         // // actual slapper
         // if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1))

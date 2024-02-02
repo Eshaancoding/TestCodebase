@@ -10,6 +10,8 @@ namespace Routes {
     void elimDefensive ();   
     void qualOffensive ();  
     void qualDefensive ();   
+    void macro ();
+
     void skills ();
 };
 
