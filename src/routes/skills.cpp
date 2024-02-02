@@ -8,6 +8,9 @@
 #include "odom/OdomCustom.h"
 
 void Routes::macro () {
+    eff.rotSensorShooter.set_position(0);
+    double rot_sensor_val = 0;
+
     drive.setToleranceParams(nullopt, nullopt, 1.4_s);
     drive.goToPoint({-4_tile, -2_tile}, true, true, {{0, 1.4}}); // 0.7
     drive.resetToleranceParams();
@@ -24,7 +27,7 @@ void Routes::macro () {
     // eff.toggleFourBar();
     // eff.slapper.move_voltage(12000);
     // eff.smallerSlapper.move_velocity(-100);
-    // pros::delay(41*1000);
+    // pros::delay(1*1000);
     // eff.slapper.move_voltage(0);
     // eff.smallerSlapper.move_velocity(0);
     // eff.toggleFourBar();
@@ -32,13 +35,15 @@ void Routes::macro () {
     // go back 
     
     // reset 
-    double rot_sensor_val = eff.rotSensorShooter.get_position();
+    rot_sensor_val = eff.rotSensorShooter.get_position();
     eff.slapper.move_voltage(12000*0.5);
     eff.smallerSlapper.move_velocity(-100*0.5);
-    pros::delay(100);
-    eff.rotSensorShooter.set_position(0);
-    while (rot_sensor_val <= 7700) { 
-        pros::delay(10);
+    int count = 0;
+    while (true) {  
+        if (rot_sensor_val > 200 && count > 0) break;
+        if (rot_sensor_val < -6000 && count == 0) count++;
+
+        pros::delay(5);
         rot_sensor_val = eff.rotSensorShooter.get_position();
         Console::printBrain(7, "Rot sensor shoot: %f", rot_sensor_val);
     }
@@ -56,19 +61,20 @@ void Routes::skills () {
     drive.moveArcade(1,0);
     pros::delay(100);
     drive.moveArcade(0,0);
-    drive.faceToPoint({-3_tile, -3_tile}, true, {{0, 0.7}});
-    drive.moveArcade(-1,0);
-    pros::delay(600);
+
+    drive.faceToPoint({-3_tile, -3_tile}, true);
+    drive.goBackward(1.15_tile);
+    drive.faceToPoint({0_tile, -3_tile}, true);
+    drive.goBackward(3_tile);
+    drive.faceToPoint({3_tile, -3_tile}, true);
+    drive.moveArcade(-1, 0);
+    pros::delay(1200);
     drive.moveArcade(0, 0);
-    drive.faceToPoint({0_tile, -3_tile}, true, {{0, 0.7}});
-    drive.moveArcade(-1, 0);
-    pros::delay(1500);
-    drive.moveArcade(0,0);
-    drive.faceToPoint({3_tile, -3_tile}, true, {{0, 0.7}});
-    drive.moveArcade(-1, 0);
-    pros::delay(300);
-    drive.moveArcade(1, 0);
-    pros::delay(300);
+
+    drive.goBackward(0.5_tile);
+    drive.turnLeft(45_deg);
+    drive.goBackward(2.2_tile);
+    
 
     // going to middle
     // eff.setIntake(true, false);
