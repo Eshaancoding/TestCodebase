@@ -13,36 +13,40 @@ void Routes::qualDefensive () {
 
     //get matchload triball out
     eff.wingsToggle();
-    drive.goForward(16_in, {}, {{0.9, [](){
+    drive.setToleranceParams(nullopt, nullopt, 1.3_s);
+    drive.goForward(16.5_in, {}, {{0.9, [](){
         eff.wingsToggle();
     }}});
+    eff.wingsToggle();
+    drive.resetToleranceParams();
     pros::delay(500);
-    drive.turnLeft(27_deg, {{0, 0.85}});
+    drive.turnLeft(25_deg, {{0, 0.85}});
 
     //score two triballs
     eff.setIntake(true, false);
-    drive.setToleranceParams(nullopt, nullopt, 1_s);
-    drive.goForward(2.2_tile, {{0, 1.4}}, {{0.7, [](){
-        eff.setIntake(true, false);
-    }}});
-    drive.resetToleranceParams();
-    drive.goBackward(6_in);
+    // drive.setToleranceParams(nullopt, nullopt, 1_s);
+    // drive.goForward(2.2_tile, {{0, 1.4}}, {{0.7, [](){
+    //     eff.setIntake(true, false);
+    // }}});
+    // drive.resetToleranceParams();
+    drive.moveArcade(1, 0);
+    pros::delay(600);
+    drive.moveArcade(-0.5, 0);
+    pros::delay(200);
+
+    drive.turnLeft(180_deg);
+    drive.moveArcade(-1, 0);
+    pros::delay(600);
+    drive.moveArcade(0, 0);
+
+    drive.goForward(3_in);
     eff.setIntake(false, true);
 
     drive.faceToPoint({-20_tile, 0_tile}, true);
-    drive.goForward(2_tile);
-    eff.wingsToggle();
-    drive.setToleranceParams(nullopt, nullopt, 0.5_s);
-    drive.turnRight(30_deg);
+    drive.goForward(2.1_tile);
+    drive.setToleranceParams(nullopt, nullopt, 1.5_s);
+    drive.turnRight(30_deg, {{0, 0.6}}, {{0.4, [](){
+        eff.wingsToggle();
+    }}});
     drive.resetToleranceParams();
-
-    //go to elevation bars
-    // drive.turnRight(35_deg);
-    // drive.goBackward(35_in);
-    
-    // OdomCustom::setPos(0_in, 0_in);
-    // drive.faceToPoint({20_tile, 0_tile}, true);
-
-    // drive.goBackward(1.3_tile, {{0, 1.2}});
-
 }
