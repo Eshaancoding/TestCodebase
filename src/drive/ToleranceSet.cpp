@@ -2,7 +2,7 @@
 #include "parameters.h"
 #include "PIDParams.h"
 
-void Drive::setToleranceParams(std::optional<QLength> distanceTolP, std::optional<QAngle> angleTolP, std::optional<QTime> timeTolP) {
+void Drive::setToleranceParams(std::optional<QLength> distanceTolP, std::optional<QAngle> angleTolP, std::optional<QTime> timeTolP, std::optional<double> ccFactor ) {
     if (distanceTolP)
         distanceTol = *distanceTolP;
 
@@ -12,10 +12,14 @@ void Drive::setToleranceParams(std::optional<QLength> distanceTolP, std::optiona
     if (timeTolP) {
         timeTol = *timeTolP;
     }
+    if (ccFactor) {
+        courseCorrectionFactor = *ccFactor;
+    }
 }
 
 void Drive::resetToleranceParams () {
     distanceTol = DISTANCE_TOLERANCE; 
     angleTol = ANGLE_TOLERANCE;
     timeTol = TIME_TOLERANCE;
+    courseCorrectionFactor = COURSE_CORRECTION_FACTOR;
 }

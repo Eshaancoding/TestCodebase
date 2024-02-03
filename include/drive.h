@@ -15,6 +15,7 @@ private:
     QLength distanceTol;
     QAngle angleTol;
     QTime timeTol;
+    double courseCorrectionFactor;
 
     /**
      * @brief Essentially goes to the point but in general this houses the PID for both distance and heading
@@ -158,7 +159,8 @@ public:
     void setToleranceParams (
         std::optional<QLength> distanceTolP=std::nullopt,
         std::optional<QAngle> angleTolP=std::nullopt,
-        std::optional<QTime> timeTolP=std::nullopt
+        std::optional<QTime> timeTolP=std::nullopt,
+        std::optional<double> ccFactor=std::nullopt
     );
 
     /**

@@ -97,7 +97,7 @@ void Drive::move (
         if (headingActivated)  headingPower  = HeadingPID.step(angleErr.convert(radian));
 
         if (headingActivated && distanceActivated && setFactorCC) 
-            headingPower *= COURSE_CORRECTION_FACTOR;
+            headingPower *= courseCorrectionFactor;
 
         // Actually drive
         Drive::moveArcade(distancePower, headingPower);

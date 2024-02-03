@@ -31,10 +31,12 @@ void Routes::qualDefensive () {
     // drive.resetToleranceParams();
     drive.moveArcade(1, 0);
     pros::delay(600);
-    drive.moveArcade(-0.5, 0);
-    pros::delay(200);
 
+    drive.moveArcade(-0.5, 0);
+    pros::delay(300);
     drive.turnLeft(180_deg);
+    pros::delay(100);
+
     drive.moveArcade(-1, 0);
     pros::delay(600);
     drive.moveArcade(0, 0);
@@ -43,10 +45,13 @@ void Routes::qualDefensive () {
     eff.setIntake(false, true);
 
     drive.faceToPoint({-20_tile, 0_tile}, true);
+    
+    drive.setToleranceParams(nullopt, nullopt, nullopt, 0);
     drive.goForward(2.1_tile);
+
+    drive.resetToleranceParams();
     drive.setToleranceParams(nullopt, nullopt, 1.5_s);
-    drive.turnRight(30_deg, {{0, 0.6}}, {{0.4, [](){
-        eff.wingsToggle();
-    }}});
+    eff.wingsToggle();
+    drive.turnRight(30_deg, {{0, 0.6}});
     drive.resetToleranceParams();
 }
