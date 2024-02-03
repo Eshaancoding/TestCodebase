@@ -85,7 +85,7 @@ void Routes::skills () {
     drive.setToleranceParams(nullopt, nullopt, 2.1_s, 0.8);
     drive.goToPoint({-6_tile, 4_tile}, true, true, {{0, 1.4}});
     drive.resetToleranceParams();
-    drive.goBackward(0.8_tile);
+    drive.goBackward(0.9_tile);
 
     // ================== OLD ==============
     // drive.faceToPoint({-30_tile, 45_tile}, true);
