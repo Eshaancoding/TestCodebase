@@ -45,16 +45,16 @@ void Routes::macro () {
     pros::delay(400);
     drive.moveTank(0, 0);
 
-    drive.faceToPoint({-1.5_tile, 7_tile}, true, {{0, 0.7}});
+    drive.faceToPoint({-3_tile, 7_tile}, true, {{0, 0.7}});
 
-    // eff.toggleFourBar();
-    // pros::delay(300);
-    // eff.slapper.move_voltage(12000);
-    // eff.smallerSlapper.move_velocity(-100);
-    // pros::delay(41*1000);
-    // eff.slapper.move_voltage(0);
-    // eff.smallerSlapper.move_velocity(0);
-    // eff.toggleFourBar();
+    eff.toggleFourBar();
+    pros::delay(300);
+    eff.slapper.move_voltage(12000);
+    eff.smallerSlapper.move_velocity(-100);
+    pros::delay(41*1000);
+    eff.slapper.move_voltage(0);
+    eff.smallerSlapper.move_velocity(0);
+    eff.toggleFourBar();
 
     // go back 
     
@@ -67,46 +67,49 @@ void Routes::skills () {
 
     macro();
 
-    // pros::delay(200);
-
-    // Task t (resetShooter);
-    // drive.faceToPoint({-3_tile, -3_tile}, true);
+    Task t (resetShooter);
+    drive.faceToPoint({-2_tile, -3_tile}, true);
     
-    // drive.setToleranceParams(nullopt, nullopt, 1.3_s);
-    // drive.goBackward(1.25_tile, {{0, 1.3}});
-    // drive.resetToleranceParams();
+    drive.setToleranceParams(nullopt, nullopt, 1.3_s);
+    drive.goBackward(1.2_tile, {{0, 1.3}});
+    drive.resetToleranceParams();
 
-    // drive.faceToPoint({0_tile, -3_tile}, true);
+    drive.faceToPoint({0_tile, -3_tile}, true);
 
-    // drive.setToleranceParams(nullopt, nullopt, 2.4_s);
-    // drive.goBackward(3.35_tile);
-    // drive.resetToleranceParams();
+    drive.setToleranceParams(nullopt, nullopt, 2.4_s);
+    drive.goBackward(3_tile);
+    drive.resetToleranceParams();
 
-    // drive.faceToPoint({30_tile, -45_tile}, true);
-    // drive.goBackward(19_in, {{0, 1.2}});
-    // drive.faceToPoint({50_tile, 0_tile}, true);
-    // drive.moveArcade(-1, 0);
-    // pros::delay(1200);
+    drive.faceToPoint({30_tile, -45_tile}, true);
 
-    // drive.setToleranceParams(nullopt, nullopt, 1_s);
-    // drive.goForward(0.7_tile);
-    // drive.resetToleranceParams();
-    // drive.faceToPoint({3_tile, 3_tile}, true);
+    drive.setToleranceParams(nullopt, nullopt, 1.4_s);
+    drive.goBackward(19_in, {{0, 1.2}});
+    drive.resetToleranceParams();
 
-    // drive.setToleranceParams(nullopt, nullopt, 2_s);
-    // drive.goBackward(2.2_tile);
-    // drive.resetToleranceParams();
 
-    // drive.faceToPoint({-1_tile, 3_tile}, true);
+    drive.faceToPoint({50_tile, 0_tile}, true);
+    drive.moveArcade(-1, 0);
+    pros::delay(1200);
+
+    drive.setToleranceParams(nullopt, nullopt, 1.2_s);
+    drive.goForward(1.1_tile);
+    drive.resetToleranceParams();
+    drive.faceToPoint({3_tile, 3_tile}, true);
+
+    drive.setToleranceParams(nullopt, nullopt, 2_s);
+    drive.goBackward(2.2_tile);
+    drive.resetToleranceParams();
+
+    drive.faceToPoint({-1_tile, 3_tile}, true);
     
-    // eff.wingsToggle();
-    // drive.moveArcade(1, 0);
-    // pros::delay(1200);
-    // drive.moveArcade(0, 0);
+    eff.wingsToggle();
+    drive.moveArcade(1, 0);
+    pros::delay(1200);
+    drive.moveArcade(0, 0);
 
-    // drive.moveArcade(-1, 0);
-    // pros::delay(600);
-    // drive.moveArcade(0, 0);
-    // eff.wingsToggle();
+    drive.moveArcade(-1, 0);
+    pros::delay(600);
+    drive.moveArcade(0, 0);
+    eff.wingsToggle();
     
 }
