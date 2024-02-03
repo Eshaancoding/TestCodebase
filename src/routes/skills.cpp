@@ -14,15 +14,15 @@
 
 void resetShooter () {
     double rot_sensor_val = eff.rotSensorShooter.get_position();
-    eff.slapper.move_voltage(12000*0.5);
-    eff.smallerSlapper.move_velocity(-100*0.5);
+    eff.slapper.move_voltage(12000*0.58);
+    eff.smallerSlapper.move_velocity(-100*0.58);
     int count = 0;
     while (true) {  
         // original 200
-        if (rot_sensor_val > 0 && count > 0) break; 
+        if (rot_sensor_val > 100 && count > 0) break; 
         if (rot_sensor_val < -6000 && count == 0) count++;
 
-        pros::delay(5);
+        pros::delay(2);
         rot_sensor_val = eff.rotSensorShooter.get_position();
         Console::printBrain(7, "Rot sensor shoot: %f", rot_sensor_val);
     }
@@ -31,27 +31,27 @@ void resetShooter () {
 }
 
 void Routes::macro () {
-    eff.rotSensorShooter.set_position(0);
+    // eff.rotSensorShooter.set_position(0);
 
-    drive.setToleranceParams(nullopt, nullopt, 1.4_s);
-    drive.goToPoint({-4_tile, -2_tile}, true, true, {{0, 1.4}});
-    drive.resetToleranceParams();
-    drive.moveTank(0, 0);
-    // pros::delay(100);
+    // drive.setToleranceParams(nullopt, nullopt, 1.4_s);
+    // drive.goToPoint({-4_tile, -2_tile}, true, true, {{0, 1.4}});
+    // drive.resetToleranceParams();
+    // drive.moveTank(0, 0);
+    // // pros::delay(100);
 
-    drive.moveArcade(-0.5, 0);
-    pros::delay(600);
-    drive.moveTank(0, -0.5);
-    pros::delay(400);
-    drive.moveTank(0, 0);
+    // drive.moveArcade(-0.5, 0);
+    // pros::delay(600);
+    // drive.moveTank(0, -0.5);
+    // pros::delay(400);
+    // drive.moveTank(0, 0);
 
-    drive.faceToPoint({-3_tile, 7_tile}, true, {{0, 0.7}});
+    // drive.faceToPoint({-3_tile, 7_tile}, true, {{0, 0.7}});
 
     eff.toggleFourBar();
     pros::delay(300);
     eff.slapper.move_voltage(12000);
     eff.smallerSlapper.move_velocity(-100);
-    pros::delay(41*1000);
+    pros::delay(2.5*1000);
     eff.slapper.move_voltage(0);
     eff.smallerSlapper.move_velocity(0);
     eff.toggleFourBar();
@@ -68,48 +68,42 @@ void Routes::skills () {
     macro();
 
     Task t (resetShooter);
-    drive.faceToPoint({-2_tile, -3_tile}, true);
+    // drive.faceToPoint({-2_tile, -3_tile}, true);
     
-    drive.setToleranceParams(nullopt, nullopt, 1.3_s);
-    drive.goBackward(1.2_tile, {{0, 1.3}});
-    drive.resetToleranceParams();
+    // drive.setToleranceParams(nullopt, nullopt, 1.3_s);
+    // drive.goBackward(1_tile, {{0, 1.3}});
+    // drive.resetToleranceParams();
 
-    drive.faceToPoint({0_tile, -3_tile}, true);
+    // drive.faceToPoint({0_tile, -3_tile}, true);
 
-    drive.setToleranceParams(nullopt, nullopt, 2.4_s);
-    drive.goBackward(3_tile);
-    drive.resetToleranceParams();
+    // drive.goBackward(3.0_tile);
 
-    drive.faceToPoint({30_tile, -45_tile}, true);
+    // drive.faceToPoint({30_tile, -45_tile}, true);
 
-    drive.setToleranceParams(nullopt, nullopt, 1.4_s);
-    drive.goBackward(19_in, {{0, 1.2}});
-    drive.resetToleranceParams();
+    // drive.moveArcade(-1, 0);
+    // pros::delay(750);
 
 
-    drive.faceToPoint({50_tile, 0_tile}, true);
-    drive.moveArcade(-1, 0);
-    pros::delay(1200);
+    // drive.faceToPoint({50_tile, 0_tile}, true);
+    // drive.moveArcade(-1, 0);
+    // pros::delay(1200);
 
-    drive.setToleranceParams(nullopt, nullopt, 1.2_s);
-    drive.goForward(1.1_tile);
-    drive.resetToleranceParams();
-    drive.faceToPoint({3_tile, 3_tile}, true);
+    // drive.setToleranceParams(nullopt, nullopt, 1.2_s);
+    // drive.goForward(1.1_tile);
+    // drive.resetToleranceParams();
+    // drive.faceToPoint({3_tile, 3_tile}, true);
 
-    drive.setToleranceParams(nullopt, nullopt, 2_s);
-    drive.goBackward(2.2_tile);
-    drive.resetToleranceParams();
+    // drive.setToleranceParams(nullopt, nullopt, 2_s);
+    // drive.goBackward(2.2_tile);
+    // drive.resetToleranceParams();
 
-    drive.faceToPoint({-1_tile, 3_tile}, true);
+    // drive.faceToPoint({-1_tile, 3_tile}, true);
     
-    eff.wingsToggle();
-    drive.moveArcade(1, 0);
-    pros::delay(1200);
-    drive.moveArcade(0, 0);
+    // eff.wingsToggle();
+    // drive.moveArcade(1, 0);
+    // pros::delay(900);
+    // drive.moveArcade(0, 0);
 
-    drive.moveArcade(-1, 0);
-    pros::delay(600);
-    drive.moveArcade(0, 0);
-    eff.wingsToggle();
+    // drive.moveArcade(-1, 0);
     
 }

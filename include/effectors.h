@@ -53,6 +53,7 @@ public:
         lockEnabled(false)
     { 
         slapper.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+        smallerSlapper.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
         eff.rotSensorShooter.set_position(0);
     };
     ~Effectors() = default;
