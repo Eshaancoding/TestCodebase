@@ -41,7 +41,7 @@ void Routes::qualDefensive () {
     pros::delay(600);
     drive.moveArcade(0, 0);
 
-    drive.goForward(3_in);
+    drive.goForward(5_in);
     eff.setIntake(false, true);
 
     drive.faceToPoint({-20_tile, 0_tile}, true);
