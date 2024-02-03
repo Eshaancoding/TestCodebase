@@ -29,7 +29,7 @@ extern PID HeadingPID;  // declared in parameters.cpp
 
 // drive
 #define LEFT_BOTTOM_MOTOR    1
-#define RIGHT_BOTTOM_MOTOR   10
+#define RIGHT_BOTTOM_MOTOR   7
 #define RIGHT_MIDDLE_MOTOR   20
 #define LEFT_MIDDLE_MOTOR    9
 #define LEFT_TOP_MOTOR       15

@@ -45,13 +45,13 @@ void Routes::macro () {
     pros::delay(400);
     drive.moveTank(0, 0);
 
-    drive.faceToPoint({-3_tile, 7_tile}, true, {{0, 0.7}});
+    drive.faceToPoint({-35_tile, 70_tile}, true, {{0, 0.7}});
 
     eff.toggleFourBar();
     pros::delay(300);
     eff.slapper.move_voltage(12000);
     eff.smallerSlapper.move_velocity(-100);
-    pros::delay(2.5*1000); // CAHBGEN TO 41
+    pros::delay(41*1000); // CAHBGEN TO 41
     eff.slapper.move_voltage(0);
     eff.smallerSlapper.move_velocity(0);
     eff.toggleFourBar();
@@ -67,31 +67,41 @@ void Routes::skills () {
     macro();
 
     Task t (resetShooter);
-    drive.faceToPoint({-2_tile, -3_tile}, true);
+    drive.faceToPoint({2_tile, 3_tile}, true);
     
     drive.setToleranceParams(nullopt, nullopt, 1.3_s);
-    drive.goBackward(1_tile, {{0, 1.3}});
+    drive.goForward(1_tile, {{0, 1.3}});
     drive.resetToleranceParams();
 
     drive.faceToPoint({0_tile, 3_tile}, true);
 
-    drive.goForward(3.0_tile, {
-        {0, 0.4},
+    drive.setToleranceParams(nullopt, nullopt, 2.35_s);
+    drive.goForward(2.7_tile, {
+        {0, 0.7},
         {0.6, 1}
     });
-
-    drive.faceToPoint({30_tile, -45_tile}, true);
-
-    drive.moveArcade(-1, 0);
-    pros::delay(750);
-
-    drive.faceToPoint({50_tile, 0_tile}, true);
-    drive.moveArcade(-1, 0);
-    pros::delay(1200);
-
-    drive.setToleranceParams(nullopt, nullopt, 1.2_s);
-    drive.goForward(1.1_tile);
     drive.resetToleranceParams();
+
+    drive.setToleranceParams(nullopt, nullopt, 2.1_s, 0.8);
+    drive.goToPoint({-6_tile, 4_tile}, true, true, {{0, 1.4}});
+    drive.resetToleranceParams();
+    drive.goBackward(0.8_tile);
+
+    // ================== OLD ==============
+    // drive.faceToPoint({-30_tile, 45_tile}, true);
+
+    // drive.moveArcade(1, 0);
+    // pros::delay(350);
+    // drive.moveArcade(0, 0);
+
+    // drive.faceToPoint({50_tile, 0_tile}, true);
+    // drive.moveArcade(-1, 0);
+    // pros::delay(1200);
+
+    // drive.setToleranceParams(nullopt, nullopt, 1.2_s);
+    // drive.goForward(1.1_tile);
+    // drive.resetToleranceParams();
+
     drive.faceToPoint({3_tile, 3_tile}, true);
 
     drive.setToleranceParams(nullopt, nullopt, 2_s);
@@ -103,8 +113,12 @@ void Routes::skills () {
     eff.wingsToggle();
     drive.moveArcade(1, 0);
     pros::delay(900);
-    drive.moveArcade(0, 0);
-
     drive.moveArcade(-1, 0);
+    pros::delay(500);
+    drive.moveArcade(1, 0);
+    pros::delay(700);
+    drive.moveArcade(-1, 0);
+    pros::delay(500);
+    drive.moveArcade(0, 0);
     
 }

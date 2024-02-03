@@ -7,6 +7,11 @@
 #include "odom/OdomCustom.h"
 
 void Routes::elimOffensive() {
+    eff.slapper.move_voltage(12000);
+    eff.smallerSlapper.move_velocity(-100);
+    pros::delay(1000);
+    eff.slapper.move_voltage(0);
+    eff.smallerSlapper.move_velocity(0);
 
     OdomCustom::setPos(0_in, 0_in, -90_deg);
 

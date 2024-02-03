@@ -55,7 +55,7 @@ bool Effectors::runSlapperSkill () {
     // 53600 too long 
     while (true) {
         pros::delay(30);
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1)) {
             eff.slapper.move_voltage(0);
             eff.smallerSlapper.move_voltage(0);
             return false;
@@ -64,10 +64,7 @@ bool Effectors::runSlapperSkill () {
 
     eff.slapper.move_velocity(0);
     eff.smallerSlapper.move_velocity(0);
-
     eff.rotSensorShooter.set_position(0);
-
-    pros::delay(150); // wait, should be at the end position again from previosu
     return true;
 }
 

@@ -7,7 +7,13 @@
 #include "odom/OdomCustom.h"
 
 void Routes::elimDefensive () {
-    // note different corodinate system
+    // note different corodinate system 
+    eff.slapper.move_voltage(12000);
+    eff.smallerSlapper.move_velocity(-100);
+    pros::delay(1000);
+    eff.slapper.move_voltage(0);
+    eff.smallerSlapper.move_velocity(0);
+
     OdomCustom::setPos(0_in, 0_in, -41.01_deg);
     
     // go forward and outtake our match load

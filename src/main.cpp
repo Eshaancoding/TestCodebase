@@ -45,7 +45,7 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    // AutonSelector::init();
+    AutonSelector::init();
 
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
     rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
@@ -66,20 +66,20 @@ void autonomous() {
     eff.rotSensorShooter.set_position(0);
     // drive.goForward(2_tile);
     // drive.turnRight(135_deg);
-    Routes::skills();
+    // Routes::skills();
     // Routes::qualOffensive();
     
-    // auto state = waitForValidState();     
-    // if (state.status == AutonSelector::SKILL)
-    //     Routes::skills();
-    // else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
-    //     Routes::elimDefensive();
-    // else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
-    //     Routes::elimOffensive();
-    // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
-    //     Routes::qualDefensive();
-    // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
-    //     Routes::qualOffensive();
+    auto state = waitForValidState();     
+    if (state.status == AutonSelector::SKILL)
+        Routes::skills();
+    else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
+        Routes::elimDefensive();
+    else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
+        Routes::elimOffensive();
+    else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
+        Routes::qualDefensive();
+    else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
+        Routes::qualOffensive();
 };
 
 // you disabled the factor map thing
@@ -107,7 +107,7 @@ void opcontrol() {
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
         drive.moveArcade(distance, heading);
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT))
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1))
             isShooting = !isShooting;
 
         if (isShooting) {
