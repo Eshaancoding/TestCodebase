@@ -31,6 +31,7 @@ void resetShooter () {
 }
 
 void Routes::macro () {
+    OdomCustom::setPos(0_in, 0_in, -135_deg);
     eff.rotSensorShooter.set_position(0);
 
     drive.setToleranceParams(nullopt, nullopt, 1.4_s);
@@ -51,7 +52,7 @@ void Routes::macro () {
     pros::delay(300);
     eff.slapper.move_voltage(12000);
     eff.smallerSlapper.move_velocity(-100);
-    pros::delay(41*1000); // CAHBGEN TO 41
+    pros::delay(1*1000); // CAHBGEN TO 41
     eff.slapper.move_voltage(0);
     eff.smallerSlapper.move_velocity(0);
     eff.toggleFourBar();
@@ -62,7 +63,6 @@ void Routes::macro () {
 }
 
 void Routes::skills () {
-    OdomCustom::setPos(0_in, 0_in, -135_deg);
 
     macro();
 
@@ -70,46 +70,38 @@ void Routes::skills () {
     drive.faceToPoint({2_tile, 3_tile}, true);
     
     drive.setToleranceParams(nullopt, nullopt, 1.3_s);
-    drive.goForward(1_tile, {{0, 1.3}});
+    drive.goForward(0.9_tile, {{0, 1}}); // THIS THIS HTHIS THIS 
     drive.resetToleranceParams();
 
     drive.faceToPoint({0_tile, 3_tile}, true);
 
     drive.setToleranceParams(nullopt, nullopt, 2.35_s);
-    drive.goForward(2.7_tile, {
+    drive.goForward(3.0_tile, { 
         {0, 0.7},
         {0.6, 1}
     });
     drive.resetToleranceParams();
 
     drive.setToleranceParams(nullopt, nullopt, 2.1_s, 0.8);
+    // curve movement to hit triball
     drive.goToPoint({-6_tile, 4_tile}, true, true, {{0, 1.4}});
     drive.resetToleranceParams();
-    drive.goBackward(0.9_tile);
 
-    // ================== OLD ==============
-    // drive.faceToPoint({-30_tile, 45_tile}, true);
+    // go backwardo
+    drive.goBackward(0.6_tile);
 
-    // drive.moveArcade(1, 0);
-    // pros::delay(350);
-    // drive.moveArcade(0, 0);
+    // face the point of interest to go the center
+    drive.faceToPoint({-20_tile, -30_tile}, true);
 
-    // drive.faceToPoint({50_tile, 0_tile}, true);
-    // drive.moveArcade(-1, 0);
-    // pros::delay(1200);
-
-    // drive.setToleranceParams(nullopt, nullopt, 1.2_s);
-    // drive.goForward(1.1_tile);
-    // drive.resetToleranceParams();
-
-    drive.faceToPoint({3_tile, 3_tile}, true);
-
+    // actually go the center
     drive.setToleranceParams(nullopt, nullopt, 2_s);
-    drive.goBackward(2.2_tile);
+    drive.goForward(2_tile);
     drive.resetToleranceParams();
 
-    drive.faceToPoint({-1_tile, 3_tile}, true);
+    // face the actual point
+    drive.faceToPoint({-20_tile, 30_tile}, true);
     
+    // go back and forth and back and forth and back and forth
     eff.wingsToggle();
     drive.moveArcade(1, 0);
     pros::delay(900);
