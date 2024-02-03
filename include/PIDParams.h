@@ -6,7 +6,7 @@
 #define Distance_I           0
 #define Distance_D           0
 #define Distance_MAXPOWER    1
-#define Distance_MINPOWER    0.1
+#define Distance_MINPOWER    0.05
 #define Distance_FACTOR      1
 #define Distance_SLEW        0.01 // <=========== really important
 #define Distance_MINERRDISI  2.5  // min error to disable I, NOT NEEDED IF I = 0 
