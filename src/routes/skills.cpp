@@ -12,8 +12,6 @@
 #include "AutonSelector.h"
 #include "controller.h"
 
-
-
 void resetShooter () {
     double rot_sensor_val = eff.rotSensorShooter.get_position();
     eff.slapper.move_voltage(12000*0.5);
@@ -45,19 +43,16 @@ void Routes::macro () {
     pros::delay(650);
     drive.moveTank(0, 0);
 
-    drive.faceToPoint({-2.5_tile, 6_tile}, true, {{0, 0.7}});
+    drive.faceToPoint({-2.5_tile, 7_tile}, true, {{0, 0.7}});
 
-    // eff.toggleFourBar();
-    // eff.slapper.move_voltage(12000);
-    // eff.smallerSlapper.move_velocity(-100);
-    drive.moveTank(0, -0.4);
-    pros::delay(200);
-    drive.moveTank(0, 0);
-
-    // pros::delay(1*1000);
-    // eff.slapper.move_voltage(0);
-    // eff.smallerSlapper.move_velocity(0);
-    // eff.toggleFourBar();
+    eff.toggleFourBar();
+    pros::delay(300);
+    eff.slapper.move_voltage(12000);
+    eff.smallerSlapper.move_velocity(-100);
+    pros::delay(41*1000);
+    eff.slapper.move_voltage(0);
+    eff.smallerSlapper.move_velocity(0);
+    eff.toggleFourBar();
 
     // go back 
     
@@ -85,14 +80,19 @@ void Routes::skills () {
 
     drive.faceToPoint({0_tile, -3_tile}, true);
 
-    drive.setToleranceParams(nullopt, nullopt, 2.3_s);
-    drive.goBackward(3_tile);
+    drive.setToleranceParams(nullopt, nullopt, 2.4_s);
+    drive.goBackward(3.35_tile);
     drive.resetToleranceParams();
 
-    drive.faceToPoint({3_tile, -3_tile}, true);
+    drive.faceToPoint({30_tile, -45_tile}, true);
+    drive.goBackward(19_in, {{0, 1.2}});
+    drive.faceToPoint({50_tile, 0_tile}, true);
     drive.moveArcade(-1, 0);
     pros::delay(1200);
-    drive.moveArcade(0, 0);
+    // drive.moveArcade(0.5, 0);
+    // pros::delay(600);
+    // drive.moveArcade(-1, 0);
+    // pros::delay(600);
 
     drive.setToleranceParams(nullopt, nullopt, 1_s);
     drive.goForward(0.7_tile);
@@ -111,14 +111,9 @@ void Routes::skills () {
     pros::delay(1200);
     drive.moveArcade(0, 0);
 
-    eff.wingsToggle();
-    
     drive.moveArcade(-1, 0);
     pros::delay(600);
-
-    drive.moveArcade(1, 0);
-    eff.wingsToggle();
-    pros::delay(1200);
     drive.moveArcade(0, 0);
     eff.wingsToggle();
+    
 }

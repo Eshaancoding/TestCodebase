@@ -48,8 +48,8 @@ void Routes::qualDefensive () {
     
     drive.setToleranceParams(nullopt, nullopt, nullopt, 0);
     drive.goForward(2.1_tile);
-
     drive.resetToleranceParams();
+
     drive.setToleranceParams(nullopt, nullopt, 1.5_s);
     eff.wingsToggle();
     drive.turnRight(30_deg, {{0, 0.6}});

@@ -9,9 +9,9 @@
 void Routes::qualOffensive() {
     
     OdomCustom::setPos(0_in, 0_in, 45_deg);
-    eff.setIntake();
     
     // go back to get the triball out
+    eff.setIntake();
     drive.goBackward(10_in);
     eff.wingsToggle();
     
@@ -20,30 +20,26 @@ void Routes::qualOffensive() {
     }}});
     
     // set the triball into the our goal
-    drive.turnLeft(160_deg);
+    drive.turnLeft(160_deg, {{0, 0.8}});
     
     // slam
-    drive.setToleranceParams(nullopt, nullopt, 1.7_s);
-    drive.goForward(2.2_tile, {{0, 1.4}}, {{0.7, [](){
-        eff.setIntake(true, false);
-    }}});
-    drive.resetToleranceParams();
-
-    // go a little bit back 
-    drive.goBackward(8_in);
+    eff.setIntake(true, false);
+    drive.moveArcade(1, 0);
+    pros::delay(800);
+    drive.moveArcade(0, 0);
+    pros::delay(200);
     eff.setIntake(false, true);
 
+    // go a little bit back 
+    drive.goBackward(3_in);
     drive.faceToPoint({0_tile, 20_tile}, true);
-    drive.goForward(2_tile);
+
+    drive.setToleranceParams(nullopt, nullopt, nullopt, 0);
+    drive.goForward(2.1_tile);
+    drive.resetToleranceParams();
+
+    drive.setToleranceParams(nullopt, nullopt, 1.5_s);
     eff.wingsToggle();
-    drive.turnLeft(30_deg);
-
-    // drive.turnLeft(45_deg);
-    
-    // // go backwawrd to the red bar zone
-    // drive.goBackward(1.4_tile);
-    // drive.turnLeft(43_deg);
-
-    // // go backward to touch
-    // drive.goBackward(1.2_tile, {{0, 0.7}});
+    drive.turnLeft(30_deg, {{0, 0.6}});
+    drive.resetToleranceParams();
 }
