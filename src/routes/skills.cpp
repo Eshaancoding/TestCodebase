@@ -52,7 +52,7 @@ void Routes::macro () {
     pros::delay(300);
     eff.slapper.move_voltage(12000);
     eff.smallerSlapper.move_velocity(-100);
-    pros::delay(1*1000); // CAHBGEN TO 41
+    pros::delay(41*1000); // CAHBGEN TO 41
     eff.slapper.move_voltage(0);
     eff.smallerSlapper.move_velocity(0);
     eff.toggleFourBar();

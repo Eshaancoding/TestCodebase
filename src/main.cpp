@@ -130,7 +130,7 @@ void opcontrol() {
         }
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_UP)) {
-            Routes::macro();
+            Routes::skills();
         }
         double rot_sensor_val = eff.rotSensorShooter.get_position();
         Console::printBrain(7, "Rot sensor shoot: %f", rot_sensor_val);
