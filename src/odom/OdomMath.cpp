@@ -19,6 +19,13 @@ QLength Math::distance(OdomState p1, Point p2) {
     return dist * (okapi::abs(ang) > 150_deg ? -1 : 1);
 }
 
+QLength Math::distance (Point p1, Point p2) {
+    double xDiff = (p2.x - p1.x).convert(okapi::inch);
+    double yDiff = (p2.y - p1.y).convert(okapi::inch);
+    QLength dist = sqrt(pow(xDiff, 2) + pow(yDiff, 2)) * 1_in;
+    return dist;
+}
+
 /**
  * computes the difference in angle between target point and current robot position (along with theta)
  */

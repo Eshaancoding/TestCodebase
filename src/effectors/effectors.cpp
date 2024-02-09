@@ -49,8 +49,8 @@ void Effectors::setIntake (bool isReverse, bool isOff) {
 
 bool Effectors::runSlapperSkill () {
     // assumes that the slapper is at the end position... at the last tooth gear
-    eff.slapper.move_voltage(12000);
-    eff.smallerSlapper.move_velocity(-100);
+    eff.slapper.move_voltage(24000);
+    eff.smallerSlapper.move_velocity(-200);
 
     // 53600 too long 
     while (true) {

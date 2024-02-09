@@ -154,22 +154,10 @@ void opcontrol() {
             eff.smallerSlapper.move_velocity(0);
         }
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-            eff.slapper.move_voltage(12000);
-            eff.smallerSlapper.move_velocity(-100);
-        } else {
-            eff.slapper.move_voltage(0);
-            eff.smallerSlapper.move_velocity(0);
-        }
 
         // run it at end of macro
         // during auton (match) --> just spin a lil
 
-
-        // // actual slapper
-        // if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1))
-        //     eff.toggleShootingState();
-        // eff.stepShootMotor();
 
         pros::delay(10);
 

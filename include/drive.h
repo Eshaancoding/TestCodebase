@@ -9,6 +9,23 @@
 #include "MovingAverage.h"
 #include "Odom/Math.h"
 
+class Path {
+public:
+    okapi::Point point;
+    std::optional<std::function<void()>> callback;
+    double headingFactor, distanceFactor;
+    okapi::QLength lookaheadDistance;
+
+    Path (
+        okapi::Point p, 
+        okapi::QLength lookaheadDistance,
+        double headingF=1,
+        double distanceF=1,
+        std::optional<std::function<void()>> func=std::nullopt
+    )
+        : point(p), callback(func), headingFactor(headingF), distanceFactor(distanceF), lookaheadDistance(lookaheadDistance) {};
+};
+
 // I could make this a namespace idk why im making it a class
 class Drive {
 private:
@@ -162,6 +179,24 @@ public:
         std::optional<QTime> timeTolP=std::nullopt,
         std::optional<double> ccFactor=std::nullopt
     );
+
+    /**
+     * @brief Pure pursuit (this is where we have a path object)
+     * 
+     * @param paths_initializer the paths to use in the pure pursuit algorithm
+     * @param isRelative determine whether the points are relative or not
+     * @param callbackTol the tolerance of the robot from the point to where to call the callback
+     * @param isReverse to check whether the robot is going in reverse or not
+     * @param maxTime set the max time for the entire movement
+     */
+    void goPath (
+        std::initializer_list<Path> paths_initializer,        
+        bool isRelative,
+        QLength callbackTol,
+        bool isReverse=false,
+        std::optional<QTime> maxTime=nullopt
+    );
+   
 
     /**
      * @brief resets tolerance params
