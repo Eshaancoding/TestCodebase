@@ -57,6 +57,7 @@ void Drive::goPath (
     std::initializer_list<Path> paths_initializer,
     bool isRelative,
     QLength callbackTol,
+    QLength endTol,
     bool isReverse,
     std::optional<QTime> maxTime
 ) {
@@ -94,9 +95,6 @@ void Drive::goPath (
     double distance_factor = paths.begin()->distanceFactor;
     QLength lookaheadDistance = paths.begin()->lookaheadDistance;
 
-    if (lookaheadDistance <= callbackTol)
-        throw invalid_argument("Lookahead distance is less than or equal to callback distance");
-
     // =============== Main while loop =============== 
     bool mainLoop = true;
     while (mainLoop) {
@@ -105,32 +103,15 @@ void Drive::goPath (
         if (isReverse) current_pos.theta += 180_deg;
         
         // =============== Set distance/heading/callback ===============
-        QLength shortest_distance = -1_in;
-        int shortest_index = -1;
-        
         for (int i = callbackIndexStart; i < paths.size(); i++) {
             auto path = paths[i];
             auto dist = okapi::abs(Math::distance(current_pos, path.point));
             
-            // calculate shortest distance
-            if (shortest_distance == -1_in || dist < shortest_distance) {
-                shortest_distance = dist;
-                shortest_index = i;
-            }
-
             // handle call backs
             if (dist <= callbackTol) {
-                if (i == paths.size()-1) {
-                    mainLoop = false;
-                    break;
-                }
-
                 distance_factor = path.distanceFactor;
                 heading_factor = path.headingFactor;
                 lookaheadDistance = path.lookaheadDistance;
-
-                if (lookaheadDistance <= callbackTol)
-                    throw invalid_argument("Lookahead distance is less than or equal to callback distance");
 
                 if (path.callback) (*path.callback)();
 
@@ -142,7 +123,7 @@ void Drive::goPath (
 
         // =============== Find goal point =============== 
         Point target_point = {0_in, 0_in};
-        if (shortest_index == paths.size()-1)
+        if (callbackIndexStart == paths.size()-1) // this is... kinda sketchy?
             target_point = paths.end()->point;
         else {
             vector<Point> pot_points = {};
@@ -180,7 +161,7 @@ void Drive::goPath (
 
         // calculate the angle
         double angle_err = Math::anglePoint(current_pos, target_point).convert(okapi::radian);
-        double dist_err = abs(Math::distance(current_pos, target_point).convert(okapi::inch));
+        double dist_err = Math::distance(current_pos, target_point).convert(okapi::inch);
 
         // make sure in drive you do the - - if in reverse
         double ang_power = HeadingPID.step(angle_err);
@@ -194,6 +175,12 @@ void Drive::goPath (
 
         // check if we should break the loop if end time tolerance
         if (maxTime && (pros::millis() - start) >= (*maxTime).convert(okapi::millisecond)) {
+            mainLoop = false;
+            break;
+        }
+
+        // or check if whether close to last point
+        if (abs(Math::distance(current_pos, paths.end()->point).convert(okapi::inch)) < endTol.convert(okapi::inch)) {
             mainLoop = false;
             break;
         }
