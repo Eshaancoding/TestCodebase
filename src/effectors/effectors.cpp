@@ -13,6 +13,7 @@ void Effectors::wingsToggle () {
 void Effectors::toggleFourBar () {
     forBarActive = !forBarActive;
     fourBar.set_value(forBarActive);
+    fourBarExtra.set_value(forBarActive);
 }
 
 // INTAKE

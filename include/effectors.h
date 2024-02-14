@@ -30,6 +30,7 @@ public:
 
     pros::ADIDigitalOut wingsPiston;
     pros::ADIDigitalOut fourBar;
+    pros::ADIDigitalOut fourBarExtra;
     
     bool forBarActive;
     bool wingsActive;
@@ -42,8 +43,9 @@ public:
         slapper(13, pros::E_MOTOR_GEAR_GREEN),
         smallerSlapper(14, pros::E_MOTOR_GEAR_GREEN),
         intakeMotor(5, pros::E_MOTOR_GEAR_GREEN),    
-        wingsPiston('B'),
+        wingsPiston('C'),
         fourBar('A'),
+        fourBarExtra('B'),
         rotSensor(18),
         rotSensorShooter(11),
         wingsActive(false),

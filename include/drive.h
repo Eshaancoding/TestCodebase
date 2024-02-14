@@ -23,7 +23,12 @@ public:
         double distanceF=1,
         std::optional<std::function<void()>> func=std::nullopt
     )
-        : point(p), callback(func), headingFactor(headingF), distanceFactor(distanceF), lookaheadDistance(lookaheadDistance) {};
+        : point(p), 
+        callback(func), 
+        headingFactor(headingF), 
+        distanceFactor(distanceF), 
+        lookaheadDistance(lookaheadDistance) 
+    {};
 };
 
 // I could make this a namespace idk why im making it a class
