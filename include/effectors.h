@@ -28,9 +28,9 @@ public:
     pros::Rotation rotSensor;
     pros::Rotation rotSensorShooter;
 
-    pros::ADIDigitalOut wingsPiston;
+    pros::ADIDigitalOut wingsPistonLeft;
+    pros::ADIDigitalOut wingsPistonRight;
     pros::ADIDigitalOut fourBar;
-    pros::ADIDigitalOut fourBarExtra;
     
     bool forBarActive;
     bool wingsActive;
@@ -40,12 +40,12 @@ public:
     bool lockEnabled;
 
     Effectors () : 
-        slapper(13, pros::E_MOTOR_GEAR_GREEN),
-        smallerSlapper(14, pros::E_MOTOR_GEAR_GREEN),
-        intakeMotor(5, pros::E_MOTOR_GEAR_GREEN),    
-        wingsPiston('C'),
-        fourBar('A'),
-        fourBarExtra('B'),
+        slapper(7, pros::E_MOTOR_GEAR_GREEN),
+        smallerSlapper(6, pros::E_MOTOR_GEAR_GREEN),
+        intakeMotor(14, pros::E_MOTOR_GEAR_GREEN),    
+        wingsPistonLeft('B'),
+        wingsPistonRight('A'),
+        fourBar('C'),
         rotSensor(18),
         rotSensorShooter(11),
         wingsActive(false),

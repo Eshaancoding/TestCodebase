@@ -6,14 +6,14 @@
 // WINGS
 void Effectors::wingsToggle () {
     wingsActive = !wingsActive;
-    wingsPiston.set_value(wingsActive); // there's a get value here in piston
+    wingsPistonLeft.set_value(wingsActive); // there's a get value here in piston
+    wingsPistonRight.set_value(wingsActive); // there's a get value here in piston
 }
 
 // toggle four bar
 void Effectors::toggleFourBar () {
     forBarActive = !forBarActive;
     fourBar.set_value(forBarActive);
-    fourBarExtra.set_value(forBarActive);
 }
 
 // INTAKE
@@ -50,8 +50,8 @@ void Effectors::setIntake (bool isReverse, bool isOff) {
 
 bool Effectors::runSlapperSkill () {
     // assumes that the slapper is at the end position... at the last tooth gear
-    eff.slapper.move_voltage(24000);
-    eff.smallerSlapper.move_velocity(-200);
+    eff.slapper.move_voltage(12000);
+    eff.smallerSlapper.move_voltage(-12000);
 
     // 53600 too long 
     while (true) {

@@ -14,14 +14,19 @@ std::vector<Point> circleLineIntersection (
     Point lineTwo  // line ending point
 ) {
 
+    lineOne.x -= currentPosition.x;
+    lineOne.y -= currentPosition.y;
+
+    lineTwo.x -= currentPosition.x;
+    lineTwo.y -= currentPosition.y;
+
     auto d_x = (lineTwo.x - lineOne.x).convert(okapi::inch);
     auto d_y = (lineTwo.y - lineOne.y).convert(okapi::inch);
     auto d_r = sqrt(pow(d_x, 2) + pow(d_y, 2));
 
-    auto d_discrim = lineOne.x.convert(okapi::inch) * lineTwo.y.convert(okapi::inch) - \
-                     lineTwo.x.convert(okapi::inch) * lineOne.y.convert(okapi::inch);
+    auto d_discrim = (lineOne.x.convert(okapi::inch) * lineTwo.y.convert(okapi::inch)) - (lineTwo.x.convert(okapi::inch) * lineOne.y.convert(okapi::inch));
 
-    auto discriminant = (pow(lookaheadDistance.convert(okapi::inch), 2) * pow(d_r, 2) - pow(d_discrim, 2));
+    auto discriminant = (pow(d_r, 2) * pow(lookaheadDistance.convert(okapi::inch), 2))  - pow(d_discrim, 2);
 
     if (discriminant < 0) return {}; // there is no points
     else if (discriminant == 0) { // only one point exists
@@ -40,14 +45,14 @@ std::vector<Point> circleLineIntersection (
         // find first potential point
         QLength x1 = ((d_discrim * d_y + sign(d_y) * d_x * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
         QLength y1 = ((-d_discrim * d_x + abs(d_y) * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
-        if (lineOne.x < x1 && x1 < lineTwo.x && lineOne.y < y1 && y1 < lineTwo.y)
-            pot_points.push_back({x1, y1});
+        // if (lineOne.x <= x1 && x1 <= lineTwo.x && lineOne.y <= y1 && y1 <= lineTwo.y)
+        pot_points.push_back({x1+currentPosition.x, y1+currentPosition.y});
 
         // find second potential point
         QLength x2 = ((d_discrim * d_y - sign(d_y) * d_x * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
         QLength y2 = ((-d_discrim * d_x - abs(d_y) * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
-        if (lineOne.x < x2 && x2 < lineTwo.x && lineOne.y < y2 && y2 < lineTwo.y)
-            pot_points.push_back({x2, y2});
+        // if (lineOne.x <= x2 && x2 <= lineTwo.x && lineOne.y <= y2 && y2 <= lineTwo.y)
+        pot_points.push_back({x2+currentPosition.x, y2+currentPosition.y});
 
         return pot_points;
     }
@@ -71,18 +76,18 @@ void Drive::goPath (
     vector<Path> paths;
 
     okapi::Point current_point = {current_pos.x, current_pos.y};
-    for (int i = 0; i < paths.size(); i++) {
-        okapi::Point new_point = (paths.begin()+i)->point;
+    for (int i = 0; i < paths_initializer.size(); i++) {
+        okapi::Point new_point = (paths_initializer.begin()+i)->point;
         if (isRelative) {
             new_point.x += current_point.x;
             new_point.y += current_point.y;
         }
         paths.push_back(Path(
             new_point,
-            (paths.begin()+i)->lookaheadDistance,
-            (paths.begin()+i)->headingFactor,
-            (paths.begin()+i)->distanceFactor,
-            (paths.begin()+i)->callback
+            (paths_initializer.begin()+i)->lookaheadDistance,
+            (paths_initializer.begin()+i)->headingFactor,
+            (paths_initializer.begin()+i)->distanceFactor,
+            (paths_initializer.begin()+i)->callback
         ));
         current_point = new_point;
     }
@@ -116,15 +121,17 @@ void Drive::goPath (
                 if (path.callback) (*path.callback)();
 
                 callbackIndexStart++;
+                Console::printBrain(1, i, "Called callback: ");
                 break;
             }
         }
 
+        Console::printBrain(0, "Okay main loop...");
 
         // =============== Find goal point =============== 
         Point target_point = {0_in, 0_in};
         if (callbackIndexStart == paths.size()-1) // this is... kinda sketchy?
-            target_point = paths.end()->point;
+            target_point = (paths.begin()+(paths.size()-1))->point;
         else {
             vector<Point> pot_points = {};
             
@@ -143,20 +150,26 @@ void Drive::goPath (
                 }
             }
 
-            if (pot_points.size() == 0)
+            if (pot_points.size() == 0) {
+                mainLoop = false;
                 throw invalid_argument("No potential points");
+                break;
+            }
 
             // then, out of all the pot_points, find the one that's closest to the heading point.
             auto heading_point = Math::findPointOffset(current_pos, lookaheadDistance);
             double shortest_distance = -1;
             for (auto p : pot_points) {
                 auto d = abs(Math::distance(heading_point, p).convert(okapi::inch));
-                if (shortest_distance == -1 || shortest_distance > d) {
+                if (shortest_distance == -1 || d < shortest_distance) {
                     shortest_distance = d; 
                     target_point = p;
                 }
             }
         } 
+
+        Console::printBrain(2, current_pos, "current pos");
+        Console::printBrain(3, target_point, "target point");
 
 
         // calculate the angle
@@ -167,11 +180,16 @@ void Drive::goPath (
         double ang_power = HeadingPID.step(angle_err);
         double dist_power = DistancePID.step(dist_err);
 
+        Console::printBrain(4, dist_err, "dist err: ");
+        Console::printBrain(5, angle_err, "angle err: ");
+        Console::printBrain(6, dist_power, "raw dist power: ");
+        Console::printBrain(7, ang_power, "raw ang power: ");
+
         // Move the robot; uncomment after test
-        // drive.moveArcade(
-        //     dist_power * (isReverse ? -1 : 1) * distance_factor, 
-        //     ang_power * (isReverse ? -1 : 1) * heading_factor
-        // );
+        drive.moveArcade(
+            dist_power * (isReverse ? -1 : 1) * distance_factor, 
+            ang_power * (isReverse ? -1 : 1) * heading_factor
+        );
 
         // check if we should break the loop if end time tolerance
         if (maxTime && (pros::millis() - start) >= (*maxTime).convert(okapi::millisecond)) {
@@ -180,11 +198,12 @@ void Drive::goPath (
         }
 
         // or check if whether close to last point
-        if (abs(Math::distance(current_pos, paths.end()->point).convert(okapi::inch)) < endTol.convert(okapi::inch)) {
+        if (abs(Math::distance(current_pos, (paths.begin()+(paths.size()-1))->point).convert(okapi::inch)) < endTol.convert(okapi::inch)) {
             mainLoop = false;
             break;
         }
 
-        pros::delay(10);
+        pros::delay(50); //////////////////////////////////////////// TSDKFJSKDFJKSDJFKSJDFKSJDKFJK
     }
+    drive.moveArcade(0,0);
 }

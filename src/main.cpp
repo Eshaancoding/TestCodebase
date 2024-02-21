@@ -45,7 +45,7 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    AutonSelector::init();
+    // AutonSelector::init();
 
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
     rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
@@ -69,17 +69,30 @@ void autonomous() {
     // Routes::skills();
     // Routes::qualOffensive();
     
-    auto state = waitForValidState();     
-    if (state.status == AutonSelector::SKILL)
-        Routes::skills();
-    else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
-        Routes::elimDefensive();
-    else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
-        Routes::elimOffensive();
-    else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
-        Routes::qualDefensive();
-    else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
-        Routes::qualOffensive();
+    // auto state = waitForValidState();     
+    // if (state.status == AutonSelector::SKILL)
+    //     Routes::skills();
+    // else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
+    //     Routes::elimDefensive();
+    // else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
+    //     Routes::elimOffensive();
+    // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
+    //     Routes::qualDefensive();
+    // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
+    //     Routes::qualOffensive();
+
+    // drive.goForward(2_tile);
+    // drive.goBackward(1_tile);
+    // drive.turnRight(135_deg);
+    const QLength ld = 0.5_tile;
+
+    // drive.goForward(1_tile);
+    
+    drive.goPath({
+        Path({0_tile, 0_tile}, ld),
+        Path({0_tile, 2_tile}, ld),
+        Path({1_tile, 1_tile}, ld)
+    }, true, 5_in, 2_in);
 };
 
 // you disabled the factor map thing
@@ -100,6 +113,7 @@ void opcontrol() {
         // ======================== Arcade ======================== 
         double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
         double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+
         // distance *= isReversed ? -1 : 1;
 
         // ======================== Tank ======================== 
@@ -130,30 +144,10 @@ void opcontrol() {
         }
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_UP)) {
-            Routes::skills();
+            // Routes::skills();
         }
         double rot_sensor_val = eff.rotSensorShooter.get_position();
         Console::printBrain(7, "Rot sensor shoot: %f", rot_sensor_val);
-
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-            // run unti goes up
-            // run up
-            eff.rotSensorShooter.set_position(0);
-            eff.slapper.move_voltage(12000*0.5);
-            eff.smallerSlapper.move_velocity(-100*0.5);
-            int count = 0;
-            while (true) {  
-                if (rot_sensor_val > 200 && count > 0) break;
-                if (rot_sensor_val < -6000 && count == 0) count++;
-
-                pros::delay(5);
-                rot_sensor_val = eff.rotSensorShooter.get_position();
-                Console::printBrain(7, "Rot sensor shoot: %f", rot_sensor_val);
-            }
-            eff.slapper.move_velocity(0);
-            eff.smallerSlapper.move_velocity(0);
-        }
-
 
         // run it at end of macro
         // during auton (match) --> just spin a lil

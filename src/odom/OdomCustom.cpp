@@ -65,8 +65,6 @@ namespace OdomCustom {
             // set previous values
             prevEnc = currentEnc; 
             pros::delay(25); // test this shit
-
-            Console::printBrain(2, distanceGet(), "Value: ");
         }
     }
 
