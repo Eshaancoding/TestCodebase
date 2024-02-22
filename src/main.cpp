@@ -85,9 +85,9 @@ void autonomous() {
     // drive.goBackward(1_tile);
     
     drive.goPath({
-        Path({0_tile, 0_tile}),
-        Path({0.75_tile, -1_tile}),
-        Path({-0.75_tile, -1_tile})
+        Path({0_tile, -0.75_tile}),
+        Path({-0.25_tile, -0.5_tile}),
+        Path({-0.25_tile, -0.75_tile})
     }, true, 5_in, 2_in, true);
 
 };
