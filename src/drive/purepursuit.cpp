@@ -72,7 +72,6 @@ void Drive::goPath (
     // =============== First convert all points to absolute if relative =============== 
     // and also convert to vector
     auto current_pos = OdomCustom::getPos();
-    if (isReverse) current_pos.theta += 180_deg;
     vector<Path> paths;
 
     okapi::Point current_point = {current_pos.x, current_pos.y};
@@ -105,7 +104,6 @@ void Drive::goPath (
     while (mainLoop) {
         // get current pos
         current_pos = OdomCustom::getPos();
-        if (isReverse) current_pos.theta += 180_deg;
         
         // =============== Set distance/heading/callback ===============
         for (int i = callbackIndexStart; i < paths.size(); i++) {
@@ -157,7 +155,12 @@ void Drive::goPath (
             }
 
             // then, out of all the pot_points, find the one that's closest to the heading point.
-            auto heading_point = Math::findPointOffset(current_pos, lookaheadDistance);
+            auto heading_point = Math::findPointOffset({
+                current_pos.x,
+                current_pos.y,
+                current_pos.theta + (isReverse ? 180_deg : 0_deg),
+            }, lookaheadDistance);
+
             double shortest_distance = -1;
             for (auto p : pot_points) {
                 auto d = abs(Math::distance(heading_point, p).convert(okapi::inch));
@@ -171,9 +174,8 @@ void Drive::goPath (
         Console::printBrain(2, current_pos, "current pos");
         Console::printBrain(3, target_point, "target point");
 
-
         // calculate the angle
-        double angle_err = Math::anglePoint(current_pos, target_point).convert(okapi::radian);
+        double angle_err = Math::anglePoint(current_pos, target_point, true).convert(okapi::radian);
         double dist_err = Math::distance(current_pos, target_point).convert(okapi::inch);
 
         // make sure in drive you do the - - if in reverse
@@ -187,8 +189,8 @@ void Drive::goPath (
 
         // Move the robot; uncomment after test
         drive.moveArcade(
-            dist_power * (isReverse ? -1 : 1) * distance_factor, 
-            ang_power * (isReverse ? -1 : 1) * heading_factor
+            dist_power * distance_factor, 
+            ang_power * heading_factor
         );
 
         // check if we should break the loop if end time tolerance

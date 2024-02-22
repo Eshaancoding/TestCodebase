@@ -84,14 +84,11 @@ void autonomous() {
     // drive.goForward(2_tile);
     // drive.goBackward(1_tile);
     // drive.turnRight(135_deg);
-    const QLength ld = 0.5_tile;
-
-    // drive.goForward(1_tile);
     
     drive.goPath({
-        Path({0_tile, 0_tile}, ld),
-        Path({0_tile, 2_tile}, ld),
-        Path({1_tile, 1_tile}, ld)
+        Path({0_tile, 0_tile}),
+        Path({0_tile, 1_tile}),
+        Path({1_tile, 1_tile})
     }, true, 5_in, 2_in);
 };
 

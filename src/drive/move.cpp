@@ -39,6 +39,9 @@ void Drive::move (
     // get target position and distance/angle error 
     auto targetPos = isRelative ? add(startingPos, point) : point;
     QLength distErr = Math::distance(startingPos, targetPos);
+    if (distErr >= LOOKAHEAD_DIST) distErr = LOOKAHEAD_DIST;
+    if (distErr <= -LOOKAHEAD_DIST) distErr = -LOOKAHEAD_DIST;
+
     QAngle angleErr = Math::anglePoint(startingPos, targetPos, distanceActivated);
 
     // record original distance and angle error as well as time
@@ -105,6 +108,8 @@ void Drive::move (
         // update error
         okapi::OdomState newPos = OdomCustom::getPos();
         distErr = Math::distance(newPos, targetPos);
+        if (distErr >= LOOKAHEAD_DIST) distErr = LOOKAHEAD_DIST;
+        if (distErr <= -LOOKAHEAD_DIST) distErr = -LOOKAHEAD_DIST;
         angleErr = Math::anglePoint(newPos, targetPos, distanceActivated);
 
         // debug if we need to 
