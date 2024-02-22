@@ -40,7 +40,7 @@ QAngle Math::anglePoint(OdomState currentState, Point p1, bool restrict) {
 
         if (!restrict) return ang;
 
-        if (okapi::abs(ang) > 90_deg) 
+        if (okapi::abs(ang) > 160_deg) 
             return (180_deg - okapi::abs(ang)) * (ang < 0_deg ? 1 : -1);
         else 
             return ang;

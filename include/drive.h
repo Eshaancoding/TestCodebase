@@ -1,7 +1,6 @@
 #ifndef DRIVE_H
 #define DRIVE_H
 
-#include "PIDParams.h"
 #include "Console.h"
 #include "effectors.h"
 #include "parameters.h"
@@ -19,9 +18,9 @@ public:
 
     Path (
         okapi::Point p, 
-        okapi::QLength lookaheadDistance=LOOKAHEAD_DIST,
-        double headingF=HEADING_FACTOR,
-        double distanceF=DISTANCE_FACTOR,
+        okapi::QLength lookaheadDistance=0.3_tile, // has to be same 
+        double headingF=1,
+        double distanceF=1,
         std::optional<std::function<void()>> func=std::nullopt
     )
         : point(p), 
@@ -199,8 +198,8 @@ public:
     void goPath (
         std::initializer_list<Path> paths_initializer,        
         bool isRelative,
-        QLength callbackTol=CALLBACK_TOL,
-        QLength endTol=END_TOL,
+        QLength callbackTol=5_in,
+        QLength endTol=2_in,
         bool isReverse=false,
         std::optional<QTime> maxTime=nullopt
     );

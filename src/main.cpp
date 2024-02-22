@@ -83,13 +83,13 @@ void autonomous() {
 
     // drive.goForward(2_tile);
     // drive.goBackward(1_tile);
-    // drive.turnRight(135_deg);
     
     drive.goPath({
         Path({0_tile, 0_tile}),
-        Path({0_tile, 1_tile}),
-        Path({1_tile, 1_tile})
-    }, true, 5_in, 2_in);
+        Path({0.75_tile, -1_tile}),
+        Path({-0.75_tile, -1_tile})
+    }, true, 5_in, 2_in, true);
+
 };
 
 // you disabled the factor map thing
@@ -98,7 +98,6 @@ void opcontrol() {
     bool isShooting = false;    
     bool isPTOEnabled = false;
     bool isIntaking = false;
-    Control::printController(0, "Forward    ");
 
     // ================== COAST ================== 
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
@@ -144,15 +143,12 @@ void opcontrol() {
             // Routes::skills();
         }
         double rot_sensor_val = eff.rotSensorShooter.get_position();
-        Console::printBrain(7, "Rot sensor shoot: %f", rot_sensor_val);
 
         // run it at end of macro
         // during auton (match) --> just spin a lil
 
 
         pros::delay(10);
-
-        Console::printBrain(0, OdomCustom::getPos(), "Get pos: ");
     }
 }
 

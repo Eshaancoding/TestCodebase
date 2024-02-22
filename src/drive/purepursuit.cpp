@@ -1,6 +1,7 @@
 #include "drive.h"
 #include "odom/Math.h"
 #include "odom/OdomCustom.h"
+#include "PIDParams.h"
 
 double sign (double x) {
     if (x < 0) return -1;
@@ -13,20 +14,34 @@ std::vector<Point> circleLineIntersection (
     Point lineOne, // line starting point
     Point lineTwo  // line ending point
 ) {
+    const QLength pot_points_tol = 2_in;
 
-    lineOne.x -= currentPosition.x;
-    lineOne.y -= currentPosition.y;
+    // lineOne.x -= currentPosition.x;
+    // lineOne.y -= currentPosition.y;
 
-    lineTwo.x -= currentPosition.x;
-    lineTwo.y -= currentPosition.y;
+    // lineTwo.x -= currentPosition.x;
+    // lineTwo.y -= currentPosition.y;
 
-    auto d_x = (lineTwo.x - lineOne.x).convert(okapi::inch);
-    auto d_y = (lineTwo.y - lineOne.y).convert(okapi::inch);
+    auto x1_offset = lineOne.x - currentPosition.x;
+    auto y1_offset = lineOne.y - currentPosition.y;
+
+    auto x2_offset = lineTwo.x - currentPosition.x;
+    auto y2_offset = lineTwo.y - currentPosition.y;
+
+    auto d_x = (x2_offset - x1_offset).convert(okapi::inch);
+    auto d_y = (y2_offset - y1_offset).convert(okapi::inch);
     auto d_r = sqrt(pow(d_x, 2) + pow(d_y, 2));
 
-    auto d_discrim = (lineOne.x.convert(okapi::inch) * lineTwo.y.convert(okapi::inch)) - (lineTwo.x.convert(okapi::inch) * lineOne.y.convert(okapi::inch));
+    auto d_discrim = (x1_offset.convert(okapi::inch) * y2_offset.convert(okapi::inch)) - (x2_offset.convert(okapi::inch) * y1_offset.convert(okapi::inch));
 
     auto discriminant = (pow(d_r, 2) * pow(lookaheadDistance.convert(okapi::inch), 2))  - pow(d_discrim, 2);
+
+    // find min and max points
+    auto minX = min(lineOne.x, lineTwo.x) - pot_points_tol;
+    auto maxX = max(lineOne.x, lineTwo.x) + pot_points_tol;
+
+    auto minY = min(lineOne.y, lineTwo.y) - pot_points_tol;
+    auto maxY = max(lineOne.y, lineTwo.y) + pot_points_tol;
 
     if (discriminant < 0) return {}; // there is no points
     else if (discriminant == 0) { // only one point exists
@@ -34,8 +49,11 @@ std::vector<Point> circleLineIntersection (
         QLength y = ((-d_discrim * d_x) / pow(d_r, 2)) * 1_in;
             
         // check whether it's within the points
-        if (lineOne.x < x && x < lineTwo.x && lineOne.y < y && y < lineTwo.y)
-            return { {x, y} };
+        auto solX = x + currentPosition.x;
+        auto solY = y + currentPosition.y;
+
+        if (minX <= solX && solX <= maxX && minY <= solY && solY <= maxY)
+            return { {solX, solY} };
         else 
             return {};
     }
@@ -45,15 +63,23 @@ std::vector<Point> circleLineIntersection (
         // find first potential point
         QLength x1 = ((d_discrim * d_y + sign(d_y) * d_x * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
         QLength y1 = ((-d_discrim * d_x + abs(d_y) * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
-        // if (lineOne.x <= x1 && x1 <= lineTwo.x && lineOne.y <= y1 && y1 <= lineTwo.y)
-        pot_points.push_back({x1+currentPosition.x, y1+currentPosition.y});
-
+        Point sol1 = {x1 + currentPosition.x, y1 + currentPosition.y};
+        
         // find second potential point
         QLength x2 = ((d_discrim * d_y - sign(d_y) * d_x * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
         QLength y2 = ((-d_discrim * d_x - abs(d_y) * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
-        // if (lineOne.x <= x2 && x2 <= lineTwo.x && lineOne.y <= y2 && y2 <= lineTwo.y)
-        pot_points.push_back({x2+currentPosition.x, y2+currentPosition.y});
+        Point sol2 = {x2 + currentPosition.x, y2 + currentPosition.y};
+        
+        // find is between
+        if (minX <= sol1.x && sol1.x <= maxX && minY <= sol1.y && sol1.y <= maxY) {
+            pot_points.push_back(sol1);
+        }
+        
 
+        if (minX <= sol2.x && sol2.x <= maxX && minY <= sol2.y && sol2.y <= maxY) {
+            pot_points.push_back(sol2);
+        }
+        
         return pot_points;
     }
 }
@@ -69,6 +95,8 @@ void Drive::goPath (
     DistancePID.reset();
     HeadingPID.reset();
     
+    OdomCustom::setPos(0_in, 0_in, 0_deg); // is relative is always 
+
     // =============== First convert all points to absolute if relative =============== 
     // and also convert to vector
     auto current_pos = OdomCustom::getPos();
@@ -150,6 +178,7 @@ void Drive::goPath (
 
             if (pot_points.size() == 0) {
                 mainLoop = false;
+                drive.moveArcade(0,0);
                 throw invalid_argument("No potential points");
                 break;
             }
@@ -173,10 +202,23 @@ void Drive::goPath (
 
         Console::printBrain(2, current_pos, "current pos");
         Console::printBrain(3, target_point, "target point");
+        printf("============= Target point: %f %f =============\n", target_point.x.convert(okapi::inch), target_point.y.convert(okapi::inch));
 
         // calculate the angle
-        double angle_err = Math::anglePoint(current_pos, target_point, true).convert(okapi::radian);
-        double dist_err = Math::distance(current_pos, target_point).convert(okapi::inch);
+        double angle_err = Math::anglePoint({
+            current_pos.x,
+            current_pos.y,
+            current_pos.theta + (isReverse ? 180_deg : 0_deg),
+        }, target_point).convert(okapi::radian);
+
+        double dist_err = Math::distance({
+            current_pos.x,
+            current_pos.y,
+            current_pos.theta + (isReverse ? 180_deg : 0_deg)
+        }, target_point).convert(okapi::inch);
+
+        if (dist_err > LOOKAHEAD_DIST.convert(okapi::inch)) dist_err = LOOKAHEAD_DIST.convert(okapi::inch);
+        if (dist_err < -LOOKAHEAD_DIST.convert(okapi::inch)) dist_err = -LOOKAHEAD_DIST.convert(okapi::inch);
 
         // make sure in drive you do the - - if in reverse
         double ang_power = HeadingPID.step(angle_err);
@@ -189,8 +231,8 @@ void Drive::goPath (
 
         // Move the robot; uncomment after test
         drive.moveArcade(
-            dist_power * distance_factor, 
-            ang_power * heading_factor
+            dist_power * distance_factor * (isReverse ? -1 : 1), 
+            ang_power * heading_factor * (isReverse ? -1 : 1)
         );
 
         // check if we should break the loop if end time tolerance
@@ -205,7 +247,7 @@ void Drive::goPath (
             break;
         }
 
-        pros::delay(50); //////////////////////////////////////////// TSDKFJSKDFJKSDJFKSJDFKSJDKFJK
+        pros::delay(10); //////////////////////////////////////////// TSDKFJSKDFJKSDJFKSJDFKSJDKFJK
     }
     drive.moveArcade(0,0);
 }
