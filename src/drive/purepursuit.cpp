@@ -14,7 +14,7 @@ std::vector<Point> circleLineIntersection (
     Point lineOne, // line starting point
     Point lineTwo  // line ending point
 ) {
-    const QLength pot_points_tol = 2_in;
+    const QLength pot_points_tol = 0.1_in;
 
     // lineOne.x -= currentPosition.x;
     // lineOne.y -= currentPosition.y;
@@ -73,23 +73,10 @@ std::vector<Point> circleLineIntersection (
         // find is between
         if (minX <= sol1.x && sol1.x <= maxX && minY <= sol1.y && sol1.y <= maxY) {
             pot_points.push_back(sol1);
-        } else {
-            printf("==========================\n");
-            printf("Point 1: %f %f\n", sol1.x.convert(okapi::tile), sol1.y.convert(okapi::tile));
-            printf("x should be %f to %f\n", minX.convert(okapi::tile), maxX.convert(okapi::tile));
-            printf("y should be %f to %f\n", minY.convert(okapi::tile), maxY.convert(okapi::tile));
-            printf("==========================\n");
         }
         
-
         if (minX <= sol2.x && sol2.x <= maxX && minY <= sol2.y && sol2.y <= maxY) {
             pot_points.push_back(sol2);
-        } else {
-            printf("==========================\n");
-            printf("Point 2: %f %f\n", sol2.x.convert(okapi::tile), sol2.y.convert(okapi::tile));
-            printf("x should be %f to %f\n", minX.convert(okapi::tile), maxX.convert(okapi::tile));
-            printf("y should be %f to %f\n", minY.convert(okapi::tile), maxY.convert(okapi::tile));
-            printf("==========================\n");
         }
         
         return pot_points;
@@ -98,7 +85,6 @@ std::vector<Point> circleLineIntersection (
 
 void Drive::goPath (
     std::initializer_list<Path> paths_initializer,
-    bool isRelative,
     QLength callbackTol,
     QLength endTol,
     bool isReverse,
@@ -107,27 +93,22 @@ void Drive::goPath (
     DistancePID.reset();
     HeadingPID.reset();
     
-    OdomCustom::setPos(0_in, 0_in, 0_deg); // is relative is always 
-
     // =============== First convert all points to absolute if relative =============== 
     // and also convert to vector
     auto current_pos = OdomCustom::getPos();
     vector<Path> paths = {
         Path(
-            {0_in, 0_in}, 
+            {current_pos.x, current_pos.y}, 
             paths_initializer.begin()->lookaheadDistance,
             paths_initializer.begin()->headingFactor,
             paths_initializer.begin()->distanceFactor
         )
     };
 
-    okapi::Point current_point = {current_pos.x, current_pos.y};
     for (int i = 0; i < paths_initializer.size(); i++) {
         okapi::Point new_point = (paths_initializer.begin()+i)->point;
-        if (isRelative) {
-            new_point.x += current_point.x;
-            new_point.y += current_point.y;
-        }
+        new_point.x += current_pos.x;
+        new_point.y += current_pos.y;
         paths.push_back(Path(
             new_point,
             (paths_initializer.begin()+i)->lookaheadDistance,
@@ -135,7 +116,6 @@ void Drive::goPath (
             (paths_initializer.begin()+i)->distanceFactor,
             (paths_initializer.begin()+i)->callback
         ));
-        current_point = new_point;
     }
 
     // factor variables
@@ -218,11 +198,10 @@ void Drive::goPath (
 
         Console::printBrain(2, current_pos, "current pos");
         Console::printBrain(3, target_point, "target point");
-        printf("============= Target point: %f %f =============\n", target_point.x.convert(okapi::inch), target_point.y.convert(okapi::inch));
+        printf("Current pos %f %f Target point: %f %f callback ind: %d \n", current_pos.x.convert(okapi::tile), current_pos.y.convert(okapi::tile), target_point.x.convert(okapi::tile), target_point.y.convert(okapi::tile), callbackIndexStart);
 
         // calculate the angle
         double angle_err = Math::anglePoint(current_pos, target_point).convert(okapi::radian);
-
         double dist_err = Math::distance(current_pos, target_point).convert(okapi::inch);
 
         if (dist_err > LOOKAHEAD_DIST.convert(okapi::inch)) dist_err = LOOKAHEAD_DIST.convert(okapi::inch);

@@ -189,7 +189,6 @@ public:
      * @brief Pure pursuit (this is where we have a path object)
      * 
      * @param paths_initializer the paths to use in the pure pursuit algorithm
-     * @param isRelative determine whether the points are relative or not
      * @param callbackTol the tolerance of the robot from the point to where to call the callback
      * @param endTol the tolerance that is used to stop the robot in its place
      * @param isReverse to check whether the robot is going in reverse or not
@@ -197,7 +196,6 @@ public:
      */
     void goPath (
         std::initializer_list<Path> paths_initializer,        
-        bool isRelative,
         QLength callbackTol=5_in,
         QLength endTol=2_in,
         bool isReverse=false,

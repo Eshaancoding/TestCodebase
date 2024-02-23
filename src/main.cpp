@@ -84,11 +84,32 @@ void autonomous() {
     // drive.goForward(2_tile);
     // drive.goBackward(1_tile);
     
+    // going backward
+    OdomCustom::setPos({0_in, 0_in, -135_deg});
     drive.goPath({
-        Path({0_tile, -0.75_tile}),
-        Path({-0.25_tile, -0.5_tile}),
-        Path({-0.25_tile, -0.75_tile})
-    }, true, 5_in, 2_in, true);
+        Path({1_tile, 1_tile}),
+        Path({1_tile, 4_tile}),
+        Path({0_tile, 5_tile}),
+        Path({-0.5_tile, 5_tile})
+    }, 5_in, 2_in, true);
+
+    // going forward
+    // OdomCustom::setPos({0_in, 0_in, 45_deg});
+    // drive.goPath({
+    //     Path({1_tile, 1_tile}),
+    //     Path({1_tile, 4_tile})
+    //     Path({0_tile, 5_tile})
+    // }, 5_in, 2_in);
+
+    // curved path (this is going forward)
+    // drive.goPath({
+    //     Path({0.4_tile, 0_tile}),
+    //     Path({0.8_tile, -0.4_tile}),
+    //     Path({0_tile, -1_tile}),
+    //     Path({-0.5_tile, -1.3_tile}, 1.5, 0.5),
+    //     Path({-0.5_tile, -0.9_tile}, 0.5, 1.5),
+    //     Path({-0.5_tile, -0.3_tile}, 0.5, 1.5),
+    // }, 5_in, 2_in);
 
 };
 
