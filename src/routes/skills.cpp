@@ -33,83 +33,49 @@ void Routes::macro () {
     OdomCustom::setPos(0_in, 0_in, -135_deg);
     eff.rotSensorShooter.set_position(0);
 
-    drive.setToleranceParams(nullopt, nullopt, 1.4_s);
-    drive.goToPoint({-4_tile, -2_tile}, true, true, {{0, 1.4}});
-    drive.resetToleranceParams();
-    drive.moveTank(0, 0);
-    // pros::delay(100);
-
-    drive.moveArcade(-0.5, 0);
-    pros::delay(600);
-    drive.moveTank(0, -0.5);
+    drive.moveArcade(1, 0.4);
+    pros::delay(800);
+    eff.setIntake(true, false); // reverse intake
     pros::delay(400);
-    drive.moveTank(0, 0);
+    drive.moveTank(-0.2, -0.8);
+    pros::delay(800);
+    drive.moveArcade(0, 0);
 
-    drive.faceToPoint({-35_tile, 70_tile}, true, {{0, 0.7}});
+    pros::delay(1000);
 
-    eff.toggleFourBar();
-    pros::delay(300);
-    eff.slapper.move_voltage(12000);
-    eff.smallerSlapper.move_velocity(-100);
-    pros::delay(41*1000); // CAHBGEN TO 41
-    eff.slapper.move_voltage(0);
-    eff.smallerSlapper.move_velocity(0);
-    eff.toggleFourBar();
-
-    // go back 
-    // reset 
-    
+    eff.setIntake(false, true); // turn off
 }
 
 void Routes::skills () {
 
     macro();
 
-    Task t (resetShooter);
-    drive.faceToPoint({2_tile, 3_tile}, true);
-    
-    drive.setToleranceParams(nullopt, nullopt, 1.3_s);
-    drive.goForward(0.9_tile, {{0, 1}}); // THIS THIS HTHIS THIS 
-    drive.resetToleranceParams();
+    drive.goForward(4_in);
+    drive.faceToPoint({-30_tile, -30_tile}, true);
 
-    drive.faceToPoint({0_tile, 3_tile}, true);
+    OdomCustom::setPos(0_in, 0_in, -135_deg);
+    drive.goPath({
+        Path({0_in, 0_in}),
+        Path({0.5_tile, 0.5_tile}),
+        Path({0.53_tile, 1_tile}, 0.4, 1.4),
+        Path({0.53_tile, 3.7_tile}),
+        Path({-0.4_tile, 4.7_tile}),
+    }, 8_in, 6_in, true);
 
-    drive.setToleranceParams(nullopt, nullopt, 2.35_s);
-    drive.goForward(3.0_tile, { 
-        {0, 0.7},
-        {0.6, 1}
-    });
-    drive.resetToleranceParams();
-
-    drive.setToleranceParams(nullopt, nullopt, 2.1_s, 0.8);
-    // curve movement to hit triball
-    drive.goToPoint({-6_tile, 4_tile}, true, true, {{0, 1.4}});
-    drive.resetToleranceParams();
-
-    // go backwardo
-    drive.goBackward(0.6_tile);
-
-    // face the point of interest to go the center
-    drive.faceToPoint({-20_tile, -30_tile}, true);
-
-    // actually go the center
-    drive.setToleranceParams(nullopt, nullopt, 2_s);
-    drive.goForward(2_tile);
-    drive.resetToleranceParams();
-
-    // face the actual point
-    drive.faceToPoint({-20_tile, 30_tile}, true);
-    
-    // go back and forth and back and forth and back and forth
-    eff.wingsToggle();
-    drive.moveArcade(1, 0);
-    pros::delay(900);
     drive.moveArcade(-1, 0);
-    pros::delay(500);
-    drive.moveArcade(1, 0);
-    pros::delay(700);
-    drive.moveArcade(-1, 0);
-    pros::delay(500);
+    pros::delay(1000);
     drive.moveArcade(0, 0);
+
+    // curved path (this is for hitting triball)
+    OdomCustom::setPos(0_in, 0_in, 90_deg);
+    drive.goPath({
+        Path({0_tile, 0_tile}),
+        Path({0.4_tile, 0_tile}),
+        Path({0.6_tile, -0.3_tile}),
+        Path({0_tile, -1_tile}),
+        Path({-0.5_tile, -1.3_tile}, 1.5, 0.5),
+        Path({-0.5_tile, -0.9_tile}, 0.5, 1.5),
+        Path({-0.5_tile, -0.3_tile}, 0.5, 1.5),
+    }, 5_in, 2_in);
     
 }

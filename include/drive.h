@@ -18,9 +18,9 @@ public:
 
     Path (
         okapi::Point p, 
-        okapi::QLength lookaheadDistance=0.3_tile, // has to be same 
         double headingF=1,
         double distanceF=1,
+        okapi::QLength lookaheadDistance=0.3_tile, // has to be same 
         std::optional<std::function<void()>> func=std::nullopt
     )
         : point(p), 

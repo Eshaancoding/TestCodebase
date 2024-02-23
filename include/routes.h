@@ -12,6 +12,8 @@ namespace Routes {
     void qualDefensive ();   
     void macro ();
 
+    void sixBall ();
+
     void skills ();
 };
 

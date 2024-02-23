@@ -85,32 +85,8 @@ void autonomous() {
     // drive.goBackward(1_tile);
     
     // going backward
-    OdomCustom::setPos({0_in, 0_in, -135_deg});
-    drive.goPath({
-        Path({1_tile, 1_tile}),
-        Path({1_tile, 4_tile}),
-        Path({0_tile, 5_tile}),
-        Path({-0.5_tile, 5_tile})
-    }, 5_in, 2_in, true);
-
-    // going forward
-    // OdomCustom::setPos({0_in, 0_in, 45_deg});
-    // drive.goPath({
-    //     Path({1_tile, 1_tile}),
-    //     Path({1_tile, 4_tile})
-    //     Path({0_tile, 5_tile})
-    // }, 5_in, 2_in);
-
-    // curved path (this is going forward)
-    // drive.goPath({
-    //     Path({0.4_tile, 0_tile}),
-    //     Path({0.8_tile, -0.4_tile}),
-    //     Path({0_tile, -1_tile}),
-    //     Path({-0.5_tile, -1.3_tile}, 1.5, 0.5),
-    //     Path({-0.5_tile, -0.9_tile}, 0.5, 1.5),
-    //     Path({-0.5_tile, -0.3_tile}, 0.5, 1.5),
-    // }, 5_in, 2_in);
-
+    OdomCustom::setPos(0_in, 0_in, -135_deg);
+    Routes::skills();
 };
 
 // you disabled the factor map thing
@@ -161,7 +137,11 @@ void opcontrol() {
         }
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_UP)) {
-            // Routes::skills();
+            leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+            rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+            Routes::macro();
+            leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+            rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
         }
         double rot_sensor_val = eff.rotSensorShooter.get_position();
 

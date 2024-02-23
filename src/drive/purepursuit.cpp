@@ -98,10 +98,7 @@ void Drive::goPath (
     auto current_pos = OdomCustom::getPos();
     vector<Path> paths = {
         Path(
-            {current_pos.x, current_pos.y}, 
-            paths_initializer.begin()->lookaheadDistance,
-            paths_initializer.begin()->headingFactor,
-            paths_initializer.begin()->distanceFactor
+            {current_pos.x, current_pos.y}
         )
     };
 
@@ -111,9 +108,9 @@ void Drive::goPath (
         new_point.y += current_pos.y;
         paths.push_back(Path(
             new_point,
-            (paths_initializer.begin()+i)->lookaheadDistance,
             (paths_initializer.begin()+i)->headingFactor,
             (paths_initializer.begin()+i)->distanceFactor,
+            (paths_initializer.begin()+i)->lookaheadDistance,
             (paths_initializer.begin()+i)->callback
         ));
     }
@@ -219,7 +216,7 @@ void Drive::goPath (
         // Move the robot; uncomment after test
         drive.moveArcade(
             dist_power * distance_factor * (isReverse ? -1 : 1), 
-            ang_power * heading_factor * (isReverse ? -1 : 1)
+            ang_power * heading_factor
         );
 
         // check if we should break the loop if end time tolerance
@@ -234,7 +231,7 @@ void Drive::goPath (
             break;
         }
 
-        pros::delay(10); //////////////////////////////////////////// TSDKFJSKDFJKSDJFKSJDFKSJDKFJK
+        pros::delay(10);
     }
     drive.moveArcade(0,0);
 }
