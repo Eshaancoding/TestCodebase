@@ -72,10 +72,8 @@ void Routes::skills () {
         Path({0_tile, 0_tile}),
         Path({0.4_tile, 0_tile}),
         Path({0.6_tile, -0.3_tile}),
-        Path({0_tile, -1_tile}),
-        Path({-0.5_tile, -1.3_tile}, 1.5, 0.5),
-        Path({-0.5_tile, -0.9_tile}, 0.5, 1.5),
-        Path({-0.5_tile, -0.3_tile}, 0.5, 1.5),
+        Path({-0.4_tile, -1_tile}),
+        Path({-0.4_tile, 0_tile}),
     }, 5_in, 2_in);
     
 }
