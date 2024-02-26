@@ -69,11 +69,16 @@ void Routes::skills () {
     // curved path (this is for hitting triball)
     OdomCustom::setPos(0_in, 0_in, 90_deg);
     drive.goPath({
-        Path({0_tile, 0_tile}),
-        Path({0.4_tile, 0_tile}),
-        Path({0.6_tile, -0.3_tile}),
-        Path({-0.4_tile, -1_tile}),
-        Path({-0.4_tile, 0_tile}),
-    }, 5_in, 2_in);
+        Path({0_tile, 0_tile}, 0.7, 1, 0.3_tile),
+        Path({0.4_tile, -0.4_tile}, 0.7, 1, 0.3_tile),
+        Path({-1_tile, -1.75_tile}, 1, 1, 0.3_tile, [](){
+            eff.wingsToggle();
+        }),
+        Path({-1_tile, -1_tile}),
+    }, 8_in, 2_in);
+    
+    drive.moveArcade(-1, 0);
+    pros::delay(600);
+    drive.moveArcade(0, 0);
     
 }

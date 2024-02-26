@@ -96,11 +96,7 @@ void Drive::goPath (
     // =============== First convert all points to absolute if relative =============== 
     // and also convert to vector
     auto current_pos = OdomCustom::getPos();
-    vector<Path> paths = {
-        Path(
-            {current_pos.x, current_pos.y}
-        )
-    };
+    vector<Path> paths;
 
     for (int i = 0; i < paths_initializer.size(); i++) {
         okapi::Point new_point = (paths_initializer.begin()+i)->point;
@@ -124,8 +120,10 @@ void Drive::goPath (
     QLength lookaheadDistance = paths.begin()->lookaheadDistance;
 
     // =============== Main while loop =============== 
+    int iteration = 0;
     bool mainLoop = true;
     while (mainLoop) {
+        iteration++;
         // get current pos
         current_pos = OdomCustom::getPos();
         current_pos.theta += (isReverse ? 180_deg : 0_deg);
@@ -195,7 +193,6 @@ void Drive::goPath (
 
         Console::printBrain(2, current_pos, "current pos");
         Console::printBrain(3, target_point, "target point");
-        printf("Current pos %f %f Target point: %f %f callback ind: %d \n", current_pos.x.convert(okapi::tile), current_pos.y.convert(okapi::tile), target_point.x.convert(okapi::tile), target_point.y.convert(okapi::tile), callbackIndexStart);
 
         // calculate the angle
         double angle_err = Math::anglePoint(current_pos, target_point).convert(okapi::radian);
@@ -212,6 +209,19 @@ void Drive::goPath (
         Console::printBrain(5, angle_err, "angle err: ");
         Console::printBrain(6, dist_power, "raw dist power: ");
         Console::printBrain(7, ang_power, "raw ang power: ");
+        if (iteration % 2 == 0) {
+            printf("c: %f %f t: %f %f callback: %d head: %f dist: %f dist_pow: %f ang_pow: %f \n", 
+                current_pos.x.convert(okapi::tile), 
+                current_pos.y.convert(okapi::tile), 
+                target_point.x.convert(okapi::tile), 
+                target_point.y.convert(okapi::tile), 
+                callbackIndexStart, 
+                heading_factor, 
+                distance_factor,
+                dist_power,
+                ang_power
+            );
+        }
 
         // Move the robot; uncomment after test
         drive.moveArcade(
