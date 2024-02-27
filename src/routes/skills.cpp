@@ -40,10 +40,15 @@ void Routes::macro () {
     drive.moveTank(-0.2, -0.8);
     pros::delay(800);
     drive.moveArcade(0, 0);
-
-    pros::delay(1000);
-
     eff.setIntake(false, true); // turn off
+    drive.faceToPoint({-1_tile, 6_tile}, true);
+
+    eff.slapper.move_voltage(12000);
+    eff.smallerSlapper.move_voltage(-12000);
+    pros::delay(27 * 1000);
+    eff.slapper.move_voltage(0);
+    eff.smallerSlapper.move_voltage(0);
+
 }
 
 void Routes::skills () {
@@ -69,16 +74,18 @@ void Routes::skills () {
     // curved path (this is for hitting triball)
     OdomCustom::setPos(0_in, 0_in, 90_deg);
     drive.goPath({
-        Path({0_tile, 0_tile}, 0.7, 1, 0.3_tile),
-        Path({0.4_tile, -0.4_tile}, 0.7, 1, 0.3_tile),
-        Path({-1_tile, -1.75_tile}, 1, 1, 0.3_tile, [](){
-            eff.wingsToggle();
-        }),
-        Path({-1_tile, -1_tile}),
-    }, 8_in, 2_in);
-    
-    drive.moveArcade(-1, 0);
-    pros::delay(600);
+        Path({0_tile, 0_tile}, 1, 0.8, 0.3_tile),
+        Path({0.4_tile, -0.4_tile}, 1, 0.8, 0.3_tile),
+        Path({-1_tile, -1.75_tile})
+    }, 8_in, 6_in);
+
+    drive.setToleranceParams(nullopt, nullopt, 0.75_s);
+    drive.faceToPoint({0_in, 30_tile}, true);
+    drive.resetToleranceParams();
+
+    eff.wingsToggle();
+    drive.moveArcade(1, 0);
+    pros::delay(1200);
     drive.moveArcade(0, 0);
     
 }
