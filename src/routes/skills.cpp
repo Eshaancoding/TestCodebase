@@ -41,7 +41,7 @@ void Routes::macro () {
     pros::delay(800);
     drive.moveArcade(0, 0);
     eff.setIntake(false, true); // turn off
-    drive.faceToPoint({-1_tile, 6_tile}, true);
+    drive.faceToPoint({-1.25_tile, 6_tile}, true);
 
     eff.slapper.move_voltage(12000);
     eff.smallerSlapper.move_voltage(-12000);
@@ -63,14 +63,15 @@ void Routes::skills () {
         Path({0_in, 0_in}),
         Path({0.5_tile, 0.5_tile}),
         Path({0.53_tile, 1_tile}, 0.4, 1.4),
-        Path({0.53_tile, 3.7_tile}),
+        Path({0.53_tile, 4_tile}),
         Path({-0.4_tile, 5_tile}),
     }, 8_in, 10_in, true);
 
     drive.moveArcade(-1, 0);
     pros::delay(1000);
-    drive.moveArcade(1, 0);
-    pros::delay(500);
+    drive.moveArcade(0.7, 0);
+    pros::delay(250);
+    drive.faceToPoint({20_tile, -5_tile}, true, {{0, 1.4}});
     drive.moveArcade(-1, 0);
     pros::delay(1000);
     drive.moveArcade(0, 0);
@@ -95,7 +96,7 @@ void Routes::skills () {
     drive.moveArcade(-1, 0);
     pros::delay(600);
     drive.moveArcade(1, 0);
-    pros::delay(600);
+    pros::delay(1000);
     drive.moveArcade(-1, 0);
     pros::delay(600);
     drive.moveArcade(0, 0);
