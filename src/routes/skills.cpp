@@ -29,7 +29,7 @@ void resetShooter () {
     eff.smallerSlapper.move_velocity(0);
 }
 
-void Routes::macro () {
+void Routes::macro (bool run_shooter) {
     OdomCustom::setPos(0_in, 0_in, -135_deg);
     eff.rotSensorShooter.set_position(0);
 
@@ -43,12 +43,13 @@ void Routes::macro () {
     eff.setIntake(false, true); // turn off
     drive.faceToPoint({-1.25_tile, 6_tile}, true);
 
-    eff.slapper.move_voltage(12000);
-    eff.smallerSlapper.move_voltage(-12000);
-    pros::delay(27 * 1000);
-    eff.slapper.move_voltage(0);
-    eff.smallerSlapper.move_voltage(0);
-
+    if (run_shooter) {
+        eff.slapper.move_voltage(12000);
+        eff.smallerSlapper.move_voltage(-12000);
+        pros::delay(27 * 1000);
+        eff.slapper.move_voltage(0);
+        eff.smallerSlapper.move_voltage(0);
+    }
 }
 
 void Routes::skills () {

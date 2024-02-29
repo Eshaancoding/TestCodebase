@@ -10,11 +10,12 @@ namespace Routes {
     void elimDefensive ();   
     void qualOffensive ();  
     void qualDefensive ();   
-    void macro ();
+    void macro (bool run_shooter=true);
 
     void sixBall ();
 
     void skills ();
+    void new_skills ();
 };
 
 #endif

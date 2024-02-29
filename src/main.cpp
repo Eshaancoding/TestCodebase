@@ -86,7 +86,7 @@ void autonomous() {
     
     // going backward
     OdomCustom::setPos(0_in, 0_in, -135_deg);
-    Routes::skills();
+    Routes::new_skills();
 };
 
 // you disabled the factor map thing
