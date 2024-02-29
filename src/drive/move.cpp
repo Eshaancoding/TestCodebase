@@ -50,14 +50,16 @@ void Drive::move (
     QAngle origAngleErr = angleErr;
 
     // record previous factors 
-    double prevDistanceFact = DistancePID.getFactor(); // get the previous factor for setting at the end
-    double prevHeadingFact = HeadingPID.getFactor();   // get the previous factor for setting at the end
     if (ODOM_DEBUG) Console::printBrain(4, ""); // clear line
 
+    double heading_factor = 1;
+    double distance_factor = 1;
+
     // =================== Main loop ==================
+    int iteration = 0;
 
     while (true) { 
-
+        iteration++;
         // determine which percent change (used for callback map and factor map to use; by default uses distance
         double percentChange;
         if (distanceActivated) 
@@ -68,8 +70,12 @@ void Drive::move (
         // go through factor map; commented because you have weird code for factors
         for (auto itr = factorMap.begin(); itr != factorMap.end(); itr++) {
             if (itr->first < percentChange && percentChange <= 1) {
-                if (distanceActivated) DistancePID.setFactor(get<0>(itr->second));
-                if (headingActivated) HeadingPID.setFactor(get<1>(itr->second));
+                distance_factor = get<0>(itr->second);
+                heading_factor = get<1>(itr->second);
+
+                printf("Heading factor: %f\n", heading_factor);
+                printf("Distance factor: %f\n", distance_factor);
+                printf("Percent change %f with i: %f \n", percentChange, (float)itr->first);
 
                 /// SKILL 
                 if (ODOM_DEBUG)
@@ -103,7 +109,14 @@ void Drive::move (
             headingPower *= courseCorrectionFactor;
 
         // Actually drive
-        Drive::moveArcade(distancePower, headingPower);
+        if (iteration % 3 == 0) {
+            printf("power distnace: %f ", distancePower * distance_factor * (distanceActivated ? 1 : 0));
+            printf("raw power: %f\n", distancePower);
+        }
+        Drive::moveArcade(
+            distancePower * distance_factor * (distanceActivated ? 1 : 0), 
+            headingPower * heading_factor * (headingActivated ? 1 : 0)
+        );
         
         // update error
         okapi::OdomState newPos = OdomCustom::getPos();
@@ -135,10 +148,6 @@ void Drive::move (
 
         pros::delay(DELAYITER.convert(okapi::millisecond));
     }
-
-    // set previous factor for PID factor
-    HeadingPID.setFactor(prevHeadingFact);
-    DistancePID.setFactor(prevDistanceFact);
 
     Drive::moveArcade(0, 0); // reset!
 

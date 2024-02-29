@@ -20,9 +20,11 @@ void Drive::goForward (
     Point absolute = Math::findPointOffset(startingPos, distance);
 
     // convert from factor map to multiple of factor map cause not doing so is cringe
+    double last_interest = 0;
     map<double, pair<double, double>> map;
     for (auto i : factorMap) {
         map[i.first] = {i.second, Heading_FACTOR}; 
+        last_interest = i.second;
     }
 
     // wait... this is weird we are activating heading too!
@@ -31,7 +33,7 @@ void Drive::goForward (
     // we have to disable the heading somewhere at the end BECAUSE angle point becomes larger and larger as it grows closer to the point!
     double disablePoint = DISABLEPOINT; 
     if (map.find(disablePoint) == map.end()) { // not found in map
-        map[disablePoint] = {Distance_FACTOR, 0}; // completely disables heading! only allows distance
+        map[disablePoint] = {last_interest, 0}; // completely disables heading! only allows distance
     }
 
     move(absolute, false, COURSE_CORRECTION, true, true, map, callbackMap);

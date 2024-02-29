@@ -33,7 +33,7 @@ void Routes::macro (bool run_shooter) {
     OdomCustom::setPos(0_in, 0_in, -135_deg);
     eff.rotSensorShooter.set_position(0);
 
-    drive.moveArcade(1, 0.4);
+    drive.moveArcade(1, 0.45);
     pros::delay(800);
     eff.setIntake(true, false); // reverse intake
     pros::delay(400);

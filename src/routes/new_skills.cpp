@@ -16,21 +16,27 @@ void Routes::new_skills () {
     macro(false);
 
     // ========= get the 4 middle triballs =======
-    drive.goForward(2.2_tile);
+    eff.setIntake(true, false); // reverse intake
+    drive.goForward(2.3_tile);
     drive.faceToPoint({10_tile, -1_tile}, true);
-    eff.wingsPistonLeft.set_value(1);
-    drive.goBackward(2.75_tile, {{0, 1.5}});
-    eff.wingsPistonLeft.set_value(0);
+    eff.setIntake(false, true); // reverse intake
+
+    eff.wingsPistonRight.set_value(1);
+    drive.moveArcade(-1, 0);
+    pros::delay(2300);
+    drive.moveArcade(0, 0);
+    eff.wingsPistonRight.set_value(0);
 
     // ========== Realign and go under bar ======
-    drive.goBackward(6_in);
+    // drive.goForward(4_in);
+    drive.faceToPoint({0_tile, 10_tile}, true, {{0, 0.8}});
     
-    OdomCustom::setPos(0_in, 0_in, -90_deg);
     drive.goPath({
         Path({0_in, 0_in}, 1, 0.8, 0.3_tile),
-        Path({0_in, -0.5_tile}),
-        Path({0_in, -1_tile}),
-        Path({-1_tile, -1_tile}),
+        Path({0_in, -0.5_tile}, 1, 0.8, 0.3_tile),
+        Path({0_in, -1_tile}, 1, 0.8, 0.3_tile),
+        Path({-1_tile, -1_tile}, 1, 0.8, 0.3_tile),
+        Path({-1_tile, 0_tile}),
         Path({-1_tile, 2.2_tile}),
         Path({0_in, 3_tile}),
     }, 8_in, 3_in, true);
@@ -46,7 +52,6 @@ void Routes::new_skills () {
     drive.moveArcade(-1, 0);
     pros::delay(1000);
     drive.moveArcade(0,0);
-
 
     // ============== Go to center ==============
     drive.goPath({
