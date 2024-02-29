@@ -135,8 +135,8 @@ void Drive::move (
 
         // check on if we should stop or not
         if (
-            ((!distanceActivated || DistancePID.getFactor() == 0) || abs(distErr.convert(inch)) <= distanceTol.convert(inch)) &&
-            ((!headingActivated || HeadingPID.getFactor() == 0) || abs(angleErr.convert(radian)) <= angleTol.convert(radian))
+            ((!distanceActivated || distance_factor == 0) || abs(distErr.convert(inch)) <= distanceTol.convert(inch)) &&
+            ((!headingActivated || heading_factor == 0) || abs(angleErr.convert(radian)) <= angleTol.convert(radian))
         ) {
             if (ODOM_DEBUG) Console::printBrain(4, "Stopped due to heading/distance threshold reached.");
             break;

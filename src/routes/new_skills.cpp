@@ -29,16 +29,15 @@ void Routes::new_skills () {
 
     // ========== Realign and go under bar ======
     // drive.goForward(4_in);
-    drive.faceToPoint({0_tile, 10_tile}, true, {{0, 0.8}});
+    drive.goForward(1_tile);
     
     drive.goPath({
         Path({0_in, 0_in}, 1, 0.8, 0.3_tile),
-        Path({0_in, -0.5_tile}, 1, 0.8, 0.3_tile),
-        Path({0_in, -1_tile}, 1, 0.8, 0.3_tile),
         Path({-1_tile, -1_tile}, 1, 0.8, 0.3_tile),
-        Path({-1_tile, 0_tile}),
-        Path({-1_tile, 2.2_tile}),
-        Path({0_in, 3_tile}),
+        Path({-1.5_tile, -1_tile}, 1, 0.8, 0.3_tile),
+        Path({-1.5_tile, 0_tile}, 0.8, 1),
+        Path({-1.5_tile, 2.2_tile}, 0.8, 1),
+        Path({-0.5_tile, 3_tile}),
     }, 8_in, 3_in, true);
 
     // ============== Slam left side ==============
