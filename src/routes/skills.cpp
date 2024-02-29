@@ -71,7 +71,7 @@ void Routes::skills () {
     pros::delay(1000);
     drive.moveArcade(0.7, 0);
     pros::delay(250);
-    drive.faceToPoint({20_tile, -5_tile}, true, {{0, 1.4}});
+    drive.faceToPoint({20_tile, -5_tile}, true);
     drive.moveArcade(-1, 0);
     pros::delay(1000);
     drive.moveArcade(0, 0);
