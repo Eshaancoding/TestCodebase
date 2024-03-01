@@ -17,7 +17,7 @@ void Routes::new_skills () {
 
     // ========= get the 4 middle triballs =======
     eff.setIntake(true, false); // reverse intake
-    drive.goForward(2.4_tile);
+    drive.goForward(2.3_tile, {{0, 1.5}});
     drive.faceToPoint({10_tile, -1_tile}, true);
     eff.setIntake(false, true); // reverse intake
 
@@ -63,22 +63,21 @@ void Routes::new_skills () {
     drive.faceToPoint({0_in, 30_tile}, true);
     drive.goPath({
         Path({0_in, 0_in}, 1, 0.8, 0.3_tile),
-        Path({0_tile, -1.25_tile}, 1, 0.8, 0.3_tile, [](){
+        Path({0_tile, -1_tile}, 1, 0.8, 0.3_tile, [](){
             eff.wingsPistonLeft.set_value(1);
             eff.wingsPistonRight.set_value(1);
         }),
-        Path({1.25_tile, -2_tile}, 1, 0.8, 0.3_tile),
+        Path({0.5_tile, -1.5_tile}, 1, 0.8, 0.3_tile),
+        Path({1_tile, -1.5_tile}, 1, 0.8, 0.3_tile),
+        Path({1.25_tile, -0.75_tile}, 1, 0.8, 0.3_tile),
+        Path({1.5_tile, 0_tile}, 1, 0.8, 0.3_tile),
     }, 8_in, 6_in, true, 5_s);
 
     // ============== Slam center ==============
-    eff.wingsPistonLeft.set_value(0);
-    eff.wingsPistonRight.set_value(0);
-    drive.faceToPoint({0_tile, -10_tile}, true, {{0, 0.7}});
-    eff.wingsPistonLeft.set_value(1);
-    eff.wingsPistonRight.set_value(1);
-    drive.moveArcade(-1, 0);
-    pros::delay(1200);
-    drive.moveArcade(1,0);
+    // drive.faceToPoint({0_tile, -10_tile}, true, {{0, 0.7}});
+    drive.moveArcade(1, 0);
     pros::delay(600);
+    drive.moveArcade(-1,0);
+    pros::delay(1200);
     drive.moveArcade(0,0);
 }
