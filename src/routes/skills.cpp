@@ -82,7 +82,7 @@ void Routes::skills () {
     drive.goPath({
         Path({0_tile, 0_tile}, 1, 0.8, 0.3_tile),
         Path({0.4_tile, -0.4_tile}, 1, 0.8, 0.3_tile),
-        Path({0_tile, -0.8_tile}),
+        Path({0_tile, -0.8_tile}, 1.3, 1.3),
         Path({-2_tile, -1.75_tile})
     }, 8_in, 6_in);
 
