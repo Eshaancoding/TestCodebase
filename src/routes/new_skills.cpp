@@ -41,7 +41,7 @@ void Routes::new_skills () {
         Path({-1.5_tile, 0.5_tile}, 0.4, 1.4),
         Path({-1.5_tile, 1.85_tile}, 0.4, 1.4),
         Path({0_tile, 2.6_tile}),
-    }, 14_in, 3_in, true, 7_s);
+    }, 14_in, 3_in, true, 6.5_s);
 
     // ============== Slam left side ==============
     
@@ -60,18 +60,22 @@ void Routes::new_skills () {
     // drive.moveArcade(0,0);
 
     // ============== Go to center ==============
-    
-    OdomCustom::setPos(0_in, 0_in, -90_deg);
+    drive.faceToPoint({0_in, 30_tile}, true);
     drive.goPath({
-        Path({0_tile, 0_tile}, 1, 0.8, 0.3_tile),
-        Path({-0.4_tile, -0.4_tile}, 1, 0.8, 0.3_tile),
-        Path({0_tile, -0.8_tile}),
-        Path({2_tile, -1.75_tile})
-    }, 8_in, 6_in);
+        Path({0_in, 0_in}, 1, 0.8, 0.3_tile),
+        Path({0_tile, -1.25_tile}, 1, 0.8, 0.3_tile, [](){
+            eff.wingsPistonLeft.set_value(1);
+            eff.wingsPistonRight.set_value(1);
+        }),
+        Path({1.25_tile, -2_tile}, 1, 0.8, 0.3_tile),
+    }, 8_in, 6_in, true, 5_s);
 
     // ============== Slam center ==============
-    drive.faceToPoint({0_tile, -10_tile}, true);
-    eff.wingsToggle();
+    eff.wingsPistonLeft.set_value(0);
+    eff.wingsPistonRight.set_value(0);
+    drive.faceToPoint({0_tile, -10_tile}, true, {{0, 0.7}});
+    eff.wingsPistonLeft.set_value(1);
+    eff.wingsPistonRight.set_value(1);
     drive.moveArcade(-1, 0);
     pros::delay(1200);
     drive.moveArcade(1,0);

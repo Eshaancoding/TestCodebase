@@ -41,7 +41,7 @@ void Routes::macro (bool run_shooter) {
     pros::delay(800);
     drive.moveArcade(0, 0);
     eff.setIntake(false, true); // turn off
-    drive.faceToPoint({-1.25_tile, 6_tile}, true);
+    drive.faceToPoint({-2_tile, 6_tile}, true);
 
     if (run_shooter) {
         eff.slapper.move_voltage(12000);
