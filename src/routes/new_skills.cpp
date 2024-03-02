@@ -24,13 +24,13 @@ void Routes::new_skills () {
     eff.wingsPistonRight.set_value(1);
     eff.wingsPistonLeft.set_value(1);
     drive.moveArcade(-1, 0);
-    pros::delay(2300);
+    pros::delay(2000);
     drive.moveArcade(0, 0);
     eff.wingsPistonLeft.set_value(0);
     eff.wingsPistonRight.set_value(0);
 
     // ========== Realign and go under bar ======
-    // drive.goForward(4_in);
+    drive.goForward(4_in);
     drive.goForward(1_tile);
     
     drive.goPath({
@@ -44,16 +44,19 @@ void Routes::new_skills () {
     }, 14_in, 3_in, true, 6.5_s);
 
     // ============== Go to center ==============
+        
+    OdomCustom::setPos(0_in, 0_in, -90_deg); // ============ DELETE THIS LATER =====
+
     drive.faceToPoint({0_in, 30_tile}, true);
     drive.goPath({
         Path({0_in, 0_in}, 1, 0.8, 0.3_tile),
-        Path({0_tile, -1_tile}, 1, 0.8, 0.3_tile, [](){
+        Path({0_tile, -1.25_tile}, 1, 0.8, 0.3_tile, [](){
             eff.wingsPistonLeft.set_value(1);
             eff.wingsPistonRight.set_value(1);
         }),
-        Path({0.5_tile, -1.5_in}, 1, 0.8, 0.3_tile),
-        Path({1_tile, -1_tile}, 1, 0.8, 0.3_tile)
-    }, 8_in, 6_in, true, 5_s);
+        Path({0.5_tile, -1.65_tile}, 1, 0.8, 0.3_tile),
+        Path({1.75_tile, -0.5_tile}, 1, 0.8, 0.3_tile)
+    }, 8_in, 12_in, true, 4.5_s);
 
     drive.moveArcade(-1, 0);
     pros::delay(1200);
@@ -64,20 +67,29 @@ void Routes::new_skills () {
     eff.wingsPistonRight.set_value(0);
     drive.goPath({
         Path({0_in, 0_in}),
-        Path({0_in, -1.3_tile}),
-        Path({1_tile, -1.3_tile}),
-    });
+        Path({0_in, -0.8_tile}),
+        Path({1.5_tile, -0.8_tile}),
+    }, 8_in, 6_in, false, 4_s);
 
     drive.faceToPoint({30_tile, -30_tile}, true);
+    
+    eff.wingsPistonLeft.set_value(1);
+    eff.wingsPistonRight.set_value(1);
     drive.moveArcade(-1, 0);
     pros::delay(1200);
+    drive.moveArcade(0, 0);
+    eff.wingsPistonLeft.set_value(0);
+    eff.wingsPistonRight.set_value(0);
 
     // ============== very Right ==============
+    OdomCustom::setPos(0_in, 0_in, 180_deg); // ============ DELETE THIS LATER =====
     drive.goPath({
-        Path({0_in, -0.75_tile}),
-        Path({2_tile, -0.75_tile}),
-    });
-    drive.faceToPoint({10_tile * -1, 10_tile * 0.75}, true);
+        Path({0_in, 0_in}),
+        Path({0_in, -0.25_tile}),
+        Path({2_tile, 0.5_tile}),
+    }, 8_in, 6_in);
+    drive.faceToPoint({10_tile * 1, 10_tile * -1.25}, true);
     drive.moveArcade(-1, 0);
     pros::delay(1200);
+    drive.moveArcade(0, 0);
 }
