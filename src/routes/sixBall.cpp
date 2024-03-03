@@ -7,13 +7,9 @@
 #include "odom/OdomCustom.h"
 
 void Routes::sixBall () {
-    OdomCustom::setPos(0_in, 0_in, -90_deg);
+    OdomCustom::setPos(0_in, 0_in, -70_deg);
     
     // =========== match triball go away =========== 
-    drive.setToleranceParams(nullopt, nullopt, 0.5_s);
-    drive.turnRight(30_deg, {{0, 1.5}});
-    drive.resetToleranceParams();
-
     eff.setIntake(true, false);
     pros::delay(300);
     eff.setIntake(false, true);
