@@ -98,8 +98,8 @@ void opcontrol() {
     bool isReversed = false;
 
     // ================== COAST ================== 
-    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
-    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
 
     eff.rotSensorShooter.set_position(0);
 
@@ -117,6 +117,11 @@ void opcontrol() {
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT))
             isReversed = !isReversed;
+
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN) && eff.forBarActive) {
+            eff.toggleFourBar();
+            eff.toggleEndGame();
+        }
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1))
             isShooting = !isShooting;

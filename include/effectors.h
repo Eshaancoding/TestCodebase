@@ -31,6 +31,7 @@ public:
     pros::ADIDigitalOut wingsPistonLeft;
     pros::ADIDigitalOut wingsPistonRight;
     pros::ADIDigitalOut fourBar;
+    pros::ADIDigitalOut endGame;
     
     bool forBarActive;
     bool wingsActive;
@@ -38,6 +39,7 @@ public:
     ShootState shootState;
 
     bool lockEnabled;
+    bool endGameEnabled;
 
     Effectors () : 
         slapper(7, pros::E_MOTOR_GEAR_GREEN),
@@ -46,10 +48,12 @@ public:
         wingsPistonLeft('B'),
         wingsPistonRight('A'),
         fourBar('C'),
+        endGame('D'),
         rotSensor(18),
         rotSensorShooter(11),
         wingsActive(false),
         forBarActive(false),
+        endGameEnabled(false),
         shootState(DORMANT),
         intakeActive(INACTIVE),
         lockEnabled(false)
@@ -72,6 +76,9 @@ public:
 
     // lock
     void lock ();
+
+    // toggle
+    void toggleEndGame ();
 
     // skills run
     bool runSlapperSkill ();

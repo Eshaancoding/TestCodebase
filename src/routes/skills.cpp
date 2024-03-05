@@ -38,10 +38,9 @@ void Routes::macro (bool run_shooter) {
     eff.setIntake(true, false); // reverse intake
     pros::delay(400);
     drive.moveTank(-0.2, -0.8);
-    pros::delay(800);
+    pros::delay(700);
     drive.moveArcade(0, 0);
     eff.setIntake(false, true); // turn off
-    
 
     drive.setToleranceParams(nullopt, nullopt, 0.75_s);
     drive.faceToPoint({-2.5_tile, 6_tile}, true);

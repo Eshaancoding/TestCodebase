@@ -7,29 +7,30 @@
 #include "odom/OdomCustom.h"
 
 void Routes::sixBall () {
-    OdomCustom::setPos(0_in, 0_in, -70_deg);
+    OdomCustom::setPos(0_in, 0_in, -135_deg);
     
     // =========== match triball go away =========== 
     eff.setIntake(true, false);
-    pros::delay(300);
+    pros::delay(400);
     eff.setIntake(false, true);
 
     // =========== go to mid =========== 
     eff.setIntake();
     drive.goPath({
-        Path({0_in, 0_in}),
-        Path({-2.3_tile, -1.8_tile})
+        Path({0_in, 0_in}, 1.4, 1.4),
+        Path({-2.2_tile, -1.8_tile}, 1.4, 1.4)
     }, 8_in, 5_in, false, 4_s);
 
     // =========== slam at mid =========== 
     drive.setToleranceParams(nullopt, nullopt, 0.75_s);
-    drive.faceToPoint({0_tile, 10_tile}, true, {{0, 1.3}});
+    drive.faceToPoint({-3_tile, 10_tile}, true, {{0, 1.3}});
     drive.resetToleranceParams();
 
     eff.setIntake(false, true);
     drive.moveArcade(1, 0);
     pros::delay(1000);
     drive.moveArcade(0, 0);
+    OdomCustom::setPos(0_in, 0_in, 0_deg);
 
     // =========== get the triball on right =========== 
     // drive.moveArcade(-1, 0);
@@ -39,7 +40,9 @@ void Routes::sixBall () {
         Path({0.5_tile, -1_tile})
     }, 4_in, 3_in, true);
 
+    drive.setToleranceParams(nullopt, nullopt, 0.75_s);
     drive.turnRight(180_deg);
+    drive.resetToleranceParams();
 
     eff.setIntake(); 
     drive.goForward(14_in);
@@ -52,38 +55,41 @@ void Routes::sixBall () {
 
     drive.goPath({
         Path({0_in, 0_in}, 1.5, 1, 0.3_tile), 
-        Path({0.5_tile, 1_tile}, 1.2, 1, 0.3_tile),
+        Path({0.65_tile, 1_tile}, 1.2, 1, 0.3_tile),
         Path({1_tile, 1_tile}, 1.5, 1, 0.3_tile),
-        Path({1.25_tile, 1_tile}, 1.3, 1, 0.3_tile),
+        Path({1.25_tile, 1_tile}, 1.3, 1, 0.3_tile, [](){
+            eff.setIntake(true, false);
+        }),
         Path({1.5_tile, 0_tile}, 1, 1, 0.3_tile),
     }, 8_in, 5_in, true);
 
-    eff.setIntake(true, false);
-    pros::delay(300);
-    eff.setIntake(false, true);
+    eff.setIntake();
     
-    // drive.faceToPoint({0_in, -10_tile}, true);
-    // drive.goForward(1_tile);
+    drive.faceToPoint({0_in, -10_tile}, true);
+    drive.goForward(12_in);
+    
+    // ===== last movement to get all triballs under goal =====
+    drive.goPath({
+        Path({0_in, 0_in}),
+        Path({0_in, 1.75_tile}, 1, 1, 0.3_tile, [](){
+            eff.wingsPistonRight.set_value(1);
+        }),
+        Path({-0.5_tile, 3_tile}, 1, 1, 0.3_tile, [](){
+            eff.wingsPistonRight.set_value(0);
+        }),
+        Path({-1_tile, 3_tile}),
+    }, 8_in, 7_in, true);
 
-    // // ===== last movement to get all triballs under goal =====
-    // drive.goPath({
-    //     Path({0_in, 0_in}),
-    //     Path({0_in, 1.75_tile}),
-    //     Path({-1_tile, 3_tile}),
-    // }, 8_in, 7_in, true);
+    drive.moveArcade(-1, 0);
+    pros::delay(1200);
+    drive.moveArcade(0.6, 0);
+    pros::delay(200);
+    drive.moveArcade(0, 0);
 
-    // drive.moveArcade(-1, 0);
-    // pros::delay(1200);
-    // drive.moveArcade(0.6, 0);
-    // pros::delay(200);
-    // drive.moveArcade(0, 0);
-
-    // drive.turnRight(180_deg);
-    // drive.moveArcade(1, 0);
-    // pros::delay(1000);
-    // drive.moveArcade(-1, 0);
-    // pros::delay(600);
-    // drive.moveArcade(0, 0);
-
-
+    drive.turnRight(180_deg);
+    drive.moveArcade(1, 0);
+    pros::delay(1000);
+    drive.moveArcade(-1, 0);
+    pros::delay(600);
+    drive.moveArcade(0, 0);
 }

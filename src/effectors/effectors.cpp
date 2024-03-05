@@ -69,3 +69,7 @@ bool Effectors::runSlapperSkill () {
     return true;
 }
 
+void Effectors::toggleEndGame () {
+    endGameEnabled = !endGameEnabled;
+    eff.endGame.set_value(endGameEnabled);
+}
