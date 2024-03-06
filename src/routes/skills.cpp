@@ -42,7 +42,7 @@ void Routes::macro (bool run_shooter) {
     drive.moveArcade(0, 0);
     eff.setIntake(false, true); // turn off
 
-    drive.setToleranceParams(nullopt, nullopt, 0.75_s);
+    drive.setToleranceParams(nullopt, nullopt, 1.5_s);
     drive.faceToPoint({-2.5_tile, 6_tile}, true);
     drive.resetToleranceParams();
 
