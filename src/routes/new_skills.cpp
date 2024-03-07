@@ -42,7 +42,7 @@ void Routes::new_skills () {
         Path({-0.8_tile, 0.75_tile}, 1, 0.75),
         Path({-0.8_tile, 1_tile}, 1, 0.9),
         Path({-0.85_tile, 1.2_tile}, 0.3, 1.4),
-        Path({-1_tile, 4.35_tile}, 1, 1.3, 0.3_tile),
+        Path({-1_tile, 4_tile}, 1, 1.3, 0.3_tile),
         Path({0.9_tile, 5.1_tile})
     }, 8_in, 5_in, true, 5_s);
     
@@ -74,7 +74,7 @@ void Routes::new_skills () {
     eff.wingsPistonRight.set_value(0);
     drive.faceToPoint({-15_tile, -40_tile}, true, {{0, 1.3}});
     eff.wingsPistonRight.set_value(1);
-    drive.moveArcade(-0.7, 0);
+    drive.moveArcade(-0.55, 0);
     pros::delay(1200);
     drive.moveArcade(1, 0);
     pros::delay(400);
@@ -97,9 +97,17 @@ void Routes::new_skills () {
     
     eff.wingsPistonLeft.set_value(1);
     eff.wingsPistonRight.set_value(1);
-    drive.moveArcade(-1, 0);
+    drive.moveArcade(-0.55, 0);
     pros::delay(1200);
+    drive.moveArcade(1, 0);
+    pros::delay(400);
+    drive.moveArcade(-1, 0);
+    pros::delay(600);
+    drive.moveArcade(0.5, 0);
+    pros::delay(300);
     drive.moveArcade(0, 0);
+
+
     eff.wingsPistonLeft.set_value(0);
     eff.wingsPistonRight.set_value(0);
 

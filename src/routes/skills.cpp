@@ -49,8 +49,8 @@ void Routes::macro (bool run_shooter, bool manual_stop) {
         eff.slapper.move_voltage(12000);
         eff.smallerSlapper.move_voltage(-12000);
         auto start = pros::millis();
-        while (pros::millis() - start <= 25 * 1000) {
-            if (manual_stop && Console::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_UP))
+        while (pros::millis() - start <= 22 * 1000) {
+            if (manual_stop && Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_UP))
                 break;
             pros::delay(25);
         }
