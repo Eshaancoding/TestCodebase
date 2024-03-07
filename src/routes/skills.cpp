@@ -29,7 +29,7 @@ void resetShooter () {
     eff.smallerSlapper.move_velocity(0);
 }
 
-void Routes::macro (bool run_shooter) {
+void Routes::macro (bool run_shooter, bool manual_stop) {
     OdomCustom::setPos(0_in, 0_in, -135_deg);
     eff.rotSensorShooter.set_position(0);
 
@@ -48,7 +48,12 @@ void Routes::macro (bool run_shooter) {
     if (run_shooter) {
         eff.slapper.move_voltage(12000);
         eff.smallerSlapper.move_voltage(-12000);
-        pros::delay(25 * 1000);
+        auto start = pros::millis();
+        while (pros::millis() - start <= 25 * 1000) {
+            if (manual_stop && Console::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_UP))
+                break;
+            pros::delay(25);
+        }
         eff.slapper.move_voltage(0);
         eff.smallerSlapper.move_voltage(0);
     }

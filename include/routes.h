@@ -10,7 +10,7 @@ namespace Routes {
     void elimDefensive ();   
     void qualOffensive ();  
     void qualDefensive ();   
-    void macro (bool run_shooter=true);
+    void macro (bool run_shooter=true, bool manual_stop=false);
 
     void sixBall ();
 

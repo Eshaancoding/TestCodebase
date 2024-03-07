@@ -148,7 +148,7 @@ void opcontrol() {
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_UP)) {
             leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
             rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-            Routes::macro();
+            Routes::macro(true, true);
             leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
             rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
         }
