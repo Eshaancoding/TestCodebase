@@ -13,13 +13,13 @@
 #include "controller.h"
 
 void Routes::new_skills () {
-    macro(true);
+    macro(false);
 
     // ========= get the 4 middle triballs =======
     drive.goForward(1.5_tile, {{0, 1.2}});
     drive.turnRight(180_deg);
     drive.goBackward(0.8_tile, {{0, 1.2}});
-    drive.faceToPoint({10_tile, -1_tile}, true, {{0, 1.2}});
+    drive.faceToPoint({10_tile, -1_tile}, true);
 
     eff.wingsPistonRight.set_value(1);
     eff.wingsPistonLeft.set_value(1);
@@ -38,8 +38,9 @@ void Routes::new_skills () {
     drive.resetToleranceParams();
 
     drive.goPath({
-        Path({0_in, 0_in}, 1, 0.9),
-        Path({-0.8_tile, 0.8_tile}, 1, 0.9),
+        Path({0_in, 0_in}, 1, 0.75),
+        Path({-0.8_tile, 0.75_tile}, 1, 0.75),
+        Path({-0.8_tile, 1_tile}, 1, 0.9),
         Path({-0.85_tile, 1.2_tile}, 0.3, 1.4),
         Path({-1_tile, 4.35_tile}, 1, 1.3, 0.3_tile),
         Path({0.9_tile, 5.1_tile})

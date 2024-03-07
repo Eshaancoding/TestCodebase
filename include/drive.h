@@ -18,8 +18,8 @@ public:
 
     Path (
         okapi::Point p, 
-        double headingF=1,
-        double distanceF=1,
+        double headingF=1, // left and right
+        double distanceF=1, // forward and backward
         okapi::QLength lookaheadDistance=0.3_tile, // has to be same 
         std::optional<std::function<void()>> func=std::nullopt
     )
