@@ -49,8 +49,8 @@ void initialize() {
 
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
     rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
-    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
-    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
 
     drive.resetToleranceParams();
     OdomCustom::init(); 
@@ -123,7 +123,7 @@ void opcontrol() {
             eff.toggleEndGame();
         }
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1))
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1))
             isShooting = !isShooting;
 
         if (isShooting) {
@@ -132,15 +132,15 @@ void opcontrol() {
 
         // ======================== Other Controls ======================== 
         // macro for toggling raising or lowering
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1)) 
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1)) 
             eff.wingsToggle();
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) {
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2)) {
             eff.toggleFourBar();
         }
 
         // toggle intake
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2)) {
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) {
             isIntaking = !isIntaking;
             eff.setIntake(false, isIntaking);
         }
@@ -149,8 +149,8 @@ void opcontrol() {
             leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
             rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
             Routes::macro();
-            leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
-            rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+            leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+            rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
         }
         double rot_sensor_val = eff.rotSensorShooter.get_position();
 

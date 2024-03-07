@@ -42,15 +42,13 @@ void Routes::macro (bool run_shooter) {
     drive.moveArcade(0, 0);
     eff.setIntake(false, true); // turn off
 
-    drive.setToleranceParams(nullopt, nullopt, 1.5_s);
     drive.faceToPoint({-2.5_tile, 6_tile}, true);
-    drive.resetToleranceParams();
 
     eff.wingsPistonRight.set_value(1);
     if (run_shooter) {
         eff.slapper.move_voltage(12000);
         eff.smallerSlapper.move_voltage(-12000);
-        pros::delay(27 * 1000);
+        pros::delay(25 * 1000);
         eff.slapper.move_voltage(0);
         eff.smallerSlapper.move_voltage(0);
     }

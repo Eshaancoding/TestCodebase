@@ -56,7 +56,7 @@ bool Effectors::runSlapperSkill () {
     // 53600 too long 
     while (true) {
         pros::delay(30);
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1)) {
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1)) {
             eff.slapper.move_voltage(0);
             eff.smallerSlapper.move_voltage(0);
             return false;

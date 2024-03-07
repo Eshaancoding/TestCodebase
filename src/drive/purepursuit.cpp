@@ -172,10 +172,10 @@ void Drive::goPath (
             }
 
             if (pot_points.size() == 0) {
-                mainLoop = false;
-                drive.moveArcade(0,0);
-                throw invalid_argument("No potential points");
-                break;
+                // mainLoop = false;
+                // drive.moveArcade(0,0);
+                // throw invalid_argument("No potential points");
+                continue;
             }
 
             // then, out of all the pot_points, find the one that's closest to the heading point.
