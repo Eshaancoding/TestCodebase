@@ -41,6 +41,8 @@ public:
     bool lockEnabled;
     bool endGameEnabled;
 
+    bool isDriveReverse;
+
     Effectors () : 
         slapper(7, pros::E_MOTOR_GEAR_GREEN),
         smallerSlapper(6, pros::E_MOTOR_GEAR_GREEN),
@@ -56,7 +58,8 @@ public:
         endGameEnabled(false),
         shootState(DORMANT),
         intakeActive(INACTIVE),
-        lockEnabled(false)
+        lockEnabled(false),
+        isDriveReverse(false)
     { 
         slapper.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
         smallerSlapper.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
@@ -82,6 +85,9 @@ public:
 
     // skills run
     bool runSlapperSkill ();
+
+    // drive
+    void toggleDriveReverse ();
 };
 
 #endif

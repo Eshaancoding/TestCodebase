@@ -68,11 +68,11 @@ void Routes::new_skills () {
         }),
         Path({0.5_tile, -1.65_tile}, 1, 0.8, 0.3_tile),
         Path({0.85_tile, -1.73_tile}, 1, 0.8, 0.3_tile),
-        Path({1.2_tile, -1.8_tile}, 1, 0.8, 0.3_tile)
+        // Path({1.2_tile, -1.8_tile}, 1, 0.8, 0.3_tile)
     }, 8_in, 6_in, true, 4.5_s);
 
     eff.wingsPistonRight.set_value(0);
-    drive.faceToPoint({-15_tile, -40_tile}, true, {{0, 1.3}});
+    drive.faceToPoint({-30_tile, -40_tile}, true, {{0, 1.3}});
     eff.wingsPistonRight.set_value(1);
     drive.moveArcade(-0.55, 0);
     pros::delay(1200);

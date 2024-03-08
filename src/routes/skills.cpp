@@ -31,6 +31,7 @@ void resetShooter () {
 
 void Routes::macro (bool run_shooter, bool manual_stop) {
     OdomCustom::setPos(0_in, 0_in, -135_deg);
+    eff.isDriveReverse = true;
     eff.rotSensorShooter.set_position(0);
 
     drive.moveArcade(1, 0.45);
@@ -49,7 +50,10 @@ void Routes::macro (bool run_shooter, bool manual_stop) {
         eff.slapper.move_voltage(12000);
         eff.smallerSlapper.move_voltage(-12000);
         auto start = pros::millis();
-        while (pros::millis() - start <= 22 * 1000) {
+
+        int duration = manual_stop ? 25 : 22; // seconds
+
+        while (pros::millis() - start <= duration * 1000) {
             if (manual_stop && Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_UP))
                 break;
             pros::delay(25);
@@ -58,6 +62,7 @@ void Routes::macro (bool run_shooter, bool manual_stop) {
         eff.smallerSlapper.move_voltage(0);
     }
     eff.wingsPistonRight.set_value(0);
+
 }
 
 void Routes::skills () {

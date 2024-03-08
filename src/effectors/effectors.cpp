@@ -3,6 +3,10 @@
 #include "controller.h"
 #include "drive.h"
 
+void Effectors::toggleDriveReverse () {
+    isDriveReverse = !isDriveReverse;
+}
+
 // WINGS
 void Effectors::wingsToggle () {
     wingsActive = !wingsActive;

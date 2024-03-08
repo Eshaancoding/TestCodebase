@@ -7,7 +7,7 @@
 #include "odom/OdomCustom.h"
 
 void Routes::sixBall () {
-    OdomCustom::setPos(0_in, 0_in, -135_deg);
+    OdomCustom::setPos(0_in, 0_in, -68_deg);
     
     // =========== match triball go away =========== 
     eff.setIntake(true, false);
@@ -17,13 +17,13 @@ void Routes::sixBall () {
     // =========== go to mid =========== 
     eff.setIntake();
     drive.goPath({
-        Path({0_in, 0_in}, 1.4, 1.4),
-        Path({-2.2_tile, -1.8_tile}, 1.4, 1.4)
+        Path({0_in, 0_in}, 1.25, 1.25),
+        Path({-2.3_tile, -1.9_tile})
     }, 8_in, 5_in, false, 4_s);
 
     // =========== slam at mid =========== 
     drive.setToleranceParams(nullopt, nullopt, 0.75_s);
-    drive.faceToPoint({-3_tile, 10_tile}, true, {{0, 1.3}});
+    drive.faceToPoint({-4_tile, 10_tile}, true, {{0, 1.3}});
     drive.resetToleranceParams();
 
     eff.setIntake(false, true);
@@ -37,7 +37,7 @@ void Routes::sixBall () {
     // pros::delay(100);
     drive.goPath({
         Path({0_in, 0_in}),
-        Path({0.5_tile, -1_tile})
+        Path({0.45_tile, -1_tile})
     }, 4_in, 3_in, true);
 
     drive.setToleranceParams(nullopt, nullopt, 0.75_s);
@@ -45,7 +45,7 @@ void Routes::sixBall () {
     drive.resetToleranceParams();
 
     eff.setIntake(); 
-    drive.goForward(14_in);
+    drive.goForward(20_in);
 
     // // =========== curve movement to the right side =========== 
     // // ================ and get triball =======================
@@ -69,27 +69,27 @@ void Routes::sixBall () {
     drive.goForward(12_in);
     
     // ===== last movement to get all triballs under goal =====
-    drive.goPath({
-        Path({0_in, 0_in}),
-        Path({0_in, 1.75_tile}, 1, 1, 0.3_tile, [](){
-            eff.wingsPistonRight.set_value(1);
-        }),
-        Path({-0.5_tile, 3_tile}, 1, 1, 0.3_tile, [](){
-            eff.wingsPistonRight.set_value(0);
-        }),
-        Path({-1_tile, 3_tile}),
-    }, 8_in, 7_in, true);
+    // drive.goPath({
+    //     Path({0_in, 0_in}),
+    //     Path({0_in, 1.75_tile}, 1, 1, 0.3_tile, [](){
+    //         eff.wingsPistonRight.set_value(1);
+    //     }),
+    //     Path({-0.5_tile, 3_tile}, 1, 1, 0.3_tile, [](){
+    //         eff.wingsPistonRight.set_value(0);
+    //     }),
+    //     Path({-1_tile, 3_tile}),
+    // }, 8_in, 7_in, true);
 
-    drive.moveArcade(-1, 0);
-    pros::delay(1200);
-    drive.moveArcade(0.6, 0);
-    pros::delay(200);
-    drive.moveArcade(0, 0);
+    // drive.moveArcade(-1, 0);
+    // pros::delay(1200);
+    // drive.moveArcade(0.6, 0);
+    // pros::delay(200);
+    // drive.moveArcade(0, 0);
 
-    drive.turnRight(180_deg);
-    drive.moveArcade(1, 0);
-    pros::delay(1000);
-    drive.moveArcade(-1, 0);
-    pros::delay(600);
-    drive.moveArcade(0, 0);
+    // drive.turnRight(180_deg);
+    // drive.moveArcade(1, 0);
+    // pros::delay(1000);
+    // drive.moveArcade(-1, 0);
+    // pros::delay(600);
+    // drive.moveArcade(0, 0);
 }

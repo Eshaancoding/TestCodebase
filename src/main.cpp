@@ -85,8 +85,7 @@ void autonomous() {
     // drive.goBackward(1_tile);
     
     // going backward
-    OdomCustom::setPos(0_in, 0_in, -135_deg);
-    Routes::new_skills();
+    Routes::sixBall();
 };
 
 // you disabled the factor map thing
@@ -95,7 +94,6 @@ void opcontrol() {
     bool isShooting = false;    
     bool isPTOEnabled = false;
     bool isIntaking = false;
-    bool isReversed = false;
 
     // ================== COAST ================== 
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
@@ -108,7 +106,7 @@ void opcontrol() {
         double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
         double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
 
-        distance *= isReversed ? -1 : 1;
+        distance *= eff.isDriveReverse ? -1 : 1;
 
         // ======================== Tank ======================== 
         // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
@@ -116,7 +114,7 @@ void opcontrol() {
         drive.moveArcade(distance, heading);
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT))
-            isReversed = !isReversed;
+            eff.toggleDriveReverse();
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN) && eff.forBarActive) {
             eff.toggleFourBar();
