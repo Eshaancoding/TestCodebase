@@ -19,11 +19,11 @@ void Routes::sixBall () {
     drive.goPath({
         Path({0_in, 0_in}, 1.25, 1.25),
         Path({-2.3_tile, -1.9_tile})
-    }, 8_in, 5_in, false, 4_s);
+    }, 8_in, 4_in, false, 4_s);
 
     // =========== slam at mid =========== 
-    drive.setToleranceParams(nullopt, nullopt, 0.75_s);
-    drive.faceToPoint({-4_tile, 10_tile}, true, {{0, 1.3}});
+    drive.setToleranceParams(nullopt, nullopt, 1.75_s);
+    drive.turnRight(145_deg, {{0, 0.8}});
     drive.resetToleranceParams();
 
     eff.setIntake(false, true);
@@ -55,41 +55,38 @@ void Routes::sixBall () {
 
     drive.goPath({
         Path({0_in, 0_in}, 1.5, 1, 0.3_tile), 
-        Path({0.65_tile, 1_tile}, 1.2, 1, 0.3_tile),
-        Path({1_tile, 1_tile}, 1.5, 1, 0.3_tile),
-        Path({1.25_tile, 1_tile}, 1.3, 1, 0.3_tile, [](){
+        Path({0.65_tile, 0.9_tile}, 1.2, 1, 0.3_tile),
+        Path({1_tile, 0.9_tile}, 1.5, 1, 0.3_tile),
+        Path({1.25_tile, 0.9_tile}, 1.3, 1, 0.3_tile, [](){
             eff.setIntake(true, false);
         }),
-        Path({1.5_tile, 0_tile}, 1, 1, 0.3_tile),
+        Path({1.4_tile, 0_tile}, 1, 1, 0.3_tile),
     }, 8_in, 5_in, true);
 
     eff.setIntake();
     
     drive.faceToPoint({0_in, -10_tile}, true);
-    drive.goForward(12_in);
-    
-    // ===== last movement to get all triballs under goal =====
-    // drive.goPath({
-    //     Path({0_in, 0_in}),
-    //     Path({0_in, 1.75_tile}, 1, 1, 0.3_tile, [](){
-    //         eff.wingsPistonRight.set_value(1);
-    //     }),
-    //     Path({-0.5_tile, 3_tile}, 1, 1, 0.3_tile, [](){
-    //         eff.wingsPistonRight.set_value(0);
-    //     }),
-    //     Path({-1_tile, 3_tile}),
-    // }, 8_in, 7_in, true);
+    drive.goForward(1_tile);
+    drive.goBackward(1.6_tile);
+    drive.turnLeft(45_deg, {{0, 0.8}});
 
-    // drive.moveArcade(-1, 0);
-    // pros::delay(1200);
-    // drive.moveArcade(0.6, 0);
-    // pros::delay(200);
-    // drive.moveArcade(0, 0);
+    eff.wingsPistonLeft.set_value(1);
+    drive.goBackward(13_in);
+    drive.turnLeft(30_deg);
 
-    // drive.turnRight(180_deg);
-    // drive.moveArcade(1, 0);
-    // pros::delay(1000);
-    // drive.moveArcade(-1, 0);
-    // pros::delay(600);
-    // drive.moveArcade(0, 0);
+    drive.moveArcade(-1, 0);
+    pros::delay(300);
+    eff.wingsPistonLeft.set_value(0);
+    pros::delay(300);
+    drive.moveArcade(0.8, 0);
+    pros::delay(300);
+    drive.moveArcade(0, 0);
+
+    // slam the second triball
+    drive.turnLeft(160_deg, {{0, 0.8}});
+    drive.moveArcade(1, 0);
+    pros::delay(400);
+    drive.moveArcade(-0.6, 0);
+    pros::delay(300);
+    drive.moveArcade(0, 0);
 }
