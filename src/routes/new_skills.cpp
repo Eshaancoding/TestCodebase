@@ -13,7 +13,7 @@
 #include "controller.h"
 
 void Routes::new_skills () {
-    macro(false);
+    macro(true);
 
     // ========= get the 4 middle triballs =======
     drive.goForward(1.5_tile, {{0, 1.2}});
@@ -45,8 +45,8 @@ void Routes::new_skills () {
         Path({-0.8_tile, 1_tile}, 1, 0.9),
         Path({-0.85_tile, 1.2_tile}, 0.3, 1.4),
         Path({-0.85_tile, 4_tile}, 1, 0.8, 0.3_tile),
-        Path({0_tile, 5.1_tile}, 1, 0.8, 0.3_tile),
-        Path({1.2_tile, 5.1_tile})
+        Path({0_tile, 5.15_tile}, 1, 0.8, 0.3_tile),
+        Path({1.2_tile, 5.15_tile})
     }, 8_in, 5_in, true, 5_s);
     
     // go back
@@ -70,10 +70,10 @@ void Routes::new_skills () {
     // go to center movement
     drive.goPath({
         Path({0_in, 0_in}, 1, 0.8, 0.3_tile),
-        Path({0_in, -1.2_tile}, 1, 0.8, 0.3_tile, [](){
+        Path({4_in, -1.2_tile}, 1, 0.8, 0.3_tile, [](){
             eff.wingsPistonRight.set_value(1);
         }),
-        Path({0_in, -1.35_tile}, 1, 0.8, 0.3_tile, [](){
+        Path({4_in, -1.35_tile}, 1, 0.8, 0.3_tile, [](){
             eff.wingsPistonLeft.set_value(1);
         }),
         Path({0.5_tile, -1.65_tile}, 1, 0.8, 0.3_tile),
@@ -98,23 +98,19 @@ void Routes::new_skills () {
     pros::delay(600);
     
     // go back
-    drive.moveArcade(0.5, 0);
-    pros::delay(300);
+    drive.moveArcade(1, 0);
+    pros::delay(670);
     drive.moveArcade(0, 0);
+
+    // turn to the right
+    drive.turnRight(90_deg);
 
     // ============== Right ==============
     // go to the right of the goal
-    eff.wingsPistonLeft.set_value(0);
-    eff.wingsPistonRight.set_value(0);
-    drive.goPath({
-        Path({0_in, 0_in}),
-        Path({0_in, -0.8_tile}),
-        Path({1.3_tile, -0.8_tile}),
-    }, 8_in, 6_in, false, 4_s);
-
-    // face to point
-    drive.faceToPoint({30_tile, -50_tile}, true, {{0, 1.3}});
     eff.wingsPistonLeft.set_value(1);
+    eff.wingsPistonRight.set_value(0);
+    drive.goBackward(1.5_tile);
+    drive.faceToPoint({10_tile, -30_tile}, true, {{0, 1.3}});
     eff.wingsPistonRight.set_value(1);
 
     // go slow at first
@@ -139,28 +135,21 @@ void Routes::new_skills () {
     eff.wingsPistonRight.set_value(0);
 
     // ============== very Right ==============
-    OdomCustom::setPos(0_in, 0_in, -180_deg);
-    
-    // go to the center
-    drive.goForward(1_tile);
+    drive.turnRight(90_deg);
 
-    // face to the point of the very right
-    drive.setToleranceParams(nullopt, nullopt, 0.5_s);
-    drive.faceToPoint({-30_tile, -10_tile}, true);
-    drive.resetToleranceParams();
-    
-    // as you run the right wing, just slowly push the very right
-    eff.wingsPistonLeft.set_value(1);
     drive.goPath({
-        Path({0_in, 0_in}, 0.4, 1.2),
-        Path({1.65_tile, 1_tile}),
-        Path({1.65_tile, 1.5_tile}),
-        Path({1.5_tile, 1.75_tile}),
-    }, 8_in, 12_in, true, 5_s);
+        Path({0_in, 0_in}, 1, 1.3),
+        Path({1_tile, 3_in}, 1, 1.3, 0.5_tile, [](){
+            eff.wingsPistonLeft.set_value(1);
+        }),
+        Path({1.7_tile, 6_in}),
+    }, 5_in, 4_in, true, 3_s);
 
-    // face to the point for pushing right
-    drive.faceToPoint({40_tile, -30_tile}, true, {{0, 1.3}});
+    drive.turnLeft(125_deg);
     eff.wingsPistonLeft.set_value(0);
+
+    drive.moveArcade(-1, -0.5);
+    pros::delay(750);
     
     // go backward a little
     drive.moveArcade(0.5, 0);
