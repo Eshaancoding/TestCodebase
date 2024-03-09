@@ -38,12 +38,16 @@ void Routes::macro (bool run_shooter, bool manual_stop) {
     pros::delay(800);
     eff.setIntake(true, false); // reverse intake
     pros::delay(400);
-    drive.moveTank(-0.2, -0.8);
-    pros::delay(700);
+    drive.moveTank(-0.2, -0.75);
+    pros::delay(650);
+    drive.moveArcade(0.1, 0);
+    pros::delay(300);
     drive.moveArcade(0, 0);
     eff.setIntake(false, true); // turn off
 
-    drive.faceToPoint({-2.5_tile, 6_tile}, true);
+    drive.setToleranceParams(nullopt, 0.5_deg, 2_s);
+    drive.faceToPoint({-2.75_tile, 6_tile}, true);
+    drive.resetToleranceParams();
 
     eff.wingsPistonRight.set_value(1);
     if (run_shooter) {

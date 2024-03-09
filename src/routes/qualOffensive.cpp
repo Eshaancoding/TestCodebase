@@ -7,44 +7,48 @@
 #include "odom/OdomCustom.h"
 
 void Routes::qualOffensive() {
-    eff.slapper.move_voltage(12000);
-    eff.smallerSlapper.move_velocity(-100);
-    pros::delay(1000);
-    eff.slapper.move_voltage(0);
-    eff.smallerSlapper.move_velocity(0);
+    OdomCustom::setPos(0_in, 0_in, -45_deg);
+    eff.setIntake(); 
+
+    eff.wingsPistonLeft.set_value(1);
+    drive.goBackward(13_in);
+    drive.turnLeft(30_deg);
+
+     
+
+    drive.moveArcade(-1, 0);
+
+    pros::delay(300);
+    eff.wingsPistonLeft.set_value(0);
+    pros::delay(300);
+
+    drive.turnRight(90_deg);
     
-    OdomCustom::setPos(0_in, 0_in, 45_deg);
-    
-    // go back to get the triball out
     eff.setIntake();
-    drive.goBackward(10_in);
-    eff.wingsToggle();
-    
-    drive.goForward(10_in, {}, {{0.5, [](){
-        eff.wingsToggle();
-    }}});
-    
-    // set the triball into the our goal
-    drive.turnLeft(160_deg, {{0, 0.8}});
-    
-    // slam
-    eff.setIntake(true, false);
+    OdomCustom::setPos(0_in, 0_in, 0_deg);
+    drive.goPath({
+        Path({0_in, 0_in}),
+        Path({0_in, 0.4_tile}),
+        Path({1.85_tile, 2.2_tile}),
+    }, 3_in, 5_in, false);
+
+    drive.faceToPoint({0_tile, -10_tile}, true);
+
     drive.moveArcade(1, 0);
+    pros::delay(1000);
+    drive.moveArcade(-1, 0);
     pros::delay(800);
     drive.moveArcade(0, 0);
-    pros::delay(200);
-    eff.setIntake(false, true);
 
-    // go a little bit back 
-    drive.goBackward(3_in);
-    drive.faceToPoint({0_tile, 20_tile}, true);
-
-    drive.setToleranceParams(nullopt, nullopt, nullopt, 0);
-    drive.goForward(2.1_tile);
+    drive.setToleranceParams(nullopt, nullopt, 0.75_s);
+    drive.faceToPoint({10_tile, 0_tile}, true);
     drive.resetToleranceParams();
-
+    
+    drive.moveArcade(-1, 0);
+    pros::delay(1000);
+    drive.moveArcade(0, 0);
+    
     drive.setToleranceParams(nullopt, nullopt, 1.5_s);
-    eff.wingsToggle();
-    drive.turnLeft(30_deg, {{0, 0.6}});
-    drive.resetToleranceParams();
+    drive.turnLeft(20_deg);
+
 }
