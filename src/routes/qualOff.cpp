@@ -6,9 +6,9 @@
 #include "Console.h"
 #include "odom/OdomCustom.h"
 
-void Routes::qualDefensive () {
-    drive.moveArcade(1, 0.47);
-    pros::delay(600);
+void Routes::qualOffensive () {
+    drive.moveArcade(1, 0.45);
+    pros::delay(800);
     eff.setIntake(true, false); // reverse intake
     pros::delay(400);
     eff.setIntake(false, true); // reverse intake

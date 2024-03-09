@@ -6,7 +6,7 @@
 #include "Console.h"
 #include "odom/OdomCustom.h"
 
-void Routes::qualOffensive() {
+void Routes::qualDefensive() {
     OdomCustom::setPos(0_in, 0_in, -45_deg);
     eff.setIntake(); 
 

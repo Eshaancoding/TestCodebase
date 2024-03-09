@@ -45,7 +45,7 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    // AutonSelector::init();
+    AutonSelector::init();
 
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
     rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
@@ -69,23 +69,23 @@ void autonomous() {
     // Routes::skills();
     // Routes::qualOffensive();
     
-    // auto state = waitForValidState();     
-    // if (state.status == AutonSelector::SKILL)
-    //     Routes::skills();
-    // else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
-    //     Routes::elimDefensive();
-    // else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
-    //     Routes::elimOffensive();
-    // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
-    //     Routes::qualDefensive();
-    // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
-    //     Routes::qualOffensive();
+    auto state = waitForValidState();     
+    if (state.status == AutonSelector::SKILL)
+        Routes::new_skills();
+    else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
+        Routes::sixBall();
+    else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
+        Routes::qualDefensive();
+    else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
+        Routes::qualDefensive();
+    else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
+        Routes::qualOffensive();
 
     // drive.goForward(2_tile);
     // drive.goBackward(1_tile);
     
     // going backward
-    Routes::sixBall();
+    // Routes::new_skills();
 };
 
 // you disabled the factor map thing

@@ -44,7 +44,8 @@ void Routes::new_skills () {
         Path({-0.8_tile, 0.75_tile}, 1, 0.75),
         Path({-0.8_tile, 1_tile}, 1, 0.9),
         Path({-0.85_tile, 1.2_tile}, 0.3, 1.4),
-        Path({-0.85_tile, 4_tile}, 1, 0.8, 0.3_tile),
+        Path({-0.85_tile, 3.5_tile}, 1, 0.8, 0.3_tile),
+        Path({-0.9_tile, 4_tile}, 1, 0.8, 0.3_tile),
         Path({0_tile, 5.15_tile}, 1, 0.8, 0.3_tile),
         Path({1.2_tile, 5.15_tile})
     }, 8_in, 5_in, true, 5_s);
@@ -55,13 +56,13 @@ void Routes::new_skills () {
     drive.moveArcade(0, 0);
 
     // realign
-    drive.faceToPoint({-10_tile, 0_tile}, true);
+    drive.faceToPoint({-10_tile, -2_tile}, true);
 
     // slam one more time
     drive.moveArcade(-1, 0);
     pros::delay(400);
     drive.moveArcade(0, 0);
-    OdomCustom::setPos(0_in, 0_in, -90_deg);
+    // OdomCustom::setPos(0_in, 0_in, -90_deg);
 
     // ============== Go to center ==============
     // face to the back
@@ -95,7 +96,7 @@ void Routes::new_skills () {
     
     // slam!
     drive.moveArcade(-1, 0);
-    pros::delay(700);
+    pros::delay(900);
     
     // go back
     drive.moveArcade(1, 0);
@@ -126,7 +127,7 @@ void Routes::new_skills () {
     
     // slam!
     drive.moveArcade(-1, 0);
-    pros::delay(700);
+    pros::delay(900);
     
     // go back
     drive.moveArcade(0.5, 0);
@@ -150,10 +151,10 @@ void Routes::new_skills () {
 
     drive.faceToPoint({25_tile, -35_tile}, true, {{0, 1}});
 
-    drive.moveArcade(-1, -0.5);
+    drive.moveArcade(-1, -0.4);
     pros::delay(400);
     eff.wingsPistonLeft.set_value(0);
-    pros::delay(350);
+    pros::delay(250);
     
     // go backward a little
     drive.moveArcade(0.5, 0);
