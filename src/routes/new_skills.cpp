@@ -13,7 +13,7 @@
 #include "controller.h"
 
 void Routes::new_skills () {
-    macro(true);
+    macro(false);
 
     // ========= get the 4 middle triballs =======
     drive.goForward(1.5_tile, {{0, 1.2}});
@@ -44,13 +44,9 @@ void Routes::new_skills () {
         Path({-0.8_tile, 0.75_tile}, 1, 0.75),
         Path({-0.8_tile, 1_tile}, 1, 0.9),
         Path({-0.85_tile, 1.2_tile}, 0.3, 1.4),
-        Path({-1_tile, 4_tile}, 1, 0.8, 0.3_tile, [](){
-            eff.wingsPistonRight.set_value(1);
-        }),
-        Path({0_tile, 4.7_tile}, 1, 0.8, 0.3_tile, [](){
-            eff.wingsPistonRight.set_value(0);
-        }),
-        Path({0.9_tile, 5.1_tile})
+        Path({-0.85_tile, 4_tile}, 1, 0.8, 0.3_tile),
+        Path({0_tile, 5.1_tile}, 1, 0.8, 0.3_tile),
+        Path({1.2_tile, 5.1_tile})
     }, 8_in, 5_in, true, 5_s);
     
     // go back
@@ -65,11 +61,11 @@ void Routes::new_skills () {
     drive.moveArcade(-1, 0);
     pros::delay(400);
     drive.moveArcade(0, 0);
-    OdomCustom::setPos(0_in, 0_in, -180_deg);
+    OdomCustom::setPos(0_in, 0_in, -90_deg);
 
     // ============== Go to center ==============
     // face to the back
-    drive.faceToPoint({-0_tile, 10_tile}, true);
+    drive.faceToPoint({0_tile, 10_tile}, true);
 
     // go to center movement
     drive.goPath({
