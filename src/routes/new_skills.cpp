@@ -55,9 +55,7 @@ void Routes::new_skills () {
     drive.moveArcade(0, 0);
 
     // realign
-    drive.setToleranceParams(nullopt, nullopt, 0.75_s);
     drive.faceToPoint({-10_tile, 0_tile}, true);
-    drive.resetToleranceParams();
 
     // slam one more time
     drive.moveArcade(-1, 0);
@@ -67,9 +65,7 @@ void Routes::new_skills () {
 
     // ============== Go to center ==============
     // face to the back
-    drive.setToleranceParams(nullopt, nullopt, 0.75_s);
     drive.faceToPoint({0_tile, 10_tile}, true);
-    drive.resetToleranceParams();
 
     // go to center movement
     drive.goPath({
@@ -86,9 +82,7 @@ void Routes::new_skills () {
 
     // turn to face the goal
     eff.wingsPistonRight.set_value(0);
-    drive.setToleranceParams(nullopt, nullopt, 0.75_s);
     drive.faceToPoint({-30_tile, -40_tile}, true, {{0, 1.3}});
-    drive.resetToleranceParams();
     eff.wingsPistonRight.set_value(1);
     
     // go slow at first
@@ -112,18 +106,14 @@ void Routes::new_skills () {
     drive.moveArcade(0, 0);
 
     // turn to the right
-    drive.setToleranceParams(nullopt, nullopt, 0.75_s);
     drive.faceToPoint({-30_tile, 0_tile}, true);
-    drive.resetToleranceParams();
 
     // ============== Right ==============
     // go to the right of the goal
     eff.wingsPistonLeft.set_value(1);
     eff.wingsPistonRight.set_value(0);
     drive.goBackward(1.5_tile);
-    drive.setToleranceParams(nullopt, nullopt, 0.75_s);
     drive.faceToPoint({15_tile, -30_tile}, true);
-    drive.resetToleranceParams();
     eff.wingsPistonRight.set_value(1);
 
     // go slow at first
@@ -158,9 +148,7 @@ void Routes::new_skills () {
         Path({2_tile, 6_in})
     }, 5_in, 4_in, true, 3_s);
 
-    drive.setToleranceParams(nullopt, nullopt, 0.75_s);
     drive.faceToPoint({25_tile, -35_tile}, true, {{0, 1}});
-    drive.resetToleranceParams();
 
     drive.moveArcade(-1, -0.5);
     pros::delay(400);

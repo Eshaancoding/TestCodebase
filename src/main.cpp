@@ -85,7 +85,7 @@ void autonomous() {
     // drive.goBackward(1_tile);
     
     // going backward
-    Routes::new_skills();
+    Routes::qualOffensive();
 };
 
 // you disabled the factor map thing
