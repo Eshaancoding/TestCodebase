@@ -3,21 +3,13 @@
 #include "controller.h"
 #include "drive.h"
 
-void Effectors::toggleDriveReverse () {
-    isDriveReverse = !isDriveReverse;
-}
-
-// WINGS
-void Effectors::wingsToggle () {
-    wingsActive = !wingsActive;
-    wingsPistonLeft.set_value(wingsActive); // there's a get value here in piston
-    wingsPistonRight.set_value(wingsActive); // there's a get value here in piston
-}
-
-// toggle four bar
-void Effectors::toggleFourBar () {
-    forBarActive = !forBarActive;
-    fourBar.set_value(forBarActive);
+void Effectors::toggleArm(){ //PRAC code
+    /*
+    armActive = !armActive;
+    arm.move_velocity(armActive ? -100 : 100); //ask
+    pros::delay(10000); //10 seconds
+    arm.move_velocity(0);
+    */
 }
 
 // INTAKE
@@ -25,17 +17,20 @@ void Effectors::intakeToggle (bool reverse) {
     float reverseFactor = 1;
     if (intakeActive == IntakeState::INTAKE && reverse) {
         reverseFactor = -1; 
-        intakeMotor.move_velocity(-600 * reverseFactor);
+        intakeMotor.move_velocity(100 * reverseFactor);
         intakeActive = IntakeState::OUTTAKE;
+        conveyorMotor.move_velocity(-100*reverseFactor);
     } 
     else if (intakeActive == IntakeState::OUTTAKE && !reverse) {
         reverseFactor = 1;
         intakeMotor.move_velocity(-600 * reverseFactor);
+        conveyorMotor.move_velocity(100*reverseFactor);
         intakeActive = IntakeState::INTAKE;
     }
     else if (intakeActive == IntakeState::INACTIVE) {
         reverseFactor = reverse ? -1 : 1; 
         intakeMotor.move_velocity(-600 * reverseFactor);
+        conveyorMotor.move_velocity(100*reverseFactor);
         intakeActive = reverse ? IntakeState::OUTTAKE : IntakeState::INTAKE;
     }
     else if ((intakeActive == IntakeState::INTAKE && !reverse) || 
@@ -43,6 +38,7 @@ void Effectors::intakeToggle (bool reverse) {
     {
         intakeMotor.move_velocity(0);
         intakeActive = IntakeState::INACTIVE;
+        conveyorMotor.move_velocity(0);
     }
 }
 
@@ -52,28 +48,8 @@ void Effectors::setIntake (bool isReverse, bool isOff) {
     intakeMotor.move_voltage(powOne);
 }
 
-bool Effectors::runSlapperSkill () {
-    // assumes that the slapper is at the end position... at the last tooth gear
-    eff.slapper.move_voltage(12000);
-    eff.smallerSlapper.move_voltage(-12000);
-
-    // 53600 too long 
-    while (true) {
-        pros::delay(30);
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1)) {
-            eff.slapper.move_voltage(0);
-            eff.smallerSlapper.move_voltage(0);
-            return false;
-        }
-    }
-
-    eff.slapper.move_velocity(0);
-    eff.smallerSlapper.move_velocity(0);
-    eff.rotSensorShooter.set_position(0);
-    return true;
-}
-
-void Effectors::toggleEndGame () {
-    endGameEnabled = !endGameEnabled;
-    eff.endGame.set_value(endGameEnabled);
+void Effectors::toggleClamp(){
+    isClamped = !isClamped;
+    clampPistonLeft.set_value(isClamped);
+    clampPistonRight.set_value(isClamped);
 }

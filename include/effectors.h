@@ -5,89 +5,42 @@
 #include "main.h"
 #include "pros/adi.hpp"
 
-enum IntakeState {
-    INTAKE,
-    OUTTAKE,
-    INACTIVE
-};
-
-enum ShootState {
-    STOPPING,
-    SHOOTING,
-    DORMANT
-};
-
 // I could make this a namespace idk why im making it a class
 class Effectors {
 public:
-    pros::Motor slapper;
-    pros::Motor smallerSlapper;
-
+    pros::Motor arm;
     pros::Motor intakeMotor;
-    
-    pros::Rotation rotSensor;
-    pros::Rotation rotSensorShooter;
+    pros::Motor conveyorMotor;
 
-    pros::ADIDigitalOut wingsPistonLeft;
-    pros::ADIDigitalOut wingsPistonRight;
-    pros::ADIDigitalOut fourBar;
-    pros::ADIDigitalOut endGame;
-    
-    bool forBarActive;
-    bool wingsActive;
-    IntakeState intakeActive;
-    ShootState shootState;
+    pros::ADIDigitalOut clampPistonLeft;
+    pros::ADIDigitalOut clampPistonRight;
 
-    bool lockEnabled;
-    bool endGameEnabled;
-
-    bool isDriveReverse;
+    bool isClamped;
+    bool intakeActive;
 
     Effectors () : 
-        slapper(7, pros::E_MOTOR_GEAR_GREEN),
-        smallerSlapper(6, pros::E_MOTOR_GEAR_GREEN),
-        intakeMotor(14, pros::E_MOTOR_GEAR_GREEN),    
-        wingsPistonLeft('B'),
-        wingsPistonRight('A'),
-        fourBar('C'),
-        endGame('D'),
-        rotSensor(18),
-        rotSensorShooter(11),
-        wingsActive(false),
-        forBarActive(false),
-        endGameEnabled(false),
-        shootState(DORMANT),
-        intakeActive(INACTIVE),
-        lockEnabled(false),
-        isDriveReverse(false)
-    { 
-        slapper.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-        smallerSlapper.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-        eff.rotSensorShooter.set_position(0);
+        arm(3),
+        intakeMotor(3),
+        conveyorMotor(3),
+        clampPistonLeft('A'),
+        clampPistonRight('A'),
+        isClamped(false),
+        intakeActive(false)
+    {
+        arm.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);  //PRAC code
     };
     ~Effectors() = default;
 
-    // wings
-    void wingsToggle ();
-
     // intake
-    void intakeToggle (bool reverse=false);
+    void intakeToggle (bool reverse=false); //turn on convey
     void setIntake (bool isReverse=false, bool isOff=false); // SIMPLER version of intake; use this for auton
 
-    // do four bar
-    void toggleFourBar ();
+    //arm
+    void toggleArm();  //PRAC code
 
-    // lock
-    void lock ();
+    //clamp
+    void toggleClamp();
 
-    // toggle
-    void toggleEndGame ();
-
-    // skills run
-    bool runSlapperSkill ();
-
-    // drive
-    void toggleDriveReverse ();
 };
 
 #endif

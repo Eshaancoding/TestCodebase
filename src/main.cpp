@@ -106,56 +106,23 @@ void opcontrol() {
         double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
         double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
 
-        distance *= eff.isDriveReverse ? -1 : 1;
-
         // ======================== Tank ======================== 
         // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
         drive.moveArcade(distance, heading);
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT))
-            eff.toggleDriveReverse();
-
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN) && eff.forBarActive) {
-            eff.toggleFourBar();
-            eff.toggleEndGame();
-        }
+        // if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT))
+        //     eff.toggleDriveReverse();
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1))
-            isShooting = !isShooting;
+            eff.setIntake(false, false);
 
-        if (isShooting) {
-            isShooting = eff.runSlapperSkill();
-        }
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2))
+            eff.setIntake(true, false);
 
-        // ======================== Other Controls ======================== 
-        // macro for toggling raising or lowering
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1)) 
-            eff.wingsToggle();
-
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2)) {
-            eff.toggleFourBar();
-        }
-
-        // toggle intake
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)) {
-            isIntaking = !isIntaking;
-            eff.setIntake(false, isIntaking);
-        }
-
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_UP)) {
-            leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-            rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-            Routes::macro(true, true);
-            leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-            rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-        }
-        double rot_sensor_val = eff.rotSensorShooter.get_position();
-
-        // run it at end of macro
-        // during auton (match) --> just spin a lil
-
-
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_X))
+            eff.toggleClamp();           
+ 
         pros::delay(10);
     }
 }
@@ -164,3 +131,11 @@ void opcontrol() {
 // L1: wings
 // L2: move intake (no outtake)
 // R1: Shooting (adi wants some fancy shit)
+
+/*PRAC code
+void vroom(int vel){
+  rightMotorGroup.moveVelocity(vel); //vel -127 to 127
+  pros::delay(10); //in ms
+  rightMotorGroup.moveVelocity(0);
+}
+*/
