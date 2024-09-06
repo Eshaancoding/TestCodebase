@@ -17,20 +17,20 @@ void Effectors::intakeToggle (bool reverse) {
     float reverseFactor = 1;
     if (intakeActive == IntakeState::INTAKE && reverse) {
         reverseFactor = -1; 
-        intakeMotor.move_velocity(100 * reverseFactor);
+        intakeMotor.move_velocity(200 * reverseFactor);
         intakeActive = IntakeState::OUTTAKE;
-        conveyorMotor.move_velocity(-100*reverseFactor);
+        conveyorMotor.move_velocity(200*reverseFactor);
     } 
     else if (intakeActive == IntakeState::OUTTAKE && !reverse) {
         reverseFactor = 1;
-        intakeMotor.move_velocity(-600 * reverseFactor);
-        conveyorMotor.move_velocity(100*reverseFactor);
+        intakeMotor.move_velocity(-200 * reverseFactor);
+        conveyorMotor.move_velocity(-200*reverseFactor);
         intakeActive = IntakeState::INTAKE;
     }
     else if (intakeActive == IntakeState::INACTIVE) {
         reverseFactor = reverse ? -1 : 1; 
-        intakeMotor.move_velocity(-600 * reverseFactor);
-        conveyorMotor.move_velocity(100*reverseFactor);
+        intakeMotor.move_velocity(200 * reverseFactor);
+        conveyorMotor.move_velocity(200*reverseFactor);
         intakeActive = reverse ? IntakeState::OUTTAKE : IntakeState::INTAKE;
     }
     else if ((intakeActive == IntakeState::INTAKE && !reverse) || 
@@ -52,4 +52,16 @@ void Effectors::toggleClamp(){
     isClamped = !isClamped;
     clampPistonLeft.set_value(isClamped);
     clampPistonRight.set_value(isClamped);
+}
+
+void Effectors::raiseArm () {
+    arm.move_velocity(200);
+}
+
+void Effectors::lowerArm () {
+    arm.move_voltage(-6000);
+}
+
+void Effectors::stopArm () {
+    arm.move_velocity(0);
 }

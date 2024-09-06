@@ -53,8 +53,8 @@ void initialize() {
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
 
     drive.resetToleranceParams();
-    OdomCustom::init(); 
-    Task task (OdomCustom::MainLoop);
+    //OdomCustom::init(); 
+    //Task task (OdomCustom::MainLoop);
 
 }
 
@@ -63,23 +63,22 @@ void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     
-    eff.rotSensorShooter.set_position(0);
     // drive.goForward(2_tile);
     // drive.turnRight(135_deg);
     // Routes::skills();
     // Routes::qualOffensive();
     
-    auto state = waitForValidState();     
-    if (state.status == AutonSelector::SKILL)
-        Routes::new_skills();
-    else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
-        Routes::sixBall();
-    else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
-        Routes::qualDefensive();
-    else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
-        Routes::qualDefensive();
-    else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
-        Routes::qualOffensive();
+    // auto state = waitForValidState();     
+    // if (state.status == AutonSelector::SKILL)
+    //     Routes::new_skills();
+    // else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
+    //     Routes::sixBall();
+    // else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
+    //     Routes::qualDefensive();
+    // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
+    //     Routes::qualDefensive();
+    // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
+    //     Routes::qualOffensive();
 
     // drive.goForward(2_tile);
     // drive.goBackward(1_tile);
@@ -96,10 +95,8 @@ void opcontrol() {
     bool isIntaking = false;
 
     // ================== COAST ================== 
-    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-
-    eff.rotSensorShooter.set_position(0);
+    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
 
     while (true) {
         // ======================== Arcade ======================== 
@@ -115,14 +112,21 @@ void opcontrol() {
         //     eff.toggleDriveReverse();
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1))
-            eff.setIntake(false, false);
+            eff.intakeToggle();
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2))
-            eff.setIntake(true, false);
+            eff.intakeToggle(true);
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_X))
             eff.toggleClamp();           
- 
+
+        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_R1))
+            eff.raiseArm();
+        else if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_R2))
+            eff.lowerArm();
+        else
+            eff.stopArm();
+
         pros::delay(10);
     }
 }

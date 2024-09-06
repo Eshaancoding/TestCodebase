@@ -28,13 +28,13 @@ extern PID HeadingPID;  // declared in parameters.cpp
 // ============================================================
 
 // drive
-#define RIGHT_BOTTOM_MOTOR   3
-#define RIGHT_MIDDLE_MOTOR   2
-#define RIGHT_TOP_MOTOR      1
+#define RIGHT_BOTTOM_MOTOR   19
+#define RIGHT_MIDDLE_MOTOR   10
+#define RIGHT_TOP_MOTOR      6
 
-#define LEFT_BOTTOM_MOTOR    13
-#define LEFT_MIDDLE_MOTOR    12
-#define LEFT_TOP_MOTOR       11
+#define LEFT_BOTTOM_MOTOR    18
+#define LEFT_MIDDLE_MOTOR    8
+#define LEFT_TOP_MOTOR       9
 
 extern okapi::MotorGroup leftMotorGroup;
 extern okapi::MotorGroup rightMotorGroup;

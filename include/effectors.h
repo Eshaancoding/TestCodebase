@@ -5,6 +5,12 @@
 #include "main.h"
 #include "pros/adi.hpp"
 
+enum IntakeState {
+    INTAKE = 0,
+    OUTTAKE = 1,
+    INACTIVE = 2
+};
+
 // I could make this a namespace idk why im making it a class
 class Effectors {
 public:
@@ -19,10 +25,10 @@ public:
     bool intakeActive;
 
     Effectors () : 
-        arm(3),
-        intakeMotor(3),
-        conveyorMotor(3),
-        clampPistonLeft('A'),
+        arm(17, pros::E_MOTOR_GEAR_200),
+        intakeMotor(11),
+        conveyorMotor(12),
+        clampPistonLeft('D'),
         clampPistonRight('A'),
         isClamped(false),
         intakeActive(false)
@@ -40,6 +46,11 @@ public:
 
     //clamp
     void toggleClamp();
+
+    // arm
+    void raiseArm ();
+    void lowerArm ();
+    void stopArm();
 
 };
 
