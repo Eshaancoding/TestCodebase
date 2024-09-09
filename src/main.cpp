@@ -67,8 +67,6 @@ void autonomous() {
     // drive.turnRight(135_deg);
     // Routes::skills();
     // Routes::qualOffensive();
-    
-    // auto state = waitForValidState();     
     // if (state.status == AutonSelector::SKILL)
     //     Routes::new_skills();
     // else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 

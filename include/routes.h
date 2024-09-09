@@ -5,17 +5,12 @@
 #include "effectors.h"
 
 namespace Routes {
-    // void test (); // test function
-    // void elimOffensive ();   
-    // void elimDefensive ();   
-    // void qualOffensive ();  
-    // void qualDefensive ();   
-    // void macro (bool run_shooter=true, bool manual_stop=false);
-
-    // void sixBall ();
-
-    // void skills ();
-    // void new_skills ();
+    void test (); // test function
+    void ringSideMatch ();   
+    void elimDefensive ();   
+    void qualOffensive ();  
+    void qualDefensive ();
+    void skills ();
 };
 
 #endif
