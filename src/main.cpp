@@ -91,10 +91,11 @@ void opcontrol() {
     bool isShooting = false;    
     bool isPTOEnabled = false;
     bool isIntaking = false;
+    bool isReverse = false;
 
     // ================== COAST ================== 
-    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
-    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
 
     while (true) {
         // ======================== Arcade ======================== 
@@ -104,10 +105,10 @@ void opcontrol() {
         // ======================== Tank ======================== 
         // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-        drive.moveArcade(distance, heading);
+        drive.moveArcade(isReverse ? -distance : distance, heading);
 
-        // if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT))
-        //     eff.toggleDriveReverse();
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN))
+            isReverse = !isReverse;
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1))
             eff.intakeToggle();

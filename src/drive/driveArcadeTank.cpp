@@ -1,7 +1,7 @@
 #include "drive.h"
 
 void Drive::moveArcade(double distance, double heading) {
-    distance *= 200; heading *= 200;
+    distance *= 600; heading *= 600;
     // leftMotorGroup.moveVelocity(0.95 * (distance + heading));    
     leftMotorGroup.moveVelocity(distance + heading);    
     rightMotorGroup.moveVelocity(distance - heading);
