@@ -18,8 +18,8 @@ public:
 
     Path (
         okapi::Point p, 
-        double headingF=1, // left and right
-        double distanceF=1, // forward and backward
+        double headingF=1, // left and right factor; 1 is full speed, 0.3 is 30% speed 
+        double distanceF=1, // forward and backward, 1 is full speed, 0.3 is 30% speed.
         okapi::QLength lookaheadDistance=0.3_tile, // has to be same 
         std::optional<std::function<void()>> func=std::nullopt
     )

@@ -20,13 +20,6 @@ void Routes::ringSideMatch () {
     drive.goForward(2.236_tile);
 
     // 100% - Eshaan B.
-    
-    bool is_mogo = true;
-    if (is_mogo) {
-        // do mogo route!
-    } else {
-        // not do mogo route!
-    }
 }
 
 // 1 tile = 12 inches

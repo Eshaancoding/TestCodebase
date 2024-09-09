@@ -27,7 +27,7 @@ public:
     Effectors () : 
         arm(17, pros::E_MOTOR_GEAR_200),
         intakeMotor(11),
-        conveyorMotor(12),
+        conveyorMotor(13), //changed 12 to 13
         clampPistonLeft('D'),
         clampPistonRight('A'),
         isClamped(false),

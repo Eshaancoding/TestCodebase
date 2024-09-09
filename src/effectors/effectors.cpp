@@ -43,7 +43,7 @@ void Effectors::intakeToggle (bool reverse) {
 }
 
 void Effectors::setIntake (bool isReverse, bool isOff) {
-    float powOne = (isReverse ? 1 : -1) * !isOff * 12000;
+float powOne = (isReverse ? 1 : -1) * !isOff * 12000;
     float powTwo = (isReverse ? -1 : 1) * !isOff * 12000;
     intakeMotor.move_voltage(powOne);
 }

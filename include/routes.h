@@ -7,7 +7,7 @@
 namespace Routes {
     void test (); // test function
     void ringSideMatch ();   
-    void elimDefensive ();   
+    void mogoSideMatch ();   
     void qualOffensive ();  
     void qualDefensive ();
     void skills ();
