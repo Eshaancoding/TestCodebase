@@ -74,9 +74,11 @@ void Routes::skills () {
     drive.faceToPoint({3_tile, -0.5_tile}, true);
     drive.goBackward(1.118_tile);
     eff.toggleClamp();
-
-    //third part of skills auton
-    eff.intakeToggle(); //delete if intake alr on
+    
+    // ======================================================
+    // ============= third part of skills auton =============
+    // ======================================================
+    eff.setIntake(false, true); // we are 1000% sure that our intake is off and we could use intakeToggle
     drive.goForward(4.123_tile);
     pros::delay(1500); //let ring go on intake
     eff.intakeToggle(); //turn off
@@ -95,7 +97,7 @@ void Routes::skills () {
     drive.goForward(1_tile);
     drive.faceToPoint({2_tile, 0_tile}, true);
     drive.goForward(1.5_tile);
-    drive.faceToPoint({-0.5_tile, 1_tile}, true);
+    drive.faceToPoint({-0.5_tile, 1_tile}, true); // weird
     drive.goBackward(1.12_tile);
     eff.toggleClamp(); //clamp off, mogo in corner
     eff.intakeToggle(); //intake off
