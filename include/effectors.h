@@ -17,29 +17,39 @@ public:
     pros::Motor arm;
     pros::Motor intakeMotor;
     pros::Motor conveyorMotor;
+  
 
     pros::ADIDigitalOut clampPistonLeft;
     pros::ADIDigitalOut clampPistonRight;
 
     bool isClamped;
-    bool intakeActive;
+    IntakeState intakeActive;
+    
+    pros::ADIDigitalIn limitSwitch;
+
+    bool previous_limit;
+    bool first_click;
 
     Effectors () : 
         arm(17, pros::E_MOTOR_GEAR_200),
-        intakeMotor(11),
-        conveyorMotor(13), //changed 12 to 13
+        intakeMotor(13),
+        conveyorMotor(1), //changed 12 to 13
         clampPistonLeft('D'),
         clampPistonRight('A'),
+        limitSwitch('H'),
         isClamped(false),
-        intakeActive(false)
+        previous_limit(false),
+        first_click(false),
+        intakeActive(IntakeState::INACTIVE)
     {
-        arm.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);  //PRAC code
+        arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);  //PRAC code
     };
     ~Effectors() = default;
 
     // intake
     void intakeToggle (bool reverse=false); //turn on convey
-    void setIntake (bool isReverse=false, bool isOff=false); // SIMPLER version of intake; use this for auton
+    void setIntake (bool isReverse=false, bool isOff=false); // SIMPLER version of intake; use this for a   uton
+    void stepOuttake ();   
 
     //arm
     void toggleArm();  //PRAC code
@@ -51,6 +61,7 @@ public:
     void raiseArm ();
     void lowerArm ();
     void stopArm();
+
 
 };
 

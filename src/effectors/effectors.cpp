@@ -14,32 +14,53 @@ void Effectors::toggleArm(){ //PRAC code
 
 // INTAKE
 void Effectors::intakeToggle (bool reverse) {
-    float reverseFactor = 1;
-    if (intakeActive == IntakeState::INTAKE && reverse) {
-        reverseFactor = -1; 
-        intakeMotor.move_velocity(200 * reverseFactor);
+    if (intakeActive == IntakeState::INTAKE && reverse) { // intake --> want to reverse --> reverse 
+        intakeMotor.move_velocity(-200);
+        conveyorMotor.move_velocity(-200);
         intakeActive = IntakeState::OUTTAKE;
-        conveyorMotor.move_velocity(200*reverseFactor);
     } 
-    else if (intakeActive == IntakeState::OUTTAKE && !reverse) {
-        reverseFactor = 1;
-        intakeMotor.move_velocity(-200 * reverseFactor);
-        conveyorMotor.move_velocity(-200*reverseFactor);
+    else if (intakeActive == IntakeState::OUTTAKE && !reverse) { // outtake --> want to intake --> intake
+        //intakeMotor.move_velocity(200);
+        //conveyorMotor.move_velocity(200);
         intakeActive = IntakeState::INTAKE;
     }
     else if (intakeActive == IntakeState::INACTIVE) {
-        reverseFactor = reverse ? -1 : 1; 
-        intakeMotor.move_velocity(200 * reverseFactor);
-        conveyorMotor.move_velocity(200*reverseFactor);
+        intakeMotor.move_velocity(200 * (reverse ? 0 : 1)); // change to -1
+        conveyorMotor.move_velocity(200* (reverse ? 0 : 1)); // change to -1
         intakeActive = reverse ? IntakeState::OUTTAKE : IntakeState::INTAKE;
     }
     else if ((intakeActive == IntakeState::INTAKE && !reverse) || 
              (intakeActive == IntakeState::OUTTAKE && reverse))
     {
         intakeMotor.move_velocity(0);
-        intakeActive = IntakeState::INACTIVE;
         conveyorMotor.move_velocity(0);
+        intakeActive = IntakeState::INACTIVE;
     }
+
+    if (intakeActive != IntakeState::OUTTAKE) {
+        first_click = false;
+        previous_limit = 0;
+    }
+
+}
+
+void Effectors::stepOuttake () {
+    // inside a while true loop!
+    if (intakeActive == IntakeState::OUTTAKE) {
+        bool val = limitSwitch.get_value();
+        
+        if (val && !previous_limit) { // debounce function
+            if (first_click) {
+                conveyorMotor.move_velocity(-200);
+            }
+            
+            first_click = !first_click; 
+        }
+
+        previous_limit = val;
+    }
+    
+
 }
 
 void Effectors::setIntake (bool isReverse, bool isOff) {
@@ -59,11 +80,12 @@ void Effectors::toggleClamp(){
 }
 
 void Effectors::raiseArm () {
-    arm.move_velocity(200);
+    arm.move_velocity(150);
 }
 
 void Effectors::lowerArm () {
-    arm.move_voltage(-6000);
+    if (arm.get_position() > 200)
+        arm.move_voltage(-6000);
 }
 
 void Effectors::stopArm () {

@@ -53,7 +53,9 @@ void initialize() {
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
 
     drive.resetToleranceParams();
+    eff.arm.set_zero_position(0);
     //OdomCustom::init(); 
+
     //Task task (OdomCustom::MainLoop);
 
 }
@@ -110,35 +112,71 @@ void opcontrol() {
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN))
             isReverse = !isReverse;
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1))
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2))
             eff.intakeToggle();
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2))
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1))
             eff.intakeToggle(true);
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_X))
             eff.toggleClamp();           
 
-        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_R1))
+        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_L1))
             eff.raiseArm();
-        else if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_R2))
+        else if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_L2))
             eff.lowerArm();
         else
             eff.stopArm();
 
+        eff.stepOuttake();
+
         pros::delay(10);
     }
-}
+};
 
 // R2: macro to go up and PTO and shit. Make sure you go back down.
 // L1: wings
 // L2: move intake (no outtake)
 // R1: Shooting (adi wants some fancy shit)
 
-/*PRAC code
-void vroom(int vel){
-  rightMotorGroup.moveVelocity(vel); //vel -127 to 127
-  pros::delay(10); //in ms
-  rightMotorGroup.moveVelocity(0);
-}
-*/
+//
+
+//drive forward, initialize 4 motors also pid
+//go forwad 2 tiles with 4 motors using pid
+//p2: update angle error correction
+/*
+void car(double distance){
+    pros::Motor rightF; //initialize
+    pros::Motor rightB;
+    pros::Motor leftF;
+    pros::Motor leftB;
+    double motorDiameter = 5;
+    rightF.set_zero_position(0); //reset encoder
+    
+    distance = (distance/motorDiameter)*360; //convert distance to degrees
+    double error = distance - rightF.get_position(); //calculate error
+
+    PID p = PID(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
+    PID h = PID(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
+    double factor = p.step(error); //get factor
+    double heading = OdomCustom::angleGet();
+    double hfactor = h.step(heading);
+    while (error>0){
+        rightF.move_velocity(200*factor);
+        rightB.move_velocity(200*factor);
+        leftF.move_velocity(200*factor);
+        leftB.move_velocity(200*factor);
+        while (heading > 0){
+            rightF.move_velocity(hfactor*200);
+            rightB.move_velocity(hfactor*200);
+        }
+        while (heading < 0){
+            leftF.move_velocity(hfactor*200);
+            leftB.move_velocity(hfactor*200);
+        }
+        error = distance - rightF.get_position(); //find new error
+        factor = p.step(error); //get new factor
+    }
+
+//
+}*/

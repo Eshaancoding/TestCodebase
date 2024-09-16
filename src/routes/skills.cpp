@@ -43,7 +43,7 @@ void Routes::skills () {
     eff.toggleClamp(); //clamp off
 
     //second part skills auton
-    drive.faceToPoint({1.75_tile, 3.75_tile});
+    drive.faceToPoint({1.75_tile, 3.75_tile}, true);
     eff.intakeToggle();
     drive.goForward(4.472_tile);
     pros::delay(500); // tunable 
