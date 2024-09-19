@@ -96,8 +96,8 @@ void opcontrol() {
     bool isReverse = false;
 
     // ================== COAST ================== 
-    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
 
     while (true) {
         // ======================== Arcade ======================== 
