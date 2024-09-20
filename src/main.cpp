@@ -45,7 +45,7 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    AutonSelector::init();
+    // AutonSelector::init();
 
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
     rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
@@ -56,7 +56,7 @@ void initialize() {
     eff.arm.set_zero_position(0);
     //OdomCustom::init(); 
 
-    //Task task (OdomCustom::MainLoop);
+    Task task (OdomCustom::MainLoop);
 
 }
 
@@ -80,7 +80,8 @@ void autonomous() {
     // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
     //     Routes::qualOffensive();
 
-    // drive.goForward(2_tile);
+    drive.goForward(2_tile);
+    // drive.turnRight(90_deg);
     // drive.goBackward(1_tile);
     
     // going backward
@@ -112,18 +113,18 @@ void opcontrol() {
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN))
             isReverse = !isReverse;
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2))
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2))
             eff.intakeToggle();
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1))
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1))
             eff.intakeToggle(true);
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_X))
             eff.toggleClamp();           
 
-        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_L1))
+        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_R1))
             eff.raiseArm();
-        else if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_L2))
+        else if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_R2))
             eff.lowerArm();
         else
             eff.stopArm();

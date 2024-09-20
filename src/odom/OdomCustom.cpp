@@ -4,10 +4,14 @@
 #include "okapi/api/util/mathUtil.hpp"
 #include "okapi/impl/device/rotarysensor/adiEncoder.hpp"
 #include "parameters.h"
+#include <cmath>
 #include "Console.h"
 
 #define PI 3.14159265
-#define WHEEL_DIA 2.35
+#define WHEEL_DIA 2.62
+
+// too low distance -->  higher wheel dia
+// too high distance
 
 namespace OdomCustom {
     std::atomic<okapi::QAngle> currentAngle = 0_deg;
@@ -15,7 +19,7 @@ namespace OdomCustom {
     std::atomic<okapi::QLength> yPos = 0_in;
     std::atomic<bool> calibrating;
 
-    okapi::IMU imu (4, okapi::IMUAxes::z);
+    okapi::IMU imu (7, okapi::IMUAxes::z);
     double prevEnc = 0.0;
     double offsetEnc = 0.0;
 
@@ -47,8 +51,10 @@ namespace OdomCustom {
 
     void MainLoop () {
         while (true) {
+
             // get change in encoder
             double di = distanceGet();
+            // Console::printBrain(1, di, "Distance: ");
 
             double enc_get = distanceGet(); // cheeeeeeeeeeck this
             double currentEnc = (enc_get - offsetEnc)/360;            
@@ -58,8 +64,10 @@ namespace OdomCustom {
 
             // get change in angle
             double currentAng = angleGet();
-            xPos = (xPos.load().convert(okapi::inch) + diff * sin(currentAng)) * 1_in;
-            yPos = (yPos.load().convert(okapi::inch) + diff * cos(currentAng)) * 1_in;
+            if (!isnan(currentAng)) {
+                xPos = (xPos.load().convert(okapi::inch) + diff * sin(currentAng)) * 1_in;
+                yPos = (yPos.load().convert(okapi::inch) + diff * cos(currentAng)) * 1_in;
+            }
             currentAngle = currentAng * okapi::radian;
 
             // set previous values

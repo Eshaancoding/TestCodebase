@@ -106,7 +106,7 @@ void Drive::move (
         if (headingActivated)  headingPower  = HeadingPID.step(angleErr.convert(radian));
 
         if (headingActivated && distanceActivated && setFactorCC) 
-            headingPower *= courseCorrectionFactor;
+            headingPower *= (distErr < 4_in) ? 0 : courseCorrectionFactor;
 
         // Actually drive
         if (iteration % 3 == 0) {
