@@ -80,8 +80,8 @@ void autonomous() {
     // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
     //     Routes::qualOffensive();
 
-    drive.goForward(2_tile);
-    // drive.turnRight(90_deg);
+    // drive.goForward(1_tile);
+    drive.turnRight(90_deg);
     // drive.goBackward(1_tile);
     
     // going backward
