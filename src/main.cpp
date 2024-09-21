@@ -47,8 +47,8 @@ AutonSelector::State waitForValidState () {
 void initialize() {
     // AutonSelector::init();
 
-    leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
-    rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
+    leftMotorGroup.setGearing(AbstractMotor::gearset::green);
+    rightMotorGroup.setGearing(AbstractMotor::gearset::green);
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
 
@@ -62,8 +62,8 @@ void initialize() {
 
 // Autonomous Mode
 void autonomous() {
-    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
     
     // drive.goForward(2_tile);
     // drive.turnRight(135_deg);
@@ -80,10 +80,12 @@ void autonomous() {
     // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
     //     Routes::qualOffensive();
 
-    // drive.goForward(1_tile);
-    drive.turnRight(90_deg);
+    drive.goForward(1_tile);
+    // drive.turnRight(90_deg);
     // drive.goBackward(1_tile);
     
+    // Routes::skills();
+
     // going backward
     // Routes::new_skills();
 };
@@ -114,10 +116,10 @@ void opcontrol() {
             isReverse = !isReverse;
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2))
-            eff.intakeToggle();
+            eff.setIntakeState(IntakeState::OUTTAKE);
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1))
-            eff.intakeToggle(true);
+            eff.setIntakeState(IntakeState::INTAKE);
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_X))
             eff.toggleClamp();           
@@ -129,7 +131,7 @@ void opcontrol() {
         else
             eff.stopArm();
 
-        eff.stepOuttake();
+        // eff.stepOuttake();
 
         pros::delay(10);
     }

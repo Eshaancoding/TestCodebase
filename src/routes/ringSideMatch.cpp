@@ -7,11 +7,12 @@
 #include "odom/OdomCustom.h"   
 
 void Routes::ringSideMatch () {
-    OdomCustom::setPos(0_in, 0_in, 146_deg); // set our default/initial position
-    drive.goBackward(1.803_tile);
-    eff.toggleClamp(); 
-    drive.turnLeft(101.31_deg);
-    drive.goForward(1.414_tile);
+    OdomCustom::setPos(0_in, 0_in, 0_deg); // set our default/initial position
+    drive.goBackward(1.803_tile, {}, {{0.9, [](){
+        eff.toggleClamp(); 
+    }}});
+    drive.turnLeft(96.31_deg);
+    drive.goForward(1.114_tile);
     
     drive.turnRight(135_deg);
     eff.intakeToggle();

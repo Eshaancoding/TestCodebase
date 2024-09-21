@@ -7,24 +7,32 @@
 #include "odom/OdomCustom.h"   
 
 void Routes::mogoSideMatch () {
-    OdomCustom::setPos(0_in, 0_in, 123.69_deg); // set our default/initial position
-    drive.goBackward(1.581_tile);
+    OdomCustom::setPos(0_in, 0_in, 0_deg); // set our default/initial position
     eff.toggleClamp();
-    drive.turnRight(63.435_deg);
-    eff.intakeToggle();
+
+    drive.setToleranceParams(std::nullopt, std::nullopt, 1.5_s, std::nullopt);
+    drive.goBackward(1.65_tile, {}, {{0.8, [](){
+        // eff.toggleClamp();
+        printf("Clamped!\n");
+    }}});
+    eff.toggleClamp();
+    
+    drive.turnRight(62.435_deg);
+    eff.setIntakeState(IntakeState::INTAKE);
     drive.goForward(1_tile);
 
-    bool isRush = true;
-    if (isRush){
-        pros::delay(1000);
-        eff.toggleClamp();
-        eff.intakeToggle();
-        drive.turnLeft(90_deg);
-        drive.goBackward(1_tile);
-        eff.toggleClamp();
-        drive.goForward(1.5_tile);
+    bool isRush = false;
+    if (isRush){ // we are almost certaintly not doing rush
+        // pros::delay(1000);
+        // eff.toggleClamp();
+        // eff.intakeToggle();
+        // drive.turnLeft(90_deg);
+        // drive.goBackward(1_tile);
+        // eff.toggleClamp();
+        // drive.goForward(1.5_tile);
     } else{
-        drive.turnLeft(153.435_deg);
-        drive.goForward(2.236_tile);
+        drive.turnLeft(155.435_deg, {{0, 0.8}});
+        pros::delay(100);
+        drive.goForward(2.136_tile, {{0, 0.8}});
     }
 }

@@ -13,6 +13,32 @@ void Effectors::toggleArm(){ //PRAC code
 }
 
 // INTAKE
+void Effectors::setIntakeState (IntakeState ia) {
+    if (ia == this->intakeActive) { // toggle!
+        intakeMotor.move_velocity(0);
+        conveyorMotor.move_velocity(0);
+        this->intakeActive = IntakeState::INACTIVE;
+        return; // don't do anything else
+    }
+
+    if (ia == IntakeState::OUTTAKE) {
+        intakeMotor.move_velocity(200);
+        conveyorMotor.move_velocity(200);
+        
+    }
+    // COMMENT THIS OUT IF YOU WANT TO STEP OUTTAKE AND LISTEN TO LIMIT SWITCH
+    else if (ia == IntakeState::INTAKE) {  
+        intakeMotor.move_velocity(-200);
+        conveyorMotor.move_velocity(-200);
+    }
+    else if (ia == IntakeState::INACTIVE) {
+        intakeMotor.move_velocity(0);
+        conveyorMotor.move_velocity(0);
+    }
+    
+    this->intakeActive = ia;
+}
+
 void Effectors::intakeToggle (bool reverse) {
     if (intakeActive == IntakeState::INTAKE && reverse) { // intake --> want to reverse --> reverse 
         intakeMotor.move_velocity(-200);
@@ -76,7 +102,7 @@ void Effectors::setIntake (bool isReverse, bool isOff) {
 void Effectors::toggleClamp(){
     isClamped = !isClamped;
     clampPistonLeft.set_value(isClamped);
-    clampPistonRight.set_value(isClamped);
+    // clampPistonRight.set_value(isClamped);
 }
 
 void Effectors::raiseArm () {

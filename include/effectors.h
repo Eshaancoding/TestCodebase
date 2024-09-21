@@ -49,7 +49,8 @@ public:
     // intake
     void intakeToggle (bool reverse=false); //turn on convey
     void setIntake (bool isReverse=false, bool isOff=false); // SIMPLER version of intake; use this for a   uton
-    void stepOuttake ();   
+    void setIntakeState (IntakeState ia);
+    void stepOuttake ();    // this is for the weird limit switch thing
 
     //arm
     void toggleArm();  //PRAC code
