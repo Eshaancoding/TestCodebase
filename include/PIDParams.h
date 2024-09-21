@@ -2,13 +2,13 @@
 #define PIDPARAM
 
 // distance (forward/backward)
-#define Distance_P           0.070 // 0.075 and 0.3 is good
+#define Distance_P           0.05 
 #define Distance_I           0
-#define Distance_D           0.23
-#define Distance_MAXPOWER    0.9
+#define Distance_D           0.053
+#define Distance_MAXPOWER    0.6
 #define Distance_MINPOWER    0
 #define Distance_FACTOR      1
-#define Distance_SLEW        0.2 // <=========== really important (suggestion: upped alr)
+#define Distance_SLEW        0.15 // <=========== really important (suggestion: upped alr)
 #define Distance_MINERRDISI  2.5  // min error to disable I, NOT NEEDED IF I = 0 
 
 // angle

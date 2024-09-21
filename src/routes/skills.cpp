@@ -7,39 +7,39 @@
 #include "odom/OdomCustom.h"   
 
 void lilRoute (bool reverse = false) {
-    drive.faceToPoint({3_tile, 0_in}, true, {{0, 0.9}});
-
+    drive.setToleranceParams(std::nullopt, std::nullopt, 0.8_s, std::nullopt);
+    drive.faceToPoint({3_tile, 0_in}, true);
     drive.setToleranceParams(std::nullopt, std::nullopt, 1.3_s, std::nullopt);
     drive.goBackward(1.2_tile);
     drive.resetToleranceParams();
 
     eff.toggleClamp(); //clamp on
+    eff.setIntakeState(IntakeState::INTAKE);
     drive.goPath({
         Path({0_in, 0_in}),
         Path({0.75_tile, (reverse ? -1 : 1) * -0.5_tile}),
-        Path({1.75_tile, (reverse ? -1 : 1) * -1.75_tile})
+        Path({1.8_tile, (reverse ? -1 : 1) * -1.5_tile})
     }, 5_in, 5_in);
 
     drive.faceToPoint({-1_tile, (reverse ? -1 : 1) * 0.5_tile}, true);
 
-    eff.setIntakeState(IntakeState::INTAKE);
 
     drive.goPath({
         Path({0_in, 0_in}),
         Path({-1_tile, (reverse ? -1 : 1) * 0.25_tile}),
         Path({-2.5_tile, (reverse ? -1 : 1) * 0.25_tile})
-    }, 5_in, 5_in);
+    }, 5_in, 5_in, false, 3_s);
 
     drive.faceToPoint({0.5_tile, (reverse ? -1 : 1) * -0.5_tile}, true);
     drive.goForward(0.707_tile);
     drive.faceToPoint({1_tile, 0_tile}, true);
     eff.setIntakeState(IntakeState::INACTIVE);
     
-    drive.setToleranceParams(std::nullopt, std::nullopt, 0.75_s, std::nullopt);
     // drive.goBackward(0.618_tile);
     drive.moveArcade(-0.3, 0);
+    pros::delay(500);
+    drive.moveArcade(0, 0);
     
-    drive.resetToleranceParams();
 
     eff.toggleClamp(); //clamp off
 }
@@ -52,16 +52,19 @@ void Routes::skills () {
 
     drive.goPath({ // REALLY REALLY REALLY TUNABLE!!!
         Path({0_in, 0_in}),
-        Path({1_tile, 0_in}),
+        Path({0.7_tile, 0_in}),
         Path({2.1_tile, -1.1_tile})
     }, 5_in, 5_in); // don't have to be too accurate!
 
     lilRoute();
 
     //second part skills auton
-    drive.faceToPoint({1.75_tile, 3.75_tile}, true);
+    drive.faceToPoint({1.75_tile, 4.5_tile}, true);
     eff.setIntakeState(IntakeState::INTAKE);
-    drive.goForward(4.472_tile);
+
+    drive.setToleranceParams(std::nullopt, std::nullopt, 5_s, std::nullopt);
+    drive.goForward(3.822_tile);
+    drive.resetToleranceParams();
     pros::delay(500); // going to be intake a disk
     eff.setIntakeState(IntakeState::INACTIVE);
 

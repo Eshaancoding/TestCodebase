@@ -47,14 +47,14 @@ AutonSelector::State waitForValidState () {
 void initialize() {
     // AutonSelector::init();
 
-    leftMotorGroup.setGearing(AbstractMotor::gearset::green);
-    rightMotorGroup.setGearing(AbstractMotor::gearset::green);
+    leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
+    rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
 
     drive.resetToleranceParams();
     eff.arm.set_zero_position(0);
-    //OdomCustom::init(); 
+    OdomCustom::init(); 
 
     Task task (OdomCustom::MainLoop);
 
@@ -80,11 +80,11 @@ void autonomous() {
     // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
     //     Routes::qualOffensive();
 
-    drive.goForward(1_tile);
+    // drive.goForward(1_tile);
     // drive.turnRight(90_deg);
     // drive.goBackward(1_tile);
     
-    // Routes::skills();
+    Routes::skills();
 
     // going backward
     // Routes::new_skills();
