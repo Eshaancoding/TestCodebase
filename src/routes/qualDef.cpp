@@ -34,11 +34,11 @@ void Routes::qualDefensive() {
 //     drive.faceToPoint({0_in, 10_tile}, true);
     
 //     eff.setIntake();
-//     drive.goPath({
-//         Path({0_in, 0_in}),
-//         Path({0_in, 0.4_tile}),
-//         Path({1.85_tile, 2.2_tile}),
-//     }, 5_in, 15_in, false);
+    drive.goPath({
+        Path({0_in, 0_in}),
+        Path({0_in, 0.4_tile}),
+        Path({1.85_tile, 2.2_tile}),
+    }, 5_in, 15_in, false);
 
 //     drive.faceToPoint({0_tile, -10_tile}, true);
 

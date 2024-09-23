@@ -2,6 +2,7 @@
 #include "parameters.h"
 #include "controller.h"
 #include "drive.h"
+#include <cstdarg>
 
 void Effectors::toggleArm(){ //PRAC code
     /*
@@ -13,27 +14,31 @@ void Effectors::toggleArm(){ //PRAC code
 }
 
 // INTAKE
-void Effectors::setIntakeState (IntakeState ia) {
+void Effectors::setIntakeState (IntakeState ia, bool isConveyor) {
     if (ia == this->intakeActive) { // toggle!
         intakeMotor.move_velocity(0);
-        conveyorMotor.move_velocity(0);
+        if (isConveyor)
+            conveyorMotor.move_velocity(0);
         this->intakeActive = IntakeState::INACTIVE;
         return; // don't do anything else
     }
 
     if (ia == IntakeState::OUTTAKE) {
         intakeMotor.move_velocity(200);
-        conveyorMotor.move_velocity(200);
+        if (isConveyor)
+            conveyorMotor.move_velocity(200);
         
     }
     // COMMENT THIS OUT IF YOU WANT TO STEP OUTTAKE AND LISTEN TO LIMIT SWITCH
     else if (ia == IntakeState::INTAKE) {  
         intakeMotor.move_velocity(-200);
-        conveyorMotor.move_velocity(-200);
+        if (isConveyor)
+            conveyorMotor.move_velocity(-200);
     }
     else if (ia == IntakeState::INACTIVE) {
         intakeMotor.move_velocity(0);
-        conveyorMotor.move_velocity(0);
+        if (isConveyor)
+            conveyorMotor.move_velocity(0);
     }
     
     this->intakeActive = ia;
@@ -106,14 +111,18 @@ void Effectors::toggleClamp(){
 }
 
 void Effectors::raiseArm () {
-    arm.move_velocity(150);
+    arm.move_voltage(8000);
 }
 
 void Effectors::lowerArm () {
-    if (arm.get_position() > 200)
-        arm.move_voltage(-6000);
+    arm.move_voltage(-8000);
 }
 
 void Effectors::stopArm () {
     arm.move_velocity(0);
+}
+
+void Effectors::toggleBoinker () {
+    boinkerActive = !boinkerActive;
+    boinkerPiston.set_value(boinkerActive);
 }

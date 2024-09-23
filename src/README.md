@@ -52,3 +52,7 @@ THAT's pretty much it happy coding
     * Also, for overflow text it would automatically scroll horizontally instead of clipping out
 
 * Auton selector using LVGL + risky/nonrisky step
+
+
+**Off** --> **BLUE**
+**DEF** --> **RED**

@@ -45,7 +45,7 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    // AutonSelector::init();
+    AutonSelector::init();
 
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
     rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
@@ -69,6 +69,21 @@ void autonomous() {
     // drive.turnRight(135_deg);
     // Routes::skills();
     // Routes::qualOffensive();
+
+    AutonSelector::State state = AutonSelector::getState(); 
+
+    if (state.status == AutonSelector::SKILL) {
+        Routes::skills();
+    }
+    else if (state.offDefState == AutonSelector::OFFENSIVE) {
+        Routes::mogoSideMatchBlue();
+    } 
+    else if (state.offDefState == AutonSelector::DEFENSIVE) {
+        Routes::mogoSideMatchRed();
+    }
+
+    
+
     // if (state.status == AutonSelector::SKILL)
     //     Routes::new_skills();
     // else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
@@ -83,11 +98,6 @@ void autonomous() {
     // drive.goForward(1_tile);
     // drive.turnRight(90_deg);
     // drive.goBackward(1_tile);
-    
-    Routes::skills();
-
-    // going backward
-    // Routes::new_skills();
 };
 
 // you disabled the factor map thing
@@ -97,6 +107,7 @@ void opcontrol() {
     bool isPTOEnabled = false;
     bool isIntaking = false;
     bool isReverse = false;
+    Control::printController(0, "Forward");
 
     // ================== COAST ================== 
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
@@ -110,10 +121,15 @@ void opcontrol() {
         // ======================== Tank ======================== 
         // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-        drive.moveArcade(isReverse ? -distance : distance, heading);
+        drive.moveArcade((isReverse ? -distance : distance) * 0.8, heading * 0.8);
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN))
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_UP))
+            eff.toggleBoinker();
+
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
             isReverse = !isReverse;
+            Control::printController(0, isReverse ? "Reverse" : "Forward");
+        }
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2))
             eff.setIntakeState(IntakeState::OUTTAKE);
@@ -126,6 +142,7 @@ void opcontrol() {
 
         if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_R1))
             eff.raiseArm();
+
         else if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_R2))
             eff.lowerArm();
         else

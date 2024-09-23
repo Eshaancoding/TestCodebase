@@ -6,7 +6,7 @@
 #include "Console.h"
 #include "odom/OdomCustom.h"   
 
-void Routes::mogoSideMatch () {
+void Routes::mogoSideMatchRed () {
     OdomCustom::setPos(0_in, 0_in, 0_deg); // set our default/initial position
     eff.toggleClamp();
 
@@ -17,22 +17,21 @@ void Routes::mogoSideMatch () {
     }}});
     eff.toggleClamp();
     
-    drive.turnRight(62.435_deg);
+    drive.turnLeft(62.435_deg);
     eff.setIntakeState(IntakeState::INTAKE);
     drive.goForward(1_tile);
+    pros::delay(200);
+    drive.moveArcade(-0.4, 0);
+    pros::delay(200);
+    drive.moveArcade(0, 0);
+    pros::delay(500);
 
-    bool isRush = false;
-    if (isRush){ // we are almost certaintly not doing rush
-        // pros::delay(1000);
-        // eff.toggleClamp();
-        // eff.intakeToggle();
-        // drive.turnLeft(90_deg);
-        // drive.goBackward(1_tile);
-        // eff.toggleClamp();
-        // drive.goForward(1.5_tile);
-    } else{
-        drive.turnLeft(155.435_deg, {{0, 0.8}});
-        pros::delay(100);
-        drive.goForward(2.136_tile, {{0, 0.8}});
-    }
+    drive.setToleranceParams(std::nullopt, 1_deg, 2_s, std::nullopt);
+    drive.turnRight(180_deg, {{0, 0.9}});
+    drive.resetToleranceParams();
+
+    pros::delay(500);
+    drive.goForward(1.7_tile);
+    eff.toggleClamp();
+    eff.setIntakeState(IntakeState::INACTIVE);
 }
