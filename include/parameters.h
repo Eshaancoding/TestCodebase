@@ -36,6 +36,8 @@ extern PID HeadingPID;  // declared in parameters.cpp
 #define LEFT_MIDDLE_MOTOR    8
 #define LEFT_TOP_MOTOR       9
 
+#define BACK_TRACK_MOTOR     22
+
 extern okapi::MotorGroup leftMotorGroup;
 extern okapi::MotorGroup rightMotorGroup;
 
