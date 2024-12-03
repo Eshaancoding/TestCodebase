@@ -56,8 +56,7 @@ void initialize() {
     eff.arm.set_zero_position(0);
     OdomCustom::init(); 
 
-    Task task (OdomCustom::MainLoop);
-
+    Task task (OdomCustom::MainLoop); // multithreading
 }
 
 // Autonomous Mode
@@ -107,6 +106,7 @@ void opcontrol() {
     bool isPTOEnabled = false;
     bool isIntaking = false;
     bool isReverse = false;
+    bool hasDonut = false;
     Control::printController(0, "Forward");
 
     // ================== COAST ================== 
@@ -130,6 +130,12 @@ void opcontrol() {
             isReverse = !isReverse;
             Control::printController(0, isReverse ? "Reverse" : "Forward");
         }
+
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B)) {
+            eff.changeState();
+        }
+
+        eff.stepArm();
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2))
             eff.setIntakeState(IntakeState::OUTTAKE);

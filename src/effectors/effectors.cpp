@@ -4,15 +4,6 @@
 #include "drive.h"
 #include <cstdarg>
 
-void Effectors::toggleArm(){ //PRAC code
-    /*
-    armActive = !armActive;
-    arm.move_velocity(armActive ? -100 : 100); //ask
-    pros::delay(10000); //10 seconds
-    arm.move_velocity(0);
-    */
-}
-
 // INTAKE
 void Effectors::setIntakeState (IntakeState ia, bool isConveyor) {
     if (ia == this->intakeActive) { // toggle!
@@ -125,4 +116,34 @@ void Effectors::stopArm () {
 void Effectors::toggleBoinker () {
     boinkerActive = !boinkerActive;
     boinkerPiston.set_value(boinkerActive);
+}
+
+
+// fancy arm things
+// press button -> arm turns a lil bit so conveyor can slide donut into it -> press button again -> 
+// arm slams almost 180 to get donut onto wall stake
+
+void Effectors::changeState () {
+    if (this->currentState == State::IDLE) {
+        this->currentState = State::isRaising;
+    } else if (this->currentState == State::isRaising) {
+        this->currentState = State::hasDonut;
+    } else {
+        this->currentState = State::IDLE;
+    }
+}
+
+void Effectors::stepArm () {
+    // there's no while true loop
+    double angle = rotationSensor.get_angle();
+    if (this->currentState == State::isRaising && angle < 30)
+        arm.move_voltage(300);
+    else if (this->currentState == State::hasDonut && angle >= 30)
+        arm.move_voltage(300);
+    else if (this->currentState == State::hasDonut && angle > 170)
+        arm.move_voltage(0);
+    else if (this->currentState == State::IDLE && angle > 0)
+        arm.move_voltage(-300); 
+    else 
+        arm.move_voltage(0);
 }
