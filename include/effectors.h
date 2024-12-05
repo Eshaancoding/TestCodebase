@@ -17,26 +17,34 @@ enum State {
     IDLE
 };
 
+enum Color {
+    noColor,
+    blue,
+    red
+};
+
 // I could make this a namespace idk why im making it a class
 class Effectors {
 public:
     pros::Motor arm;
     pros::Motor intakeMotor;
     pros::Motor conveyorMotor;
-  
 
     pros::ADIDigitalOut clampPistonLeft;
     pros::ADIDigitalOut clampPistonRight;
     pros::ADIDigitalOut boinkerPiston;
 
     pros::ADIPotentiometer rotationSensor;
+    pros::Optical colorSensor;
+    pros::c::optical_rgb_s_t rgbVal;
 
     bool isClamped;
-    IntakeState intakeActive;
+    std::atomic <IntakeState> intakeActive;
     
     pros::ADIDigitalIn limitSwitch;
 
     State currentState;
+    Color colorState;
 
     bool previous_limit;
     bool first_click;
@@ -50,23 +58,24 @@ public:
         clampPistonRight('A'),
         boinkerPiston('B'),
         limitSwitch('H'),
+        colorSensor(15), // change port
+        rotationSensor(12),
         isClamped(false),
         previous_limit(false),
         first_click(false),
         boinkerActive(false),
         intakeActive(IntakeState::INACTIVE),
-        currentState(State::IDLE)
-
+        currentState(State::IDLE),
+        colorState(Color::noColor)
     {
         arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);  //PRAC code
     };
     ~Effectors() = default;
 
-    // intak
-    void intakeToggle (bool reverse=false); //turn on convey
+    // intake
     void setIntake (bool isReverse=false, bool isOff=false); // SIMPLER version of intake; use this for a   uton
-    void setIntakeState (IntakeState ia, bool isConveyor=true);
-    void stepOuttake ();    // this is for the weird limit switch thing
+    void toggleIntakeState (IntakeState ia, bool isConveyor=true);
+    void intake (); // our bot isn't colorblind anymore!
 
     //clamp
     void toggleClamp();

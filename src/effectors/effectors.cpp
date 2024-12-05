@@ -5,91 +5,55 @@
 #include <cstdarg>
 
 // INTAKE
-void Effectors::setIntakeState (IntakeState ia, bool isConveyor) {
-    if (ia == this->intakeActive) { // toggle!
-        intakeMotor.move_velocity(0);
-        if (isConveyor)
-            conveyorMotor.move_velocity(0);
+void Effectors::toggleIntakeState (IntakeState ia, bool isConveyor) {
+    // outtaking, and we press the outtake button, disable
+    // intaking, and we press the intake button, disable
+    // disable, and press button, then it won't satisfy this condition
+    if (this->intakeActive == ia) {
         this->intakeActive = IntakeState::INACTIVE;
-        return; // don't do anything else
+    } else {
+        this->intakeActive = ia;
     }
-
-    if (ia == IntakeState::OUTTAKE) {
-        intakeMotor.move_velocity(200);
-        if (isConveyor)
-            conveyorMotor.move_velocity(200);
-        
-    }
-    // COMMENT THIS OUT IF YOU WANT TO STEP OUTTAKE AND LISTEN TO LIMIT SWITCH
-    else if (ia == IntakeState::INTAKE) {  
-        intakeMotor.move_velocity(-200);
-        if (isConveyor)
-            conveyorMotor.move_velocity(-200);
-    }
-    else if (ia == IntakeState::INACTIVE) {
-        intakeMotor.move_velocity(0);
-        if (isConveyor)
-            conveyorMotor.move_velocity(0);
-    }
-    
-    this->intakeActive = ia;
 }
 
-void Effectors::intakeToggle (bool reverse) {
-    if (intakeActive == IntakeState::INTAKE && reverse) { // intake --> want to reverse --> reverse 
-        intakeMotor.move_velocity(-200);
-        conveyorMotor.move_velocity(-200);
-        intakeActive = IntakeState::OUTTAKE;
-    } 
-    else if (intakeActive == IntakeState::OUTTAKE && !reverse) { // outtake --> want to intake --> intake
-        //intakeMotor.move_velocity(200);
-        //conveyorMotor.move_velocity(200);
-        intakeActive = IntakeState::INTAKE;
-    }
-    else if (intakeActive == IntakeState::INACTIVE) {
-        intakeMotor.move_velocity(200 * (reverse ? 0 : 1)); // change to -1
-        conveyorMotor.move_velocity(200* (reverse ? 0 : 1)); // change to -1
-        intakeActive = reverse ? IntakeState::OUTTAKE : IntakeState::INTAKE;
-    }
-    else if ((intakeActive == IntakeState::INTAKE && !reverse) || 
-             (intakeActive == IntakeState::OUTTAKE && reverse))
-    {
-        intakeMotor.move_velocity(0);
-        conveyorMotor.move_velocity(0);
-        intakeActive = IntakeState::INACTIVE;
-    }
-
-    if (intakeActive != IntakeState::OUTTAKE) {
-        first_click = false;
-        previous_limit = 0;
-    }
-
-}
-
-void Effectors::stepOuttake () {
-    // inside a while true loop!
-    if (intakeActive == IntakeState::OUTTAKE) {
-        bool val = limitSwitch.get_value();
-        
-        if (val && !previous_limit) { // debounce function
-            if (first_click) {
-                conveyorMotor.move_velocity(-200);
-            }
+void Effectors::intake () { 
+    while (true) {
+        IntakeState state = intakeActive.load();
+        if (state == IntakeState::INTAKE) {
+            // once it detects blue, stop conveyor after certain amount of encoder turns so it is at the top of arm
+            rgbVal = colorSensor.get_rgb();
+            double encCount = intakeMotor.get_position();
             
-            first_click = !first_click; 
+            if (this->colorState == Color::noColor && rgbVal.red >= 200 && rgbVal.green <= 30 && rgbVal.blue <= 30){
+                intakeMotor.set_zero_position(0);
+                this->colorState = Color::red;
+            } else if (this->colorState == Color::red && encCount >= 360){
+                intakeMotor.move_voltage(0);
+                pros::delay(500);
+                intakeMotor.move_voltage(300);
+                this->colorState = Color::noColor;
+            } else if (this->colorState == Color::noColor && rgbVal.red <= 30 && rgbVal.green <= 30 && rgbVal.blue >= 200){
+                intakeMotor.set_zero_position(0);
+                this->colorState = Color::blue;
+            } else if (this->colorState == Color::blue && encCount >= 360){
+                intakeMotor.move_voltage(0);
+                this->colorState = Color::noColor;
+                pros::delay(500);
+                intakeMotor.move_voltage(300);
+            }
+        } else if (state == IntakeState::OUTTAKE) {
+            this->colorState = Color::noColor;
+            intakeMotor.move_voltage(-300);
+        } else if (state == IntakeState::INACTIVE) {
+            this->colorState = Color::noColor;
+            intakeMotor.move_voltage(0);
         }
 
-        previous_limit = val;
+        pros::delay(50);
     }
-    
-
 }
 
 void Effectors::setIntake (bool isReverse, bool isOff) {
-    float powOne = (isReverse ? 1 : -1) * !isOff * 12000;
-    float powTwo = (isReverse ? -1 : 1) * !isOff * 12000;
-    intakeMotor.move_voltage(powOne);
-
     if (isOff)          intakeActive = IntakeState::INACTIVE;
     else if (isReverse) intakeActive = IntakeState::OUTTAKE;
     else                intakeActive = IntakeState::INTAKE;

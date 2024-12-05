@@ -57,6 +57,7 @@ void initialize() {
     OdomCustom::init(); 
 
     Task task (OdomCustom::MainLoop); // multithreading
+    Task colorCheck (Effectors::intake);
 }
 
 // Autonomous Mode
@@ -137,11 +138,13 @@ void opcontrol() {
 
         eff.stepArm();
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2))
-            eff.setIntakeState(IntakeState::OUTTAKE);
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2)){
+            eff.toggleIntakeState(IntakeState::OUTTAKE);
+        }
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1))
-            eff.setIntakeState(IntakeState::INTAKE);
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1)){
+            eff.toggleIntakeState(IntakeState::INTAKE);
+        }
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_X))
             eff.toggleClamp();           
