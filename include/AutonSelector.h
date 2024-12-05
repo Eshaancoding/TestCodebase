@@ -8,9 +8,9 @@
 using namespace std;
 
 namespace AutonSelector {
-    enum ElimQualState {ELIM=0, QUAL=1};
-    enum OffDefState {OFFENSIVE=0, DEFENSIVE=1};
-    enum Status {NOTREADY, SKILL, ROUTE};
+    enum ElimQualState {ELIM=0, QUAL=1}; // middle button
+    enum OffDefState {OFFENSIVE=0, DEFENSIVE=1}; // top buttons
+    enum Status {NOTREADY, SKILL, ROUTE}; // bottom button; is skills
 
     struct State {
         ElimQualState elimQualState;

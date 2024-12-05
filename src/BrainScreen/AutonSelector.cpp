@@ -108,12 +108,12 @@ namespace AutonSelector {
     void init () {
         shouldSkill = false;        
 
-        offensiveB = createButton("Blue", 25, 25, 100, 50);
-        defensiveB = createButton("Red", 150, 25, 100, 50);
-        elimB = createButton("N/A", 25, 100, 100, 50);
-        qualB = createButton("N/A", 150, 100, 100, 50);
-        skillB = createButton("Skills", 25, 175, 225, 50);
-        goButton = createButton("Confirm", 270, 175, 190, 50, false);
+        offensiveB = createButton("Blue", 25, 25, 100, 50); // top left button
+        defensiveB = createButton("Red", 150, 25, 100, 50); // top right button
+        elimB = createButton("N/A", 25, 100, 100, 50); // middle left button 
+        qualB = createButton("N/A", 150, 100, 100, 50); // middle right button 
+        skillB = createButton("Skills", 25, 175, 225, 50); // very bottom wide button
+        goButton = createButton("Confirm", 270, 175, 190, 50, false); // submit button on the right
 
         // LV_IMG_DECLARE(logo);
         // lv_obj_t* img = lv_img_create(lv_scr_act(), NULL);

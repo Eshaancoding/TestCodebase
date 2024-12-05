@@ -53,7 +53,8 @@ void initialize() {
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
 
     drive.resetToleranceParams();
-    eff.arm.set_zero_position(0);
+    eff.armLeft.set_zero_position(0);
+    eff.armRight.set_zero_position(0);
     OdomCustom::init(); 
 
     Task task (OdomCustom::MainLoop); // multithreading
@@ -65,20 +66,25 @@ void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
     
+
     // drive.goForward(2_tile);
     // drive.turnRight(135_deg);
     // Routes::skills();
     // Routes::qualOffensive();
 
-    AutonSelector::State state = AutonSelector::getState(); 
+    AutonSelector::State state = waitForValidState(); 
+
+    //state.offDefState == AutonSelector::OFFENSIVE; // off=blue, def = red
 
     if (state.status == AutonSelector::SKILL) {
         Routes::skills();
     }
     else if (state.offDefState == AutonSelector::OFFENSIVE) {
+        eff.isBlue = true;
         Routes::mogoSideMatchBlue();
     } 
     else if (state.offDefState == AutonSelector::DEFENSIVE) {
+        eff.isBlue = false;
         Routes::mogoSideMatchRed();
     }
 

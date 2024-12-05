@@ -26,7 +26,8 @@ enum Color {
 // I could make this a namespace idk why im making it a class
 class Effectors {
 public:
-    pros::Motor arm;
+    pros::Motor armLeft; // make 2 arm motors
+    pros::Motor armRight;
     pros::Motor intakeMotor;
     pros::Motor conveyorMotor;
 
@@ -40,7 +41,8 @@ public:
 
     bool isClamped;
     std::atomic <IntakeState> intakeActive;
-    
+    std::atomic <bool> isBlue;
+
     pros::ADIDigitalIn limitSwitch;
 
     State currentState;
@@ -51,7 +53,8 @@ public:
     bool boinkerActive;
 
     Effectors () : 
-        arm(17, pros::E_MOTOR_GEAR_200),
+        armLeft(17, pros::E_MOTOR_GEAR_200),
+        armRight(18, pros::E_MOTOR_GEAR_200),
         intakeMotor(13),
         conveyorMotor(1), //changed 12 to 13
         clampPistonLeft('D'),
@@ -66,9 +69,11 @@ public:
         boinkerActive(false),
         intakeActive(IntakeState::INACTIVE),
         currentState(State::IDLE),
-        colorState(Color::noColor)
+        colorState(Color::noColor),
+        isBlue(false)
     {
-        arm.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);  //PRAC code
+        armLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);  //PRAC code
+        armRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     };
     ~Effectors() = default;
 

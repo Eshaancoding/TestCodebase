@@ -8,7 +8,7 @@
 void Effectors::toggleIntakeState (IntakeState ia, bool isConveyor) {
     // outtaking, and we press the outtake button, disable
     // intaking, and we press the intake button, disable
-    // disable, and press button, then it won't satisfy this condition
+    // disable, and press button,sdfsdfsdf then it won't satisfy this condition
     if (this->intakeActive == ia) {
         this->intakeActive = IntakeState::INACTIVE;
     } else {
@@ -24,18 +24,18 @@ void Effectors::intake () {
             rgbVal = colorSensor.get_rgb();
             double encCount = intakeMotor.get_position();
             
-            if (this->colorState == Color::noColor && rgbVal.red >= 200 && rgbVal.green <= 30 && rgbVal.blue <= 30){
+            if (!isBlue.load() && this->colorState == Color::noColor && rgbVal.red >= 200 && rgbVal.green <= 30 && rgbVal.blue <= 30){
                 intakeMotor.set_zero_position(0);
                 this->colorState = Color::red;
-            } else if (this->colorState == Color::red && encCount >= 360){
+            } else if (!isBlue.load() && this->colorState == Color::red && encCount >= 360){
                 intakeMotor.move_voltage(0);
                 pros::delay(500);
                 intakeMotor.move_voltage(300);
                 this->colorState = Color::noColor;
-            } else if (this->colorState == Color::noColor && rgbVal.red <= 30 && rgbVal.green <= 30 && rgbVal.blue >= 200){
+            } else if (isBlue.load() && this->colorState == Color::noColor && rgbVal.red <= 30 && rgbVal.green <= 30 && rgbVal.blue >= 200){
                 intakeMotor.set_zero_position(0);
                 this->colorState = Color::blue;
-            } else if (this->colorState == Color::blue && encCount >= 360){
+            } else if (isBlue.load() && this->colorState == Color::blue && encCount >= 360){
                 intakeMotor.move_voltage(0);
                 this->colorState = Color::noColor;
                 pros::delay(500);
@@ -66,15 +66,18 @@ void Effectors::toggleClamp(){
 }
 
 void Effectors::raiseArm () {
-    arm.move_voltage(8000);
+    armLeft.move_voltage(8000);
+    armRight.move_voltage(-8000);
 }
 
 void Effectors::lowerArm () {
-    arm.move_voltage(-8000);
+    armLeft.move_voltage(-8000);
+    armRight.move_voltage(8000);
 }
 
 void Effectors::stopArm () {
-    arm.move_velocity(0);
+    armLeft.move_velocity(0);
+    armRight.move_velocity(0);
 }
 
 void Effectors::toggleBoinker () {
@@ -100,14 +103,20 @@ void Effectors::changeState () {
 void Effectors::stepArm () {
     // there's no while true loop
     double angle = rotationSensor.get_angle();
-    if (this->currentState == State::isRaising && angle < 30)
-        arm.move_voltage(300);
-    else if (this->currentState == State::hasDonut && angle >= 30)
-        arm.move_voltage(300);
-    else if (this->currentState == State::hasDonut && angle > 170)
-        arm.move_voltage(0);
-    else if (this->currentState == State::IDLE && angle > 0)
-        arm.move_voltage(-300); 
-    else 
-        arm.move_voltage(0);
+    if (this->currentState == State::isRaising && angle < 30){
+        armLeft.move_voltage(300);
+        armRight.move_voltage(-300);
+    } else if (this->currentState == State::hasDonut && angle >= 30){
+        armLeft.move_voltage(300);
+        armRight.move_voltage(-300);
+    } else if (this->currentState == State::hasDonut && angle > 170){
+        armLeft.move_voltage(0);
+        armRight.move_voltage(0);
+    } else if (this->currentState == State::IDLE && angle > 0) {
+        armLeft.move_voltage(-300);
+        armRight.move_voltage(300);
+    } else {
+        armLeft.move_voltage(0);
+        armRight.move_voltage(0);
+    }
 }
