@@ -117,6 +117,8 @@ void opcontrol() {
     bool hasDonut = false;
     Control::printController(0, "Forward");
 
+    Console::printBrain(3, OdomArc::getPos(), "Pos");
+    
     // ================== COAST ================== 
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
