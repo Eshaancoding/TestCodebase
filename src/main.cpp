@@ -101,6 +101,9 @@ void autonomous() {
 // you disabled the factor map thing
 
 void opcontrol() {
+    // Routes::mogoSideMatchBlue();
+    // return;
+
     bool isShooting = false;    
     bool isPTOEnabled = false;
     bool isIntaking = false;
@@ -132,9 +135,8 @@ void opcontrol() {
             Control::printController(0, isReverse ? "Reverse" : "Forward");
         }
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B)) {
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B))
             eff.changeState();
-        }
 
         eff.stepArm();
 
@@ -148,14 +150,6 @@ void opcontrol() {
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_X))
             eff.toggleClamp();           
-
-        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_R1))
-            eff.raiseArm();
-
-        else if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_R2))
-            eff.lowerArm();
-        else
-            eff.stopArm();
 
         // eff.stepOuttake();
 

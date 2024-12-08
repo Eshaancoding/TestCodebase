@@ -5,6 +5,7 @@
 #include "main.h"
 #include "pros/adi.hpp"
 #include "pros/motors.hpp"
+#include "pros/rotation.hpp"
 
 enum IntakeState {
     INTAKE = 0,
@@ -35,7 +36,7 @@ public:
     pros::ADIDigitalOut clampPiston;
     pros::ADIDigitalOut boinkerPiston;
 
-    pros::ADIPotentiometer rotationSensor;
+    pros::Rotation rotationSensor;
     static pros::Optical colorSensor;
 
     bool isClamped;
@@ -52,13 +53,13 @@ public:
     bool boinkerActive;
 
     Effectors () : 
-        armLeft(27, pros::E_MOTOR_GEAR_200),
-        armRight(28, pros::E_MOTOR_GEAR_200),
+        armLeft(6, pros::E_MOTOR_GEAR_200),
+        armRight(15, pros::E_MOTOR_GEAR_200),
         conveyorMotor(1), //changed 12 to 13
         clampPiston('A'),
         boinkerPiston('B'),
         limitSwitch('H'),
-        rotationSensor(22),
+        rotationSensor(19),
         isClamped(false),
         previous_limit(false),
         first_click(false),
@@ -67,6 +68,8 @@ public:
     {
         armLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);  //PRAC code
         armRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        rotationSensor.reset();
+        rotationSensor.reset_position();
     };
     ~Effectors() = default;
 

@@ -118,21 +118,25 @@ void Effectors::changeState () {
 
 void Effectors::stepArm () {
     // there's no while true loop
-    double angle = rotationSensor.get_angle();
-    if (this->currentState == State::isRaising && angle < 30){
-        armLeft.move_voltage(300);
-        armRight.move_voltage(-300);
-    } else if (this->currentState == State::hasDonut && angle >= 30){
-        armLeft.move_voltage(300);
-        armRight.move_voltage(-300);
-    } else if (this->currentState == State::hasDonut && angle > 170){
-        armLeft.move_voltage(0);
-        armRight.move_voltage(0);
-    } else if (this->currentState == State::IDLE && angle > 0) {
-        armLeft.move_voltage(-300);
-        armRight.move_voltage(300);
-    } else {
-        armLeft.move_voltage(0);
-        armRight.move_voltage(0);
-    }
+    const double loadingAngle = 23; 
+    const double dumpAngle = 120; 
+    const double idleAngle = 2;
+
+    const double initRotSensor = 9342;
+
+    double targetAngle = this->currentState == State::isRaising ? loadingAngle : 
+                         this->currentState == State::hasDonut ? dumpAngle :
+                         idleAngle; // if idle
+
+    double angle = ((double)rotationSensor.get_angle() - initRotSensor) / 100;
+    Console::printBrain(9, "rot: %f", angle);
+    Console::printBrain(10, "tar: %f", targetAngle);
+    Console::printBrain(11, "duh: %f", (double)rotationSensor.get_angle());
+
+    double error = (angle - targetAngle)*3.1415926/180;
+    double p = 70;
+
+    armLeft.move_velocity(p * error);
+    armRight.move_velocity(-p * error);
+    Console::printBrain(8, "power: %f", p * error);
 }
