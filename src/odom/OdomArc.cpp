@@ -6,6 +6,7 @@
 #include "parameters.h"
 #include <cmath>
 #include "Console.h"
+#include "pros/rotation.hpp"
 
 #define PI 3.14159265
 #define WHEEL_DIA 2.62
@@ -13,16 +14,16 @@
 // too low distance -->  higher wheel dia
 // too high distance
 
-namespace OdomCustom {
+namespace OdomArc {
     std::atomic<okapi::QAngle> currentAngle = 0_deg;
     std::atomic<okapi::QLength> xPos = 0_in;
     std::atomic<okapi::QLength> yPos = 0_in;
     std::atomic<bool> calibrating;
 
-    pros::ADIEncoder back_track_wheel;
-    pros::ADIEncoder front_track_wheel;
+    pros::Rotation vert_track_wheel (4);
+    pros::Rotation strafe_track_wheel (14);
 
-    okapi::IMU imu (7, okapi::IMUAxes::z); // imu
+    okapi::IMU imu (16, okapi::IMUAxes::z); // imu
 
     double prevEnc = 0.0;
     double offsetEnc = 0.0;
@@ -33,11 +34,11 @@ namespace OdomCustom {
     double prevAng = 0.0;
 
     double distanceGet() {
-        return front_track_wheel.get_value() * ((PI*WHEEL_DIA)/360); // ticks -> inches
+        return vert_track_wheel.get_position() * ((PI*WHEEL_DIA)/360); // ticks -> inches
     }
 
     double distanceb(){
-        return back_track_wheel.get_value() * ((PI*WHEEL_DIA)/360);
+        return strafe_track_wheel.get_position() * ((PI*WHEEL_DIA)/360);
     }
 
     double angleGet () { // in angle
@@ -51,8 +52,8 @@ namespace OdomCustom {
         prevDi = 0;
         prevAng = init_angle.convert(okapi::degree); // ehhh not sure
         prevDib = 0;
-        front_track_wheel.reset();
-        back_track_wheel.reset();
+        strafe_track_wheel.reset();
+        vert_track_wheel.reset();
         calibrating = false;
         offsetEnc = distanceGet();
         offsetEncBack = distanceb();

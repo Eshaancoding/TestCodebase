@@ -18,11 +18,11 @@ void Routes::mogoSideMatchBlue () {
     eff.toggleClamp();
     
     drive.turnRight(62.435_deg);
-    eff.setIntakeState(IntakeState::INTAKE);
+    eff.setIntake(IntakeState::INTAKE);
     drive.goForward(1_tile);
 
     drive.turnRight(185_deg);
     drive.goForward(1.7_tile);
     eff.toggleClamp();
-    eff.setIntakeState(IntakeState::INACTIVE);
+    eff.setIntake(IntakeState::INACTIVE);
 }

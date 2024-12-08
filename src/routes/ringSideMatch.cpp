@@ -15,7 +15,8 @@ void Routes::ringSideMatch () {
     drive.goForward(1.114_tile);
     
     drive.turnRight(135_deg);
-    eff.intakeToggle();
+    // eff.intakeToggle();
+    eff.setIntake(false, true); // should turn off intake
     drive.goForward(1_tile);
     drive.turnRight(63.435_deg);
     drive.goForward(2.236_tile);

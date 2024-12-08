@@ -7,6 +7,7 @@
 #include "drive.h"
 #include "controller.h"
 #include "odom/OdomCustom.h"
+#include "odom/OdomArc.h"
 #include "pros/misc.h"
 #include "routes.h"
 
@@ -27,7 +28,7 @@ AutonSelector::State waitForValidState () {
     // constantly check state change
     while (true) { 
         auto stateCheck = AutonSelector::getState();             
-        auto isCalibrating = OdomCustom::isCalibrating();
+        auto isCalibrating = OdomArc::isCalibrating();
  
         if (stateCheck.status == AutonSelector::SKILL && !isCalibrating) {
             state = stateCheck;
@@ -55,9 +56,9 @@ void initialize() {
     drive.resetToleranceParams();
     eff.armLeft.set_zero_position(0);
     eff.armRight.set_zero_position(0);
-    OdomCustom::init(); 
+    OdomArc::init(); 
 
-    Task task (OdomCustom::MainLoop); // multithreading
+    Task task (OdomArc::MainLoop); // multithreading
     Task colorCheck (Effectors::intake);
 }
 

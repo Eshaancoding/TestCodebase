@@ -4,6 +4,7 @@
 #include "parameters.h"
 #include "main.h"
 #include "pros/adi.hpp"
+#include "pros/motors.hpp"
 
 enum IntakeState {
     INTAKE = 0,
@@ -28,7 +29,7 @@ class Effectors {
 public:
     pros::Motor armLeft; // make 2 arm motors
     pros::Motor armRight;
-    pros::Motor intakeMotor;
+    static pros::Motor intakeMotor;
     pros::Motor conveyorMotor;
 
     pros::ADIDigitalOut clampPistonLeft;
@@ -36,17 +37,16 @@ public:
     pros::ADIDigitalOut boinkerPiston;
 
     pros::ADIPotentiometer rotationSensor;
-    pros::Optical colorSensor;
-    pros::c::optical_rgb_s_t rgbVal;
+    static pros::Optical colorSensor;
 
     bool isClamped;
-    std::atomic <IntakeState> intakeActive;
-    std::atomic <bool> isBlue;
+    static std::atomic <IntakeState> intakeActive;
+    static std::atomic <bool> isBlue;
 
     pros::ADIDigitalIn limitSwitch;
 
     State currentState;
-    Color colorState;
+    static Color colorState;
 
     bool previous_limit;
     bool first_click;
@@ -55,22 +55,17 @@ public:
     Effectors () : 
         armLeft(17, pros::E_MOTOR_GEAR_200),
         armRight(18, pros::E_MOTOR_GEAR_200),
-        intakeMotor(13),
         conveyorMotor(1), //changed 12 to 13
         clampPistonLeft('D'),
         clampPistonRight('A'),
         boinkerPiston('B'),
         limitSwitch('H'),
-        colorSensor(15), // change port
-        rotationSensor(12),
+        rotationSensor(22),
         isClamped(false),
         previous_limit(false),
         first_click(false),
         boinkerActive(false),
-        intakeActive(IntakeState::INACTIVE),
-        currentState(State::IDLE),
-        colorState(Color::noColor),
-        isBlue(false)
+        currentState(State::IDLE)
     {
         armLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);  //PRAC code
         armRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
@@ -80,7 +75,7 @@ public:
     // intake
     void setIntake (bool isReverse=false, bool isOff=false); // SIMPLER version of intake; use this for a   uton
     void toggleIntakeState (IntakeState ia, bool isConveyor=true);
-    void intake (); // our bot isn't colorblind anymore!
+    static void intake (); // our bot isn't colorblind anymore!
 
     //clamp
     void toggleClamp();

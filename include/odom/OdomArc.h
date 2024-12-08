@@ -1,5 +1,5 @@
-#ifndef ODOMCUSTOM_H
-#define ODOMCUSTOM_H
+#ifndef ODOMARC_H
+#define ODOMARC_H
 
 #include "main.h"
 #include "Math.h"
@@ -7,7 +7,7 @@
 #include <iostream>
 using namespace std;
 
-namespace OdomCustom {
+namespace OdomArc {
     void init (QAngle init_angle=0_deg);
     void MainLoop ();
 
@@ -19,6 +19,7 @@ namespace OdomCustom {
     );
     bool isCalibrating ();
     double distanceGet ();
+    double distanceb ();
     double angleGet ();
 };
 

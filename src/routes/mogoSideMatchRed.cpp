@@ -18,7 +18,7 @@ void Routes::mogoSideMatchRed () {
     eff.toggleClamp();
     
     drive.turnLeft(62.435_deg);
-    eff.setIntakeState(IntakeState::INTAKE);
+    eff.setIntake(IntakeState::INTAKE);
     drive.goForward(1_tile);
     pros::delay(200);
     drive.moveArcade(-0.4, 0);
@@ -33,5 +33,5 @@ void Routes::mogoSideMatchRed () {
     pros::delay(500);
     drive.goForward(1.7_tile);
     eff.toggleClamp();
-    eff.setIntakeState(IntakeState::INACTIVE);
+    eff.setIntake(IntakeState::INACTIVE);
 }

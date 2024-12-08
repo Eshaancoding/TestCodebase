@@ -2,7 +2,16 @@
 #include "parameters.h"
 #include "controller.h"
 #include "drive.h"
+#include "pros/optical.hpp"
+#include <atomic>
 #include <cstdarg>
+
+// initailize all static variables
+pros::Motor Effectors::intakeMotor (13);
+pros::Optical Effectors::colorSensor (15);
+std::atomic<IntakeState> Effectors::intakeActive = IntakeState::INACTIVE;
+Color Effectors::colorState = Color::noColor;
+std::atomic<bool> Effectors::isBlue = false;
 
 // INTAKE
 void Effectors::toggleIntakeState (IntakeState ia, bool isConveyor) {
@@ -21,31 +30,31 @@ void Effectors::intake () {
         IntakeState state = intakeActive.load();
         if (state == IntakeState::INTAKE) {
             // once it detects blue, stop conveyor after certain amount of encoder turns so it is at the top of arm
-            rgbVal = colorSensor.get_rgb();
+            pros::c::optical_rgb_s_t rgbVal = colorSensor.get_rgb();
             double encCount = intakeMotor.get_position();
             
-            if (!isBlue.load() && this->colorState == Color::noColor && rgbVal.red >= 200 && rgbVal.green <= 30 && rgbVal.blue <= 30){
+            if (!isBlue.load() && colorState == Color::noColor && rgbVal.red >= 200 && rgbVal.green <= 30 && rgbVal.blue <= 30){
                 intakeMotor.set_zero_position(0);
-                this->colorState = Color::red;
-            } else if (!isBlue.load() && this->colorState == Color::red && encCount >= 360){
+                colorState = Color::red;
+            } else if (!isBlue.load() && colorState == Color::red && encCount >= 360){
                 intakeMotor.move_voltage(0);
                 pros::delay(500);
                 intakeMotor.move_voltage(300);
-                this->colorState = Color::noColor;
-            } else if (isBlue.load() && this->colorState == Color::noColor && rgbVal.red <= 30 && rgbVal.green <= 30 && rgbVal.blue >= 200){
+                colorState = Color::noColor;
+            } else if (isBlue.load() && colorState == Color::noColor && rgbVal.red <= 30 && rgbVal.green <= 30 && rgbVal.blue >= 200){
                 intakeMotor.set_zero_position(0);
-                this->colorState = Color::blue;
-            } else if (isBlue.load() && this->colorState == Color::blue && encCount >= 360){
+                colorState = Color::blue;
+            } else if (isBlue.load() && colorState == Color::blue && encCount >= 360){
                 intakeMotor.move_voltage(0);
-                this->colorState = Color::noColor;
+                colorState = Color::noColor;
                 pros::delay(500);
                 intakeMotor.move_voltage(300);
             }
         } else if (state == IntakeState::OUTTAKE) {
-            this->colorState = Color::noColor;
+            colorState = Color::noColor;
             intakeMotor.move_voltage(-300);
         } else if (state == IntakeState::INACTIVE) {
-            this->colorState = Color::noColor;
+            colorState = Color::noColor;
             intakeMotor.move_voltage(0);
         }
 

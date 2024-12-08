@@ -14,7 +14,7 @@ void lilRoute (bool reverse = false) {
     drive.resetToleranceParams();
 
     eff.toggleClamp(); //clamp on
-    eff.setIntakeState(IntakeState::INTAKE);
+    eff.setIntake(IntakeState::INTAKE);
     drive.goPath({
         Path({0_in, 0_in}),
         Path({0.75_tile, (reverse ? -1 : 1) * -0.5_tile}),
@@ -33,7 +33,7 @@ void lilRoute (bool reverse = false) {
     drive.faceToPoint({0.5_tile, (reverse ? -1 : 1) * -0.5_tile}, true);
     drive.goForward(0.707_tile);
     drive.faceToPoint({1_tile, 0_tile}, true);
-    eff.setIntakeState(IntakeState::INACTIVE);
+    eff.setIntake(IntakeState::INACTIVE);
     
     // drive.goBackward(0.618_tile);
     drive.moveArcade(-0.3, 0);
@@ -46,9 +46,9 @@ void lilRoute (bool reverse = false) {
 
 void Routes::skills () {
     OdomCustom::setPos(0_in, 0_in, 90_deg);
-    eff.setIntakeState(IntakeState::INTAKE); 
+    eff.setIntake(IntakeState::INTAKE); 
     pros::delay(1000);
-    eff.setIntakeState(IntakeState::INACTIVE);
+    eff.setIntake(IntakeState::INACTIVE);
 
     drive.goPath({ // REALLY REALLY REALLY TUNABLE!!!
         Path({0_in, 0_in}),
@@ -60,13 +60,13 @@ void Routes::skills () {
 
     //second part skills auton
     drive.faceToPoint({1.75_tile, 4.5_tile}, true);
-    eff.setIntakeState(IntakeState::INTAKE);
+    eff.setIntake(IntakeState::INTAKE);
 
     drive.setToleranceParams(std::nullopt, std::nullopt, 5_s, std::nullopt);
     drive.goForward(3.822_tile);
     drive.resetToleranceParams();
     pros::delay(500); // going to be intake a disk
-    eff.setIntakeState(IntakeState::INACTIVE);
+    eff.setIntake(IntakeState::INACTIVE);
 
     lilRoute(true);
 
