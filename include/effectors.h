@@ -32,8 +32,7 @@ public:
     static pros::Motor intakeMotor;
     pros::Motor conveyorMotor;
 
-    pros::ADIDigitalOut clampPistonLeft;
-    pros::ADIDigitalOut clampPistonRight;
+    pros::ADIDigitalOut clampPiston;
     pros::ADIDigitalOut boinkerPiston;
 
     pros::ADIPotentiometer rotationSensor;
@@ -53,11 +52,10 @@ public:
     bool boinkerActive;
 
     Effectors () : 
-        armLeft(17, pros::E_MOTOR_GEAR_200),
-        armRight(18, pros::E_MOTOR_GEAR_200),
+        armLeft(27, pros::E_MOTOR_GEAR_200),
+        armRight(28, pros::E_MOTOR_GEAR_200),
         conveyorMotor(1), //changed 12 to 13
-        clampPistonLeft('D'),
-        clampPistonRight('A'),
+        clampPiston('A'),
         boinkerPiston('B'),
         limitSwitch('H'),
         rotationSensor(22),
@@ -74,6 +72,7 @@ public:
 
     // intake
     void setIntake (bool isReverse=false, bool isOff=false); // SIMPLER version of intake; use this for a   uton
+    void setIntake (IntakeState state); // SIMPLER version of intake; use this for a   uton
     void toggleIntakeState (IntakeState ia, bool isConveyor=true);
     static void intake (); // our bot isn't colorblind anymore!
 

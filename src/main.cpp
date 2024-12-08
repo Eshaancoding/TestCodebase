@@ -8,6 +8,7 @@
 #include "controller.h"
 #include "odom/OdomCustom.h"
 #include "odom/OdomArc.h"
+#include "pros/adi.hpp"
 #include "pros/misc.h"
 #include "routes.h"
 
@@ -28,7 +29,7 @@ AutonSelector::State waitForValidState () {
     // constantly check state change
     while (true) { 
         auto stateCheck = AutonSelector::getState();             
-        auto isCalibrating = OdomArc::isCalibrating();
+        auto isCalibrating = OdomCustom::isCalibrating();
  
         if (stateCheck.status == AutonSelector::SKILL && !isCalibrating) {
             state = stateCheck;
@@ -46,7 +47,7 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    AutonSelector::init();
+    // AutonSelector::init();
 
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
     rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
@@ -56,9 +57,9 @@ void initialize() {
     drive.resetToleranceParams();
     eff.armLeft.set_zero_position(0);
     eff.armRight.set_zero_position(0);
-    OdomArc::init(); 
+    OdomCustom::init(); 
 
-    Task task (OdomArc::MainLoop); // multithreading
+    Task task (OdomCustom::MainLoop); // multithreading
     Task colorCheck (Effectors::intake);
 }
 
@@ -66,41 +67,31 @@ void initialize() {
 void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
-    
 
     // drive.goForward(2_tile);
     // drive.turnRight(135_deg);
     // Routes::skills();
     // Routes::qualOffensive();
 
-    AutonSelector::State state = waitForValidState(); 
+    // AutonSelector::State state = waitForValidState(); 
 
     //state.offDefState == AutonSelector::OFFENSIVE; // off=blue, def = red
 
-    if (state.status == AutonSelector::SKILL) {
-        Routes::skills();
-    }
-    else if (state.offDefState == AutonSelector::OFFENSIVE) {
-        eff.isBlue = true;
-        Routes::mogoSideMatchBlue();
-    } 
-    else if (state.offDefState == AutonSelector::DEFENSIVE) {
-        eff.isBlue = false;
-        Routes::mogoSideMatchRed();
-    }
+    // if (state.status == AutonSelector::SKILL) {
+    //     Routes::skills();
+    // }
+    // else if (state.offDefState == AutonSelector::OFFENSIVE) {
+    //     eff.isBlue = true;
+    //     Routes::mogoSideMatchBlue();
+    // } 
+    // else if (state.offDefState == AutonSelector::DEFENSIVE) {
+    //     eff.isBlue = false;
+    //     Routes::mogoSideMatchRed();
+    // }
 
+    // THERE SHOULD BE A RING SIDE BOIII
+    // certain about mogoSideMatchBlue and mogoSideMatchRed
     
-
-    // if (state.status == AutonSelector::SKILL)
-    //     Routes::new_skills();
-    // else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
-    //     Routes::sixBall();
-    // else if (state.elimQualState == AutonSelector::ElimQualState::ELIM && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
-    //     Routes::qualDefensive();
-    // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::DEFENSIVE) 
-    //     Routes::qualDefensive();
-    // else if (state.elimQualState == AutonSelector::ElimQualState::QUAL && state.offDefState == AutonSelector::OffDefState::OFFENSIVE) 
-    //     Routes::qualOffensive();
 
     // drive.goForward(1_tile);
     // drive.turnRight(90_deg);
@@ -117,13 +108,13 @@ void opcontrol() {
     bool hasDonut = false;
     Control::printController(0, "Forward");
 
-    Console::printBrain(3, OdomArc::getPos(), "Pos");
-    
     // ================== COAST ================== 
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
 
     while (true) {
+        Console::printBrain(3, OdomCustom::getPos(), "Pos");
+    
         // ======================== Arcade ======================== 
         double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
         double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);

@@ -4,10 +4,10 @@
 #include "drive.h"
 #include "effectors.h"
 #include "Console.h"
-#include "odom/OdomArc.h"   
+#include "odom/OdomCustom.h"   
 
 void Routes::mogoSideMatchBlue () {
-    OdomArc::setPos(0_in, 0_in, 0_deg); // set our default/initial position
+    OdomCustom::setPos(0_in, 0_in, 0_deg); // set our default/initial position
     eff.toggleClamp();
 
     drive.setToleranceParams(std::nullopt, std::nullopt, 1.5_s, std::nullopt);
@@ -25,4 +25,5 @@ void Routes::mogoSideMatchBlue () {
     drive.goForward(1.7_tile);
     eff.toggleClamp();
     eff.setIntake(IntakeState::INACTIVE);
+    pros::delay(500);
 }

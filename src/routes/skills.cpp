@@ -4,7 +4,7 @@
 #include "drive.h"
 #include "effectors.h"
 #include "Console.h"
-#include "odom/OdomArc.h"   
+#include "odom/OdomCustom.h"   
 
 void lilRoute (bool reverse = false) {
     drive.setToleranceParams(std::nullopt, std::nullopt, 0.8_s, std::nullopt);
@@ -45,7 +45,7 @@ void lilRoute (bool reverse = false) {
 }
 
 void Routes::skills () {
-    OdomArc::setPos(0_in, 0_in, 90_deg);
+    OdomCustom::setPos(0_in, 0_in, 90_deg);
     eff.setIntake(IntakeState::INTAKE); 
     pros::delay(1000);
     eff.setIntake(IntakeState::INACTIVE);

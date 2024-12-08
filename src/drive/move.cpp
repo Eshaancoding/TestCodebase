@@ -10,6 +10,7 @@
 #include "pros/adi.h"
 #include "effectors.h"
 #include "odom/OdomArc.h"
+#include "odom/OdomCustom.h"
 #include "PIDParams.h"
 
 Point add (okapi::OdomState orig, Point p) {
@@ -34,7 +35,7 @@ void Drive::move (
     HeadingPID.reset();
 
     // get starting position
-    okapi::OdomState startingPos = OdomArc::getPos();
+    okapi::OdomState startingPos = OdomCustom::getPos();
 
     // get target position and distance/angle error 
     auto targetPos = isRelative ? add(startingPos, point) : point;
@@ -119,7 +120,7 @@ void Drive::move (
         );
         
         // update error
-        okapi::OdomState newPos = OdomArc::getPos();
+        okapi::OdomState newPos = OdomCustom::getPos();
         distErr = Math::distance(newPos, targetPos);
         if (distErr >= LOOKAHEAD_DIST) distErr = LOOKAHEAD_DIST;
         if (distErr <= -LOOKAHEAD_DIST) distErr = -LOOKAHEAD_DIST;
@@ -130,7 +131,7 @@ void Drive::move (
             Console::printBrain(0, "Dist err: %.3f in Ang err: %.3f deg", distErr.convert(inch), angleErr.convert(degree));
             Console::printBrain(1, "D: %.3f H: %.3f", distancePower, headingPower);
             Console::printBrain(2, targetPos, "Target Pos");
-            Console::printBrain(3, OdomArc::getPos(), "Pos");
+            Console::printBrain(3, OdomCustom::getPos(), "Pos");
         }
 
         // check on if we should stop or not

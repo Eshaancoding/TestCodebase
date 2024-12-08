@@ -56,7 +56,7 @@ extern Effectors eff;
 #define ODOM_DEBUG      true
 
 // tracking wheel ports
-#define LEFT_TRACKING_WHEEL_TOP       'A'
+#define LEFT_TRACKING_WHEEL_TOP       'L'
 #define LEFT_TRACKING_WHEEL_BOTTOM    'B'
 #define RIGHT_TRACKING_WHEEL_TOP      'C'
 #define RIGHT_TRACKING_WHEEL_BOTTOM   'D'

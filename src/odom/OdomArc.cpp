@@ -34,11 +34,11 @@ namespace OdomArc {
     double prevAng = 0.0;
 
     double distanceGet() {
-        return vert_track_wheel.get_position() * ((PI*WHEEL_DIA)/360); // ticks -> inches
+        return vert_track_wheel.get_position() * ((PI*WHEEL_DIA)/3600); // ticks -> inches
     }
 
     double distanceb(){
-        return strafe_track_wheel.get_position() * ((PI*WHEEL_DIA)/360);
+        return strafe_track_wheel.get_position() * ((PI*WHEEL_DIA)/3600);
     }
 
     double angleGet () { // in angle
@@ -52,11 +52,20 @@ namespace OdomArc {
         prevDi = 0;
         prevAng = init_angle.convert(okapi::degree); // ehhh not sure
         prevDib = 0;
-        strafe_track_wheel.reset();
-        vert_track_wheel.reset();
         calibrating = false;
         offsetEnc = distanceGet();
         offsetEncBack = distanceb();
+
+        pros::delay(1000);
+
+        strafe_track_wheel.reset();
+        vert_track_wheel.reset();
+        strafe_track_wheel.reset_position();
+        vert_track_wheel.reset_position();
+
+        xPos = 0_in;
+        yPos = 0_in;
+        currentAngle = init_angle;
     }
 
     /*
@@ -84,16 +93,24 @@ namespace OdomArc {
 
             double radius = Ddi/Dang;
 
+            Console::printBrain(4, "y %f", radius*sin(Dang) + (Ddib/Dang)*(1 - cos(Dang)));
+            Console::printBrain(5, "x %f", radius*(1-cos(Dang)) - (Ddib/Dang)*(sin(Dang)));
+            Console::printBrain(6, "radius: %f", (float)radius);
+            Console::printBrain(7, "IMU: %f", (float)ang);
+            Console::printBrain(8, "Strafe Tracking wheel front: %f", (float)strafe_track_wheel.get_position());
+            Console::printBrain(9, "Vert Tracking wheel front: %f", (float)vert_track_wheel.get_position());
+
             // end goal: find change in x and change in y (and then do that coord system stuff but uh we worry about that later)
             xPos = (xPos.load().convert(okapi::inch) + radius*(1-cos(Dang)) - (Ddib/Dang)*(sin(Dang))) * 1_in;
             yPos = (yPos.load().convert(okapi::inch) + radius*sin(Dang) + (Ddib/Dang)*(1 - cos(Dang))) * 1_in;
+            currentAngle = ang * 1_rad;
 
             prevDi = di;
             prevAng = ang;
             prevDib = dib;
 
             //prevEnc = currentEnc; 
-            pros::delay(25); // test this shit
+            pros::delay(25); 
         }
     }
 

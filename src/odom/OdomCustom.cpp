@@ -8,7 +8,7 @@
 #include "Console.h"
 
 #define PI 3.14159265
-#define WHEEL_DIA 2.62
+#define WHEEL_DIA 2.52
 
 // too low distance -->  higher wheel dia
 // too high distance
@@ -19,7 +19,7 @@ namespace OdomCustom {
     std::atomic<okapi::QLength> yPos = 0_in;
     std::atomic<bool> calibrating;
 
-    okapi::IMU imu (7, okapi::IMUAxes::z);
+    okapi::IMU imu (16, okapi::IMUAxes::z);
     double prevEnc = 0.0;
     double offsetEnc = 0.0;
 
@@ -72,7 +72,7 @@ namespace OdomCustom {
 
             // set previous values
             prevEnc = currentEnc; 
-            pros::delay(25); // test this shit
+            pros::delay(25); 
         }
     }
 

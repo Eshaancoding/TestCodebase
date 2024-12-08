@@ -1,6 +1,7 @@
 #include "drive.h"
 #include "odom/Math.h"
 #include "odom/OdomArc.h"
+#include "odom/OdomCustom.h"
 #include "PIDParams.h"
 
 double sign (double x) {
@@ -95,7 +96,7 @@ void Drive::goPath (
     
     // =============== First convert all points to absolute if relative =============== 
     // and also convert to vector
-    auto current_pos = OdomArc::getPos();
+    auto current_pos = OdomCustom::getPos();
     vector<Path> paths;
 
     for (int i = 0; i < paths_initializer.size(); i++) {
@@ -125,7 +126,7 @@ void Drive::goPath (
     while (mainLoop) {
         iteration++;
         // get current pos
-        current_pos = OdomArc::getPos();
+        current_pos = OdomCustom::getPos();
         current_pos.theta += (isReverse ? 180_deg : 0_deg);
         
         // =============== Set distance/heading/callback ===============

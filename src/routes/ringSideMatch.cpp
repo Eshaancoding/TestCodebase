@@ -4,10 +4,10 @@
 #include "drive.h"
 #include "effectors.h"
 #include "Console.h"
-#include "odom/OdomArc.h"
+#include "odom/OdomCustom.h"
 
 void Routes::ringSideMatch () {
-    OdomArc::setPos(0_in, 0_in, 0_deg); // set our default/initial position
+    OdomCustom::setPos(0_in, 0_in, 0_deg); // set our default/initial position
     drive.goBackward(1.803_tile, {}, {{0.9, [](){
         eff.toggleClamp(); 
     }}});
