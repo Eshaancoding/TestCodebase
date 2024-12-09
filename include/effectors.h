@@ -57,9 +57,9 @@ public:
         armRight(15, pros::E_MOTOR_GEAR_200),
         conveyorMotor(1), //changed 12 to 13
         clampPiston('A'),
-        boinkerPiston('B'),
+        boinkerPiston('C'),
         limitSwitch('H'),
-        rotationSensor(19),
+        rotationSensor(7),
         isClamped(false),
         previous_limit(false),
         first_click(false),

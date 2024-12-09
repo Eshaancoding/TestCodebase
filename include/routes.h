@@ -9,6 +9,8 @@ namespace Routes {
     void ringSideMatch ();   
     void mogoSideMatchBlue ();   
     void mogoSideMatchRed ();
+    void mogoSideMatchBlueElim ();   
+    void mogoSideMatchRedElim ();
     void qualOffensive ();  
     void qualDefensive ();
     void skills ();

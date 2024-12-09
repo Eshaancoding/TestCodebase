@@ -47,7 +47,7 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    // AutonSelector::init();
+    AutonSelector::init();
 
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
     rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
@@ -65,29 +65,27 @@ void initialize() {
 
 // Autonomous Mode
 void autonomous() {
-    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
-    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
+    leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+    rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
 
     // drive.goForward(2_tile);
     // drive.turnRight(135_deg);
     // Routes::skills();
     // Routes::qualOffensive();
 
-    // AutonSelector::State state = waitForValidState(); 
+    AutonSelector::State state = waitForValidState(); 
 
-    //state.offDefState == AutonSelector::OFFENSIVE; // off=blue, def = red
-
-    // if (state.status == AutonSelector::SKILL) {
-    //     Routes::skills();
-    // }
-    // else if (state.offDefState == AutonSelector::OFFENSIVE) {
-    //     eff.isBlue = true;
-    //     Routes::mogoSideMatchBlue();
-    // } 
-    // else if (state.offDefState == AutonSelector::DEFENSIVE) {
-    //     eff.isBlue = false;
-    //     Routes::mogoSideMatchRed();
-    // }
+    if (state.status == AutonSelector::SKILL) {
+        Routes::skills();
+    }
+    else if (state.offDefState == AutonSelector::OFFENSIVE) {
+        eff.isBlue = true;
+        Routes::mogoSideMatchBlueElim();
+    } 
+    else if (state.offDefState == AutonSelector::DEFENSIVE) {
+        eff.isBlue = false;
+        Routes::mogoSideMatchRedElim();
+    }
 
     // THERE SHOULD BE A RING SIDE BOIII
     // certain about mogoSideMatchBlue and mogoSideMatchRed
@@ -116,8 +114,6 @@ void opcontrol() {
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
 
     while (true) {
-        Console::printBrain(3, OdomCustom::getPos(), "Pos");
-    
         // ======================== Arcade ======================== 
         double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
         double distance = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
@@ -130,25 +126,25 @@ void opcontrol() {
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_UP))
             eff.toggleBoinker();
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-            isReverse = !isReverse;
-            Control::printController(0, isReverse ? "Reverse" : "Forward");
-        }
+        // if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+        //     isReverse = !isReverse;
+        //     Control::printController(0, isReverse ? "Reverse" : "Forward");
+        // }
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_B))
-            eff.changeState();
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1))
+            eff.changeState(); // lady brown
 
         eff.stepArm();
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2)){
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1)){
             eff.toggleIntakeState(IntakeState::OUTTAKE);
         }
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1)){
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)){
             eff.toggleIntakeState(IntakeState::INTAKE);
         }
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_X))
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2))
             eff.toggleClamp();           
 
         // eff.stepOuttake();

@@ -57,9 +57,9 @@ extern Effectors eff;
 
 // tracking wheel ports
 #define LEFT_TRACKING_WHEEL_TOP       'L'
-#define LEFT_TRACKING_WHEEL_BOTTOM    'B'
-#define RIGHT_TRACKING_WHEEL_TOP      'C'
-#define RIGHT_TRACKING_WHEEL_BOTTOM   'D'
+#define LEFT_TRACKING_WHEEL_BOTTOM    'L'
+#define RIGHT_TRACKING_WHEEL_TOP      'L'
+#define RIGHT_TRACKING_WHEEL_BOTTOM   'L'
 #define MID_TRACKING_WHEEL_TOP        ' '
 #define MID_TRACKING_WHEEL_BOTTOM     ' '
 

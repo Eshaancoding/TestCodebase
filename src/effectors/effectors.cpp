@@ -129,9 +129,6 @@ void Effectors::stepArm () {
                          idleAngle; // if idle
 
     double angle = ((double)rotationSensor.get_angle() - initRotSensor) / 100;
-    Console::printBrain(9, "rot: %f", angle);
-    Console::printBrain(10, "tar: %f", targetAngle);
-    Console::printBrain(11, "duh: %f", (double)rotationSensor.get_angle());
 
     double error = (angle - targetAngle)*3.1415926/180;
     double p = 70;

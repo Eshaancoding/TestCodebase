@@ -6,7 +6,7 @@
 #include "Console.h"
 #include "odom/OdomCustom.h"   
 
-void Routes::mogoSideMatchRed () {
+void Routes::mogoSideMatchRedElim () {
     OdomCustom::setPos(0_in, 0_in, 0_deg); // set our default/initial position
     eff.toggleClamp();
 
@@ -20,14 +20,9 @@ void Routes::mogoSideMatchRed () {
     drive.turnLeft(61.435_deg);
     eff.setIntake(IntakeState::INTAKE);
     drive.goForward(1.3_tile);
+    pros::delay(2000);
+    drive.goBackward(0.3_tile);
 
-    drive.setToleranceParams(std::nullopt, 1_deg, 2_s, std::nullopt);
-    drive.turnRight(180_deg, {{0, 0.9}});
-    drive.resetToleranceParams();
-
-    pros::delay(500);
-    drive.goForward(2.1_tile);
-    eff.toggleClamp();
-    eff.setIntake(IntakeState::INACTIVE);
-    pros::delay(500);
+    // drive.turnRight(75.435_deg);
+    // drive.goForward(2.7_tile);
 }

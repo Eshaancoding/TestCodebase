@@ -22,7 +22,7 @@ void Routes::mogoSideMatchBlue () {
     drive.goForward(1_tile);
 
     drive.turnRight(185_deg);
-    drive.goForward(1.7_tile);
+    drive.goForward(2.0_tile);
     eff.toggleClamp();
     eff.setIntake(IntakeState::INACTIVE);
     pros::delay(500);
