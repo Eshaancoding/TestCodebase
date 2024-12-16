@@ -88,10 +88,13 @@ namespace OdomArc {
             double dib = distanceb(); // arc length back
             double Ddib = dib - prevDib;
 
-            double ang = angleGet();
-            double Dang = ang - prevAng;
+            double ang = angleGet(); // angle of robot in rad
+            double Dang = ang - prevAng; // delta angle
 
             double radius = Ddi/Dang;
+
+            double xarc = radius*(1-cos(Dang));
+            double yarc = radius*(sin(Dang));
 
             Console::printBrain(4, "y %f", radius*sin(Dang) + (Ddib/Dang)*(1 - cos(Dang)));
             Console::printBrain(5, "x %f", radius*(1-cos(Dang)) - (Ddib/Dang)*(sin(Dang)));
@@ -101,8 +104,9 @@ namespace OdomArc {
             Console::printBrain(9, "Vert Tracking wheel front: %f", (float)vert_track_wheel.get_position());
 
             // end goal: find change in x and change in y (and then do that coord system stuff but uh we worry about that later)
-            xPos = (xPos.load().convert(okapi::inch) + radius*(1-cos(Dang)) - (Ddib/Dang)*(sin(Dang))) * 1_in;
-            yPos = (yPos.load().convert(okapi::inch) + radius*sin(Dang) + (Ddib/Dang)*(1 - cos(Dang))) * 1_in;
+            xPos = (xPos.load().convert(okapi::inch) + xarc*cos(ang) + yarc*(sin(ang))) * 1_in;
+            yPos = (yPos.load().convert(okapi::inch) + (-xarc*cos(ang)) + yarc*cos(ang)) * 1_in;
+
             currentAngle = ang * 1_rad;
 
             prevDi = di;
