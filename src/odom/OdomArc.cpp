@@ -91,21 +91,30 @@ namespace OdomArc {
             double ang = angleGet(); // angle of robot in rad
             double Dang = ang - prevAng; // delta angle
 
-            double radius = Ddi/Dang;
+            double rFront = Ddi/Dang;
+            double rBack = Ddib/Dang;
 
-            double xarc = radius*(1-cos(Dang));
-            double yarc = radius*(sin(Dang));
+            // forward
+            double xarc_f = rFront*(1-cos(Dang));
+            double yarc_f = rFront*(sin(Dang));
 
-            Console::printBrain(4, "y %f", radius*sin(Dang) + (Ddib/Dang)*(1 - cos(Dang)));
-            Console::printBrain(5, "x %f", radius*(1-cos(Dang)) - (Ddib/Dang)*(sin(Dang)));
-            Console::printBrain(6, "radius: %f", (float)radius);
+            // backward
+            double xarc_b = rBack * sin(Dang);
+            double yarc_b = rBack * (1 - cos(Dang));
+
+            Console::printBrain(6, "radius: %f", (float)rFront);
             Console::printBrain(7, "IMU: %f", (float)ang);
             Console::printBrain(8, "Strafe Tracking wheel front: %f", (float)strafe_track_wheel.get_position());
             Console::printBrain(9, "Vert Tracking wheel front: %f", (float)vert_track_wheel.get_position());
 
-            // end goal: find change in x and change in y (and then do that coord system stuff but uh we worry about that later)
+            // add delta x and delta y from front and back tracking wheel together
+            xPos = (xPos.load().convert(okapi::inch) + xarc_f + xarc_b) * 1_in;
+            yPos = (yPos.load().convert(okapi::inch) + yarc_f + yarc_b) * 1_in;
+
+            /* old code w/o back tracking wheel in case something goes horribly wrong
             xPos = (xPos.load().convert(okapi::inch) + xarc*cos(ang) + yarc*(sin(ang))) * 1_in;
             yPos = (yPos.load().convert(okapi::inch) + (-xarc*cos(ang)) + yarc*cos(ang)) * 1_in;
+            */
 
             currentAngle = ang * 1_rad;
 
