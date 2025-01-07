@@ -26,39 +26,36 @@ void Effectors::toggleIntakeState (IntakeState ia, bool isConveyor) {
     }
 }
 
+//colorState = Color::noColor;
+
 void Effectors::intake () { 
     while (true) {
         IntakeState state = intakeActive.load();
+        pros::c::optical_rgb_s_t rgbVal = colorSensor.get_rgb();
+        double encCount = intakeMotor.get_position();
         if (state == IntakeState::INTAKE) {
-            // once it detects blue, stop conveyor after certain amount of encoder turns so it is at the top of arm
-            // pros::c::optical_rgb_s_t rgbVal = colorSensor.get_rgb();
-            // double encCount = intakeMotor.get_position();
-            
-            // if (!isBlue.load() && colorState == Color::noColor && rgbVal.red >= 200 && rgbVal.green <= 30 && rgbVal.blue <= 30){
-            //     intakeMotor.set_zero_position(0);
-            //     colorState = Color::red;
-            // } else if (!isBlue.load() && colorState == Color::red && encCount >= 360){
-            //     intakeMotor.move_voltage(0);
-            //     pros::delay(500);
-            //     intakeMotor.move_voltage(300);
-            //     colorState = Color::noColor;
-            // } else if (isBlue.load() && colorState == Color::noColor && rgbVal.red <= 30 && rgbVal.green <= 30 && rgbVal.blue >= 200){
-            //     intakeMotor.set_zero_position(0);
-            //     colorState = Color::blue;
-            // } else if (isBlue.load() && colorState == Color::blue && encCount >= 360){
-            //     intakeMotor.move_voltage(0);
-            //     colorState = Color::noColor;
-            //     pros::delay(500);
-            //     intakeMotor.move_voltage(300);
-            // }
-            colorState = Color::noColor;
+            if (colorState == Color::noColor){
+                if (!isBlue.load() && rgbVal.red <= 30 && rgbVal.green <= 30 && rgbVal.blue >= 200){ // if blue
+                    colorState == Color::blue;
+                }
+            } else {
+                if (isBlue.load() && colorState == Color::noColor && rgbVal.red <= 30 && rgbVal.green <= 30 && rgbVal.blue >= 200){ // if red
+                    colorState == Color::red;
+                }
+            }
             intakeMotor.move_velocity(-300);
-        } else if (state == IntakeState::OUTTAKE) {
+        } else if (colorState == Color::noColor && state == IntakeState::OUTTAKE) {
             colorState = Color::noColor;
             intakeMotor.move_velocity(300);
-        } else if (state == IntakeState::INACTIVE) {
+        } else if (colorState == Color::noColor && state == IntakeState::INACTIVE) {
             colorState = Color::noColor;
             intakeMotor.move_velocity(0);
+        } else if (colorState != Color::noColor){
+            intakeMotor.move_velocity(-300);
+            pros::delay(500);
+            intakeMotor.move_velocity(0);
+            pros::delay(500);
+            colorState = Color::noColor;
         }
 
         pros::delay(50);
@@ -78,7 +75,6 @@ void Effectors::setIntake (IntakeState state) {
 void Effectors::toggleClamp(){
     isClamped = !isClamped;
     clampPiston.set_value(isClamped);
-    // clampPistonRight.set_value(isClamped);
 }
 
 void Effectors::raiseArm () {

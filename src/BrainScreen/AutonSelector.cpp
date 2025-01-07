@@ -108,8 +108,8 @@ namespace AutonSelector {
     void init () {
         shouldSkill = false;        
 
-        offensiveB = createButton("Left", 25, 25, 100, 50); // top left button
-        defensiveB = createButton("Right", 150, 25, 100, 50); // top right button
+        offensiveB = createButton("Blue", 25, 25, 100, 50); // top left button
+        defensiveB = createButton("Red", 150, 25, 100, 50); // top right button
         elimB = createButton("N/A", 25, 100, 100, 50); // middle left button 
         qualB = createButton("N/A", 150, 100, 100, 50); // middle right button 
         skillB = createButton("Skills", 25, 175, 225, 50); // very bottom wide button
