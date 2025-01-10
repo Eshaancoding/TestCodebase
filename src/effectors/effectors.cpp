@@ -59,18 +59,10 @@ void Effectors::intake () {
             else {
                 intakeMotor.move_velocity(300);
             }
-
-            Console::printBrain(0, "INTAKE!");
-            Console::printBrain(1, (int)is_blue, "is blue: ");
-            Console::printBrain(2, hue, "Hue: ");
-            
-
         } else if (state == IntakeState::OUTTAKE) {
             intakeMotor.move_velocity(-300);
-            Console::printBrain(0, "OUTTAKE!");
         } else if (state == IntakeState::INACTIVE) {
             intakeMotor.move_velocity(0);
-            Console::printBrain(0, "INACTIVE!");
         }
 
         pros::delay(50);

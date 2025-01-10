@@ -9,7 +9,7 @@
 #include "pros/rotation.hpp"
 
 #define PI 3.14159265
-#define WHEEL_DIA 2.62
+#define WHEEL_DIA 2.715
 
 // too low distance -->  higher wheel dia
 // too high distance
@@ -20,10 +20,10 @@ namespace OdomArc {
     std::atomic<okapi::QLength> yPos = 0_in;
     std::atomic<bool> calibrating;
 
-    pros::Rotation vert_track_wheel (4);
+    pros::Rotation vert_track_wheel (8);
     pros::Rotation strafe_track_wheel (14);
 
-    okapi::IMU imu (16, okapi::IMUAxes::z); // imu
+    okapi::IMU imu (12, okapi::IMUAxes::z); // imu
 
     double prevEnc = 0.0;
     double offsetEnc = 0.0;
@@ -34,11 +34,11 @@ namespace OdomArc {
     double prevAng = 0.0;
 
     double distanceGet() {
-        return vert_track_wheel.get_position() * ((PI*WHEEL_DIA)/3600); // ticks -> inches
+        return -vert_track_wheel.get_position() * ((PI*WHEEL_DIA)/36000); // ticks -> inches
     }
 
     double distanceb(){
-        return strafe_track_wheel.get_position() * ((PI*WHEEL_DIA)/3600);
+        return strafe_track_wheel.get_position() * ((PI*WHEEL_DIA)/36000);
     }
 
     double angleGet () { // in angle
@@ -50,7 +50,7 @@ namespace OdomArc {
         imu.calibrate();
         imu.reset(init_angle.convert(okapi::degree));
         prevDi = 0;
-        prevAng = init_angle.convert(okapi::degree); // ehhh not sure
+        prevAng = init_angle.convert(okapi::radian); // ehhh not sure
         prevDib = 0;
         calibrating = false;
         offsetEnc = distanceGet();
@@ -102,14 +102,15 @@ namespace OdomArc {
             double xarc_b = rBack * sin(Dang);
             double yarc_b = rBack * (1 - cos(Dang));
 
-            Console::printBrain(6, "radius: %f", (float)rFront);
-            Console::printBrain(7, "IMU: %f", (float)ang);
-            Console::printBrain(8, "Strafe Tracking wheel front: %f", (float)strafe_track_wheel.get_position());
-            Console::printBrain(9, "Vert Tracking wheel front: %f", (float)vert_track_wheel.get_position());
+            Console::printBrain(4, "x: %f y: %f ang: %f",(float)xPos.load().convert(okapi::tile), (float)yPos.load().convert(okapi::tile), ang * 180/PI);
+            Console::printBrain(5, "xarc_f: %f", (float)xarc_f);
+            Console::printBrain(6, "yarc_f: %f", (float)yarc_f);
+            Console::printBrain(7, "di: %f IMU: %f", (float)di, (float)ang);
+            Console::printBrain(8, "Vert Tracking wheel front: %f", (float)vert_track_wheel.get_position());
 
             // add delta x and delta y from front and back tracking wheel together
-            xPos = (xPos.load().convert(okapi::inch) + xarc_f + xarc_b) * 1_in;
-            yPos = (yPos.load().convert(okapi::inch) + yarc_f + yarc_b) * 1_in;
+            xPos = (xPos.load().convert(okapi::inch) + xarc_f*cos(ang) + yarc_f*(sin(ang))) * 1_in;
+            yPos = (yPos.load().convert(okapi::inch) + (-xarc_f*cos(ang)) + yarc_f*cos(ang)) * 1_in;
 
             /* old code w/o back tracking wheel in case something goes horribly wrong
             xPos = (xPos.load().convert(okapi::inch) + xarc*cos(ang) + yarc*(sin(ang))) * 1_in;
