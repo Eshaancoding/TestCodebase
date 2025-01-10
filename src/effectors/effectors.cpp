@@ -3,12 +3,13 @@
 #include "parameters.h"
 #include "controller.h"
 #include "drive.h"
+#include "pros/motors.h"
 #include "pros/optical.hpp"
 #include <atomic>
 #include <cstdarg>
 
 // initailize all static variables
-pros::Motor Effectors::intakeMotor (10);
+pros::Motor Effectors::intakeMotor (10, MOTOR_GEAR_BLUE);
 pros::Optical Effectors::colorSensor (9);
 std::atomic<IntakeState> Effectors::intakeActive = IntakeState::INACTIVE;
 Color Effectors::colorState = Color::noColor;
@@ -35,32 +36,43 @@ void Effectors::intake () {
     while (true) {
         IntakeState state = intakeActive.load();
         const bool is_blue = isBlue.load(); // ===== By default: false ======
+        double hue = colorSensor.get_hue();
+        double blue = colorSensor.get_rgb().blue;
+        double red = colorSensor.get_rgb().red;
+        double green = colorSensor.get_rgb().green;
+        Console::printBrain(0, hue, "hue");
+        Console::printBrain(1, red, "red");
+        Console::printBrain(2, green, "green");
+        Console::printBrain(3, blue, "blue");
         
         if (state == IntakeState::INTAKE) {
             // once it detects blue, stop conveyor after certain amount of encoder turns so it is at the top of arm
-            double hue = colorSensor.get_hue();
             
+            /*
             // First condition: we on red side; hue < 10 means detech red
-            if (is_blue && hue < 30) { 
-                pros::delay(firstDelay);
-                intakeMotor.move_velocity(0);
-                pros::delay(secondDelay );
-                intakeMotor.move_velocity(300);
-            }
-            
-            // First condition: we on blue side; hue > 120 means detech blue
-            else if (!is_blue && hue > 43) {
+            if (is_blue && hue < 10) { 
                 pros::delay(firstDelay);
                 intakeMotor.move_velocity(0);
                 pros::delay(secondDelay);
-                intakeMotor.move_velocity(300);
+                intakeMotor.move_velocity(600);
+            }
+            
+            // First condition: we on blue side; hue > 120 means detech blue
+            else if (!is_blue && hue > 120) {
+                pros::delay(firstDelay);
+                intakeMotor.move_velocity(0);
+                pros::delay(secondDelay);
+                intakeMotor.move_velocity(600);
             } 
             
             else {
-                intakeMotor.move_velocity(300);
+                intakeMotor.move_velocity(600);
             }
+            */
+            intakeMotor.move_velocity(600);
+
         } else if (state == IntakeState::OUTTAKE) {
-            intakeMotor.move_velocity(-300);
+            intakeMotor.move_velocity(-600);
         } else if (state == IntakeState::INACTIVE) {
             intakeMotor.move_velocity(0);
         }

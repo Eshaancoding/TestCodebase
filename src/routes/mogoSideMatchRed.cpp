@@ -4,30 +4,29 @@
 #include "drive.h"
 #include "effectors.h"
 #include "Console.h"
-#include "odom/OdomCustom.h"   
+#include "odom/OdomArc.h"   
 
 void Routes::mogoSideMatchRed () {
-    OdomCustom::setPos(0_in, 0_in, 0_deg); // set our default/initial position
+    OdomArc::setPos(0_in, 0_in, 0_deg); // set our default/initial position
     eff.toggleClamp();
 
     drive.setToleranceParams(std::nullopt, std::nullopt, 1.5_s, std::nullopt);
-    drive.goBackward(1.65_tile, {}, {{0.8, [](){
-        // eff.toggleClamp();
-        printf("Clamped!\n");
-    }}});
+    drive.goBackward(1.65_tile, {}, {});
     eff.toggleClamp();
+    drive.goForward(0.25_tile);
     
-    drive.turnLeft(61.435_deg);
+    drive.turnLeft(90_deg);
     eff.setIntake(IntakeState::INTAKE);
     drive.goForward(1.3_tile);
 
-    drive.setToleranceParams(std::nullopt, 1_deg, 2_s, std::nullopt);
-    drive.turnRight(180_deg, {{0, 0.9}});
-    drive.resetToleranceParams();
+    drive.turnLeft(135_deg);
 
     pros::delay(500);
-    drive.goForward(2.1_tile);
+    drive.goForward(3_tile);
     eff.toggleClamp();
     eff.setIntake(IntakeState::INACTIVE);
-    pros::delay(500);
+
+    drive.turnRight(65_deg);
+    drive.goBackward(1_tile);
+    
 }

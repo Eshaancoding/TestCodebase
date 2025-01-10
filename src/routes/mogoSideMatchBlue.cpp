@@ -7,23 +7,27 @@
 #include "odom/OdomArc.h"   
 
 void Routes::mogoSideMatchBlue () {
+    eff.isBlue = true;
+
     OdomArc::setPos(0_in, 0_in, 0_deg); // set our default/initial position
+
+    drive.goBackward(1.65_tile, {}, {});
     eff.toggleClamp();
+    drive.goForward(0.35_tile);
+    
+    drive.setToleranceParams(std::nullopt, std::nullopt, 1_s, std::nullopt);
+    drive.turnRight(90_deg);
+    drive.resetToleranceParams();
+
+    eff.setIntake(IntakeState::INTAKE);
+    drive.goForward(1.3_tile);
 
     drive.setToleranceParams(std::nullopt, std::nullopt, 1.5_s, std::nullopt);
-    drive.goBackward(1.65_tile, {}, {{0.8, [](){
-        // eff.toggleClamp();
-        printf("Clamped!\n");
-    }}});
-    eff.toggleClamp();
-    
-    drive.turnRight(62.435_deg);
-    eff.setIntake(IntakeState::INTAKE);
-    drive.goForward(1_tile);
+    drive.turnLeft(180_deg);
+    drive.resetToleranceParams();
 
-    drive.turnRight(185_deg);
-    drive.goForward(2.0_tile);
     eff.toggleClamp();
     eff.setIntake(IntakeState::INACTIVE);
-    pros::delay(500);
+
+    drive.goForward(1.6_tile);
 }

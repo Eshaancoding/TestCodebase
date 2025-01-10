@@ -13,7 +13,9 @@ namespace Routes {
     void mogoSideMatchRedElim ();
     void qualOffensive ();  
     void qualDefensive ();
+    void ringSideRed ();
     void skills ();
+    void AWPRed ();
 };
 
 #endif
