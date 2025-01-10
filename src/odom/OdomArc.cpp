@@ -102,11 +102,13 @@ namespace OdomArc {
             double xarc_b = rBack * sin(Dang);
             double yarc_b = rBack * (1 - cos(Dang));
 
-            Console::printBrain(4, "x: %f y: %f ang: %f",(float)xPos.load().convert(okapi::tile), (float)yPos.load().convert(okapi::tile), ang * 180/PI);
-            Console::printBrain(5, "xarc_f: %f", (float)xarc_f);
-            Console::printBrain(6, "yarc_f: %f", (float)yarc_f);
-            Console::printBrain(7, "di: %f IMU: %f", (float)di, (float)ang);
-            Console::printBrain(8, "Vert Tracking wheel front: %f", (float)vert_track_wheel.get_position());
+            if (false) { // set true to debug
+                Console::printBrain(4, "x: %f y: %f ang: %f",(float)xPos.load().convert(okapi::tile), (float)yPos.load().convert(okapi::tile), ang * 180/PI);
+                Console::printBrain(5, "xarc_f: %f", (float)xarc_f);
+                Console::printBrain(6, "yarc_f: %f", (float)yarc_f);
+                Console::printBrain(7, "di: %f IMU: %f", (float)di, (float)ang);
+                Console::printBrain(8, "Vert Tracking wheel front: %f", (float)vert_track_wheel.get_position());
+            }
 
             // add delta x and delta y from front and back tracking wheel together
             xPos = (xPos.load().convert(okapi::inch) + xarc_f*cos(ang) + yarc_f*(sin(ang))) * 1_in;

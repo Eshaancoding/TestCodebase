@@ -29,7 +29,7 @@ AutonSelector::State waitForValidState () {
     // constantly check state change
     while (true) { 
         auto stateCheck = AutonSelector::getState();             
-        auto isCalibrating = OdomCustom::isCalibrating();
+        auto isCalibrating = OdomArc::isCalibrating();
  
         if (stateCheck.status == AutonSelector::SKILL && !isCalibrating) {
             state = stateCheck;
@@ -70,32 +70,24 @@ void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
 
-    // drive.goForward(2_tile);
-    // drive.turnRight(135_deg);
-    // Routes::skills();
-    // Routes::qualOffensive();
+    drive.goForward(1_tile);
 
-    AutonSelector::State state = waitForValidState(); 
+    // AutonSelector::State state = waitForValidState(); 
 
-    if (state.status == AutonSelector::SKILL) {
-        Routes::skills();
-    }
-    else if (state.offDefState == AutonSelector::OFFENSIVE) {
-        eff.isBlue = true;
-        Routes::mogoSideMatchBlueElim();
-    } 
-    else if (state.offDefState == AutonSelector::DEFENSIVE) {
-        eff.isBlue = false;
-        Routes::mogoSideMatchRedElim();
-    }
+    // if (state.status == AutonSelector::SKILL) {
+    //     Routes::skills();
+    // }
+    // else if (state.offDefState == AutonSelector::OFFENSIVE) {
+    //     eff.isBlue = true;
+    //     Routes::mogoSideMatchBlueElim();
+    // } 
+    // else if (state.offDefState == AutonSelector::DEFENSIVE) {
+    //     eff.isBlue = false;
+    //     Routes::mogoSideMatchRedElim();
+    // }
 
-    // THERE SHOULD BE A RING SIDE BOIII
-    // certain about mogoSideMatchBlue and mogoSideMatchRed
     
 
-    // drive.goForward(1_tile);
-    // drive.turnRight(90_deg);
-    // drive.goBackward(1_tile);
 };
 
 // you disabled the factor map thing

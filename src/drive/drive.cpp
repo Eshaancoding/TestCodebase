@@ -7,7 +7,6 @@
 #include "parameters.h"
 #include "odom/OdomArc.h"
 #include "odom/OdomCustom.h"
-#include "PIDParams.h"
 
 // basically we define a bunch of functions that just wraps around the moveToPoint function
 
@@ -17,14 +16,14 @@ void Drive::goForward (
     std::map<double, std::function<void()>> callbackMap
 ) {
     // get starting position and then offset
-    okapi::OdomState startingPos = OdomCustom::getPos();
+    okapi::OdomState startingPos = OdomArc::getPos();
     Point absolute = Math::findPointOffset(startingPos, distance);
 
     // convert from factor map to multiple of factor map cause not doing so is cringe
     double last_interest = 0;
     map<double, pair<double, double>> map;
     for (auto i : factorMap) {
-        map[i.first] = {i.second, Heading_FACTOR}; 
+        map[i.first] = {i.second, 1}; 
         last_interest = i.second;
     }
 
@@ -54,7 +53,7 @@ void Drive::turnRight (
     std::map<double, double> factorMap,
     std::map<double, std::function<void()>> callbackMap
 ) {
-    okapi::OdomState startingPos = OdomCustom::getPos();
+    okapi::OdomState startingPos = OdomArc::getPos();
     Point absolute = Math::findPointOffset({startingPos.x, startingPos.y, startingPos.theta + ang}, 20_tile);
 
     // convert from factor map to multiple of factor map cause thats cringe
@@ -82,7 +81,7 @@ void Drive::faceToPoint (
 ) {
     map<double, pair<double, double>> map;
     for (auto i : factorMap) {
-        map[i.first] = {Distance_FACTOR, i.second};
+        map[i.first] = {1, i.second};
     }
 
     move(point, isRelative, true, false, true, map, callbackMap);
@@ -98,7 +97,7 @@ void Drive::goToPoint (
     // convert from factor map to multiple of factor map cause not doing so is cringe
     map<double, pair<double, double>> map;
     for (auto i : factorMap) {
-        map[i.first] = {i.second, Heading_FACTOR}; 
+        map[i.first] = {i.second, 1}; 
     }
 
     // wait... this is weird we are activating heading too!
