@@ -2,7 +2,7 @@
 #define PIDPARAM
 
 // distance (forward/backward)
-#define Distance_P           0.053
+#define Distance_P           0.043
 #define Distance_I           0
 #define Distance_D           0.043
 #define Distance_MAXPOWER    0.6
@@ -22,7 +22,7 @@
 #define Heading_MINERRDISI   0.25 // min error to disable I, NOT NEEDED IF I = 0 
 
 // default parameters for pure pursuit
-#define LOOKAHEAD_DIST 0.3_tile // adjust in drive.h again
+#define LOOKAHEAD_DIST 0.5_tile // adjust in drive.h again
 
 // Take a look at parameters.h for Distance, Angle, and Time Tolerance
 #define DISTANCE_TOLERANCE 0.5_in 
