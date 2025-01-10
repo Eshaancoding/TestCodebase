@@ -6,13 +6,7 @@
 
 namespace Routes {
     void test (); // test function
-    void ringSideMatch ();   
-    void mogoSideMatchBlue ();   
-    void mogoSideMatchRed ();
-    void mogoSideMatchBlueElim ();   
-    void mogoSideMatchRedElim ();
-    void qualOffensive ();  
-    void qualDefensive ();
+    void mogoSideRed();  
     void ringSideRed ();
     void skills ();
     void AWPRed ();

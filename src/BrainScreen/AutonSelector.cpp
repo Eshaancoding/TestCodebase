@@ -99,7 +99,7 @@ namespace AutonSelector {
     State getState () { 
         return {
             isElim ? ELIM : QUAL, 
-            isOffensive ? OFFENSIVE : DEFENSIVE, 
+            isOffensive ? BLUE : RED, 
             !isDonePrompt ? NOTREADY : 
             shouldSkill ? SKILL : ROUTE
         };

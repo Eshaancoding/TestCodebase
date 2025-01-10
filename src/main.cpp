@@ -69,6 +69,7 @@ void initialize() {
 void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+    
 
     Routes::ringSideRed();
     // drive.turnRight(90_deg);
@@ -77,16 +78,14 @@ void autonomous() {
     // if (state.status == AutonSelector::SKILL) {
     //     Routes::skills();
     // }
-    // else if (state.offDefState == AutonSelector::OFFENSIVE) {
+    // else if (state.offDefState == AutonSelector::BLUE) {
     //     eff.isBlue = true;
-    //     Routes::mogoSideMatchBlueElim();
+    //     Routes::mogoSide();
     // } 
-    // else if (state.offDefState == AutonSelector::DEFENSIVE) {
+    // else if (state.offDefState == AutonSelector::RED) {
     //     eff.isBlue = false;
     //     Routes::mogoSideMatchRedElim();
-    // }
-
-    
+    // }  
 
 };
 
@@ -101,7 +100,6 @@ void opcontrol() {
     bool isIntaking = false;
     bool isReverse = false;
     bool hasDonut = false;
-    Control::printController(0, "Forward");
 
     // ================== COAST ================== 
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
@@ -116,6 +114,16 @@ void opcontrol() {
         // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
         drive.moveArcade((isReverse ? -distance : distance) * 0.8, heading * 0.8);
+
+
+        // color
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT)){
+            eff.seeColor = !eff.seeColor;
+            if (eff.seeColor)
+                Control::printController(0, "Color Sensor Activated");
+            else
+                Control::printController(0, "Color Sensor Deactivated");
+        }
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_UP))
             eff.toggleBoinker();

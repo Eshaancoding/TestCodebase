@@ -42,6 +42,7 @@ public:
     bool isClamped;
     static std::atomic <IntakeState> intakeActive;
     static std::atomic <bool> isBlue;
+    static std::atomic <bool> seeColor;
 
     pros::ADIDigitalIn limitSwitch;
 
