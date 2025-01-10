@@ -31,15 +31,16 @@ void Effectors::toggleIntakeState (IntakeState ia, bool isConveyor) {
 void Effectors::intake () { 
     while (true) {
         IntakeState state = intakeActive.load();
-        pros::c::optical_rgb_s_t rgbVal = colorSensor.get_rgb();
+        double hueVal = colorSensor.get_hue();
         double encCount = intakeMotor.get_position();
         if (state == IntakeState::INTAKE) {
             if (colorState == Color::noColor){
-                if (!isBlue.load() && rgbVal.red <= 30 && rgbVal.green <= 30 && rgbVal.blue >= 200){ // if blue
+                // light intensity, normal is 40; red: under 20; blue: over 90 light intensity
+                if (!isBlue.load() && (hueVal >= 90)){ // if blue
                     colorState == Color::blue;
                 }
             } else {
-                if (isBlue.load() && colorState == Color::noColor && rgbVal.red <= 30 && rgbVal.green <= 30 && rgbVal.blue >= 200){ // if red
+                if (isBlue.load() && colorState == Color::noColor && hueVal <= 20){ // if red
                     colorState == Color::red;
                 }
             }
