@@ -55,7 +55,7 @@ public:
 
     Effectors () : 
         //armLeft(6, pros::E_MOTOR_GEAR_200),
-        armRight(15, pros::E_MOTOR_GEAR_100),
+        armRight(16, pros::E_MOTOR_GEAR_100),
         conveyorMotor(1), //changed 12 to 13
         clampPiston('A'),
         boinkerPiston('C'),

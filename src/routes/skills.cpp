@@ -36,6 +36,11 @@ void lilRoute (bool reverse = false) {
 
     pros::delay(500);
 
+    drive.moveArcade(-0.2, 0);
+    pros::delay(300);
+    drive.moveArcade(0, 0);
+
+
     drive.faceToPoint({50_tile, (reverse ? -1 : 1) * -70_tile}, true);
 
     drive.goForward(0.7_tile);
@@ -73,10 +78,10 @@ void Routes::skills () {
     drive.turnRight(45_deg);
     
     eff.setIntake(IntakeState::INTAKE);
-    drive.goForward(0.8_tile);
+    drive.goForward(1.3_tile);
     eff.setIntake(IntakeState::INACTIVE);
-    pros::delay(300);
     drive.goBackward(0.2_tile);
+    pros::delay(300);
 
     lilRoute(true);
 
