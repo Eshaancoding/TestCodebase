@@ -6,8 +6,8 @@
 
 namespace Routes {
     void test (); // test function
-    void mogoSideRed();  
-    void ringSideRed ();
+    void mogoSide ();  
+    void ringSide ();
     void skills ();
     void AWPRed ();
 };

@@ -110,8 +110,8 @@ namespace AutonSelector {
 
         offensiveB = createButton("Blue", 25, 25, 100, 50); // top left button
         defensiveB = createButton("Red", 150, 25, 100, 50); // top right button
-        elimB = createButton("N/A", 25, 100, 100, 50); // middle left button 
-        qualB = createButton("N/A", 150, 100, 100, 50); // middle right button 
+        elimB = createButton("Mogo", 25, 100, 100, 50); // middle left button 
+        qualB = createButton("Ring", 150, 100, 100, 50); // middle right button 
         skillB = createButton("Skills", 25, 175, 225, 50); // very bottom wide button
         goButton = createButton("Confirm", 270, 175, 190, 50, false); // submit button on the right
 

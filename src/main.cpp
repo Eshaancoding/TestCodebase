@@ -47,7 +47,7 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    // AutonSelector::init();
+    AutonSelector::init();
 
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
     rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
@@ -72,21 +72,25 @@ void autonomous() {
     
     eff.seeColor = false;
 
-    Routes::skills();
     // drive.turnRight(90_deg);
-    // AutonSelector::State state = waitForValidState(); 
+    AutonSelector::State state = waitForValidState(); 
 
-    // if (state.status == AutonSelector::SKILL) {
-    //     Routes::skills();
-    // }
-    // else if (state.offDefState == AutonSelector::BLUE) {
-    //     eff.isBlue = true;
-    //     Routes::mogoSide();
-    // } 
-    // else if (state.offDefState == AutonSelector::RED) {
-    //     eff.isBlue = false;
-    //     Routes::mogoSideMatchRedElim();
-    // }  
+    if (state.status == AutonSelector::SKILL) {
+        Routes::skills();
+    }
+    else if (state.offDefState == AutonSelector::BLUE) {
+        eff.isBlue = true;
+    } 
+    else if (state.offDefState == AutonSelector::RED) {
+        eff.isBlue = false;
+    }  
+
+    if (state.elimQualState == AutonSelector::QUAL) {
+        Routes::ringSide(); 
+    } 
+    else if (state.elimQualState == AutonSelector::ELIM) {
+        Routes::mogoSide();
+    }
 
 };
 

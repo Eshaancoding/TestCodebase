@@ -42,10 +42,10 @@ void Effectors::intake () {
         double blue = colorSensor.get_rgb().blue;
         double red = colorSensor.get_rgb().red;
         double green = colorSensor.get_rgb().green;
-        Console::printBrain(0, hue, "hue");
-        Console::printBrain(1, red, "red");
-        Console::printBrain(2, green, "green");
-        Console::printBrain(3, blue, "blue");
+        // Console::printBrain(0, hue, "hue");
+        // Console::printBrain(1, red, "red");
+        // Console::printBrain(2, green, "green");
+        // Console::printBrain(3, blue, "blue");
         
         if (!see_color && state == IntakeState::INTAKE) {
             intakeMotor.move_velocity(600);
@@ -133,7 +133,7 @@ void Effectors::stepArm () {
     // there's no while true loop; ALL OF THESE PARAMS TUNING
     const double loadingAngle = 18; 
     const double dumpAngle = 135; 
-    const double idleAngle = 5;
+    const double idleAngle = 1.5;
     const double initRotSensor = 0;
     // one button for motor up one button for motor down
 
@@ -144,7 +144,7 @@ void Effectors::stepArm () {
     double angle = ((double)-rotationSensor.get_angle() / 100) + 296;
 
     double error = (angle - targetAngle)*3.1415926/180; // convert to radians
-    double p = -30;
+    double p = -25;
 
     Console::printBrain(6, "Rot sensor: %f", (double)-rotationSensor.get_angle() / 100);
     Console::printBrain(7, "angle: %f", angle);

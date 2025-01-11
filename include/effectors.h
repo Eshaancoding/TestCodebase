@@ -19,6 +19,13 @@ enum State {
     IDLE
 };
 
+enum ArmState {
+    PID_ARM,
+    Raising,
+    IDLE_ARM,
+    Lowering
+};
+
 enum Color {
     noColor,
     blue,
@@ -38,6 +45,8 @@ public:
 
     pros::Rotation rotationSensor;
     static pros::Optical colorSensor;
+
+    ArmState arm_state;    
 
     bool isClamped;
     static std::atomic <IntakeState> intakeActive;

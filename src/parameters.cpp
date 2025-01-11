@@ -4,6 +4,7 @@
 #include "effectors.h"
 #include "pros/motors.h"
 #include "main.h"
+#include "pid.h"
 
 PID DistancePID = PID(
     Distance_P,   

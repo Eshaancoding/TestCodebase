@@ -6,8 +6,7 @@
 #include "Console.h"
 #include "odom/OdomArc.h"   
 
-void Routes::ringSideRed () {
-    eff.isBlue = false;
+void Routes::ringSide () {
     OdomArc::setPos(0_in, 0_in, 0_deg); // set our default/initial position
 
     drive.goBackward(1.55_tile, {}, {});
