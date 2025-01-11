@@ -78,20 +78,21 @@ void autonomous() {
     if (state.status == AutonSelector::SKILL) {
         Routes::skills();
     }
-    else if (state.offDefState == AutonSelector::BLUE) {
-        eff.isBlue = true;
-    } 
-    else if (state.offDefState == AutonSelector::RED) {
-        eff.isBlue = false;
-    }  
+    else {
+        if (state.offDefState == AutonSelector::BLUE) {
+            eff.isBlue = true;
+        } 
+        else if (state.offDefState == AutonSelector::RED) {
+            eff.isBlue = false;
+        } 
 
-    if (state.elimQualState == AutonSelector::QUAL) {
-        Routes::ringSide(); 
-    } 
-    else if (state.elimQualState == AutonSelector::ELIM) {
-        Routes::mogoSide();
+        if (state.elimQualState == AutonSelector::QUAL) {
+            Routes::ringSide(); 
+        } 
+        else if (state.elimQualState == AutonSelector::ELIM) {
+            Routes::mogoSide();
+        }
     }
-
 };
 
 // you disabled the factor map thing
@@ -142,8 +143,23 @@ void opcontrol() {
 
         
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1))
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1)) {
+            eff.arm_state = ArmState::PID_ARM;
             eff.changeState(); // lady brown
+        }
+
+        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+            eff.arm_state = ArmState::Raising_ARM;
+        } 
+        else if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_B)) {
+            eff.arm_state = ArmState::Lowering_ARM; // this is reversed kinda
+        }
+        else {
+            if (eff.arm_state != ArmState::PID_ARM) { // only do this after raising and lowering
+                eff.arm_state = ArmState::IDLE_ARM; 
+            }
+        }
+
         eff.stepArm();
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1)){

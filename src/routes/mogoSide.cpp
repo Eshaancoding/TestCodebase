@@ -10,9 +10,9 @@ void Routes::mogoSide () {
 
     OdomArc::setPos(0_in, 0_in, 0_deg); // set our default/initial position
 
-    drive.goBackward(1.55_tile, {}, {});
+    drive.goBackward(1.6_tile, {}, {});
     eff.toggleClamp();
-    drive.goForward(0.25_tile); // grab mogo
+    drive.goForward(0.3_tile); // grab mogo
     
     drive.setToleranceParams(std::nullopt, std::nullopt, 1_s, std::nullopt);
     eff.isBlue.load() ? drive.turnRight(90_deg) : drive.turnLeft(90_deg);

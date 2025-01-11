@@ -21,9 +21,9 @@ enum State {
 
 enum ArmState {
     PID_ARM,
-    Raising,
+    Raising_ARM,
     IDLE_ARM,
-    Lowering
+    Lowering_ARM
 };
 
 enum Color {
@@ -74,7 +74,8 @@ public:
         previous_limit(false),
         first_click(false),
         boinkerActive(false),
-        currentState(State::IDLE)
+        currentState(State::IDLE),
+        arm_state(ArmState::PID_ARM)
     {
         //armLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);  //PRAC code
         armRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
