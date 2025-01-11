@@ -70,6 +70,7 @@ void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     
+    eff.seeColor = false;
 
     Routes::skills();
     // drive.turnRight(90_deg);
@@ -94,6 +95,8 @@ void autonomous() {
 void opcontrol() {
     // Routes::mogoSideMatchBlue();
     // return;
+
+    eff.seeColor = false;
 
     bool isShooting = false;    
     bool isPTOEnabled = false;
@@ -133,27 +136,9 @@ void opcontrol() {
         //     Control::printController(0, isReverse ? "Reverse" : "Forward");
         // }
 
-        /*
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1))
             eff.changeState(); // lady brown
         eff.stepArm();
-        */
-
-        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_DOWN)){
-            eff.raiseArm();
-        } 
-
-        if (!Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_DOWN)){
-            eff.stopArm();
-        }
-
-        if (!Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_B)){
-            eff.stopArm();
-        }
-
-        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_B)){
-            eff.lowerArm();
-        }
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1)){
             eff.toggleIntakeState(IntakeState::INTAKE);

@@ -18,20 +18,19 @@ void lilRoute (bool reverse = false) {
     drive.goPath({
         Path({0_in, 0_in}),
         Path({0.75_tile, (reverse ? -1 : 1) * -0.5_tile}),
-        Path({2.3_tile, (reverse ? -1 : 1) * -1.5_tile})
+        Path({2.2_tile, (reverse ? -1 : 1) * -1.5_tile}) // 2.3
     }, 5_in, 5_in);
 
-    // drive.faceToPoint({-1_tile, (reverse ? -1 : 1) * 0.5_tile}, true);
+    drive.faceToPoint({-1_tile, (reverse ? -1 : 1) * 0.5_tile}, true);
 
+    drive.goPath({
+        Path({0_in, 0_in}),
+        Path({-1_tile, (reverse ? -1 : 1) * 0.35_tile}),
+        Path({-2.6_tile, (reverse ? -1 : 1) * 0.35_tile})
+    }, 5_in, 5_in, false, 3_s);
 
-    // drive.goPath({
-    //     Path({0_in, 0_in}),
-    //     Path({-1_tile, (reverse ? -1 : 1) * 0.25_tile}),
-    //     Path({-2.5_tile, (reverse ? -1 : 1) * 0.25_tile})
-    // }, 5_in, 5_in, false, 3_s);
-
-    // drive.faceToPoint({0.5_tile, (reverse ? -1 : 1) * -0.5_tile}, true);
-    // drive.goForward(0.707_tile);
+    drive.faceToPoint({0.5_tile, (reverse ? -1 : 1) * -0.75_tile}, true);
+    drive.goForward(0.707_tile);
     // drive.faceToPoint({1_tile, 0_tile}, true);
     // eff.setIntake(IntakeState::INACTIVE);
     
@@ -54,7 +53,7 @@ void Routes::skills () {
         Path({0.4_tile, 0_in}),
         Path({1.9_tile, -1.25_tile})
     }, 5_in, 5_in); // don't have to be too accurate!
-    pros::delay(200);
+    pros::delay(100);
     
     eff.setIntake(IntakeState::INACTIVE);
 
