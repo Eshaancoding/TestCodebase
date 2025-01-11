@@ -136,6 +136,8 @@ void opcontrol() {
         //     Control::printController(0, isReverse ? "Reverse" : "Forward");
         // }
 
+        
+
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1))
             eff.changeState(); // lady brown
         eff.stepArm();

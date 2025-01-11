@@ -132,7 +132,7 @@ void Effectors::changeState () {
 void Effectors::stepArm () {
     // there's no while true loop; ALL OF THESE PARAMS TUNING
     const double loadingAngle = 23; 
-    const double dumpAngle = 120; 
+    const double dumpAngle = 135; 
     const double idleAngle = 2;
     const double initRotSensor = 0;
     // one button for motor up one button for motor down
@@ -144,7 +144,7 @@ void Effectors::stepArm () {
     double angle = ((double)-rotationSensor.get_angle() / 100) + 296;
 
     double error = (angle - targetAngle)*3.1415926/180; // convert to radians
-    double p = -20;
+    double p = -25;
 
     Console::printBrain(6, "Rot sensor: %f", (double)-rotationSensor.get_angle() / 100);
     Console::printBrain(7, "angle: %f", angle);
