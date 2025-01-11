@@ -28,7 +28,7 @@ enum Color {
 // I could make this a namespace idk why im making it a class
 class Effectors {
 public:
-    pros::Motor armLeft; // make 2 arm motors
+    //pros::Motor armLeft; // make 2 arm motors
     pros::Motor armRight;
     static pros::Motor intakeMotor;
     pros::Motor conveyorMotor;
@@ -54,7 +54,7 @@ public:
     bool boinkerActive;
 
     Effectors () : 
-        armLeft(6, pros::E_MOTOR_GEAR_200),
+        //armLeft(6, pros::E_MOTOR_GEAR_200),
         armRight(15, pros::E_MOTOR_GEAR_200),
         conveyorMotor(1), //changed 12 to 13
         clampPiston('A'),
@@ -67,7 +67,7 @@ public:
         boinkerActive(false),
         currentState(State::IDLE)
     {
-        armLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);  //PRAC code
+        //armLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);  //PRAC code
         armRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
         rotationSensor.reset();
         rotationSensor.reset_position();

@@ -48,29 +48,6 @@ void Effectors::intake () {
         Console::printBrain(3, blue, "blue");
         
         if (!see_color && state == IntakeState::INTAKE) {
-            // once it detects blue, stop conveyor after certain amount of encoder turns so it is at the top of arm
-            
-            /*
-            // First condition: we on red side; hue < 10 means detech red
-            if (is_blue && hue < 10) { 
-                pros::delay(firstDelay);
-                intakeMotor.move_velocity(0);
-                pros::delay(secondDelay);
-                intakeMotor.move_velocity(600);
-            }
-            
-            // First condition: we on blue side; hue > 120 means detech blue
-            else if (!is_blue && hue > 120) {
-                pros::delay(firstDelay);
-                intakeMotor.move_velocity(0);
-                pros::delay(secondDelay);
-                intakeMotor.move_velocity(600);
-            } 
-            
-            else {
-                intakeMotor.move_velocity(600);
-            }
-            */
             intakeMotor.move_velocity(600);
 
         } else if (see_color && state == IntakeState::INTAKE){
@@ -118,17 +95,17 @@ void Effectors::toggleClamp(){
 }
 
 void Effectors::raiseArm () {
-    armLeft.move_voltage(8000);
-    armRight.move_voltage(-8000);
+    // armLeft.move_voltage(8000);
+    armRight.move_voltage(-4000);
 }
 
 void Effectors::lowerArm () {
-    armLeft.move_voltage(-8000);
-    armRight.move_voltage(8000);
+    // armLeft.move_voltage(-8000);
+    armRight.move_voltage(4000); 
 }
 
 void Effectors::stopArm () {
-    armLeft.move_velocity(0);
+    // armLeft.move_velocity(0);
     armRight.move_velocity(0);
 }
 
@@ -159,6 +136,7 @@ void Effectors::stepArm () {
     const double idleAngle = 2;
 
     const double initRotSensor = 9342;
+    // one button for motor up one button for motor down
 
     double targetAngle = this->currentState == State::isRaising ? loadingAngle : 
                          this->currentState == State::hasDonut ? dumpAngle :
@@ -169,7 +147,10 @@ void Effectors::stepArm () {
     double error = (angle - targetAngle)*3.1415926/180;
     double p = 70;
 
-    armLeft.move_velocity(p * error);
+    Console::printBrain(7, "angle: %f", angle);
+
+    // armLeft.move_velocity(p * error);
     armRight.move_velocity(-p * error);
     Console::printBrain(8, "power: %f", p * error);
 }
+

@@ -55,7 +55,7 @@ void initialize() {
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
 
     drive.resetToleranceParams();
-    eff.armLeft.set_zero_position(0);
+    //eff.armLeft.set_zero_position(0);
     eff.armRight.set_zero_position(0);
     
     // make sure to change all instances to OdomArc asw (instead of OdomCustom)
@@ -71,7 +71,7 @@ void autonomous() {
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     
 
-    Routes::ringSideRed();
+    Routes::skills();
     // drive.turnRight(90_deg);
     // AutonSelector::State state = waitForValidState(); 
 
@@ -139,9 +139,25 @@ void opcontrol() {
         eff.stepArm();
         */
 
+        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_DOWN)){
+            eff.raiseArm();
+        } 
+
+        if (!Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_DOWN)){
+            eff.stopArm();
+        }
+
+        if (!Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_B)){
+            eff.stopArm();
+        }
+
+        if (Control::getButtonPressed(pros::E_CONTROLLER_DIGITAL_B)){
+            eff.lowerArm();
+        }
+
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1)){
             eff.toggleIntakeState(IntakeState::INTAKE);
-        }
+        } 
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)){
             eff.toggleIntakeState(IntakeState::OUTTAKE);
