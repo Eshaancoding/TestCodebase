@@ -14,7 +14,7 @@ pros::Optical Effectors::colorSensor (9);
 std::atomic<IntakeState> Effectors::intakeActive = IntakeState::INACTIVE;
 Color Effectors::colorState = Color::noColor;
 std::atomic<bool> Effectors::isBlue = false; // by default we assume that we are blue
-std::atomic<bool> Effectors::seeColor = true; // yes color sensor code
+std::atomic<bool> Effectors::seeColor = false; // yes color sensor code
 
 // INTAKE
 void Effectors::toggleIntakeState (IntakeState ia, bool isConveyor) {
@@ -159,7 +159,7 @@ void Effectors::stepArm () {
         armRight.move_velocity(300);
     }
     else {
-        armRight.move_velocity(-10);
+        armRight.move_velocity(0);
     }
     
 }

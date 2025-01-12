@@ -19,7 +19,7 @@ namespace OdomCustom {
     std::atomic<okapi::QLength> yPos = 0_in;
     std::atomic<bool> calibrating;
 
-    okapi::IMU imu (16, okapi::IMUAxes::z);
+    okapi::IMU imu (12, okapi::IMUAxes::z);
     double prevEnc = 0.0;
     double offsetEnc = 0.0;
 

@@ -133,7 +133,7 @@ void opcontrol() {
                 Control::printController(0, "Color Sensor Deactivated");
         }
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_UP))
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_RIGHT))
             eff.toggleBoinker();
 
         // if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_DOWN)) {
