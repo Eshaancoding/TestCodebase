@@ -63,13 +63,14 @@ public:
     bool boinkerActive;
 
     Effectors () : 
+        // for motor group: BACK LEFT 11, bottom left motor 13 top left motor 14
         //armLeft(6, pros::E_MOTOR_GEAR_200),
         armRight(16, pros::E_MOTOR_GEAR_100),
-        conveyorMotor(1), //changed 12 to 13
+        conveyorMotor(21), // intake 21
         clampPiston('B'),
         boinkerPiston('A'),
         limitSwitch('H'),
-        rotationSensor(21),
+        rotationSensor(0), // UPDATE THIS 
         isClamped(false),
         previous_limit(false),
         first_click(false),

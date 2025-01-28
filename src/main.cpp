@@ -77,6 +77,8 @@ void autonomous() {
 
     if (state.status == AutonSelector::SKILL) {
         Routes::skills();
+        // drive.goforward(2_tile);
+        //Console::printBrain(1,"Distance: ",leftMotorGroup.getPosition())
     }
     else {
         if (state.offDefState == AutonSelector::BLUE) {
