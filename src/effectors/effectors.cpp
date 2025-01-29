@@ -9,7 +9,7 @@
 #include <cstdarg>
 
 // initailize all static variables
-pros::Motor Effectors::intakeMotor (10, MOTOR_GEAR_BLUE);
+pros::Motor Effectors::intakeMotor (21, MOTOR_GEAR_BLUE);
 pros::Optical Effectors::colorSensor (9);
 std::atomic<IntakeState> Effectors::intakeActive = IntakeState::INACTIVE;
 Color Effectors::colorState = Color::noColor;
