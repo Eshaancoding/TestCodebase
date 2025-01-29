@@ -123,7 +123,7 @@ void opcontrol() {
         // ======================== Tank ======================== 
         // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-        drive.moveArcade((isReverse ? -distance : distance) * 0.8, heading * 0.8);
+        drive.moveArcade((isReverse ? -distance : distance), heading);
 
 
         // color

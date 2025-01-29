@@ -23,7 +23,7 @@ namespace OdomArc {
     pros::Rotation vert_track_wheel (8);
     pros::Rotation strafe_track_wheel (14);
 
-    okapi::IMU imu (12, okapi::IMUAxes::z); // imu
+    okapi::IMU imu (8, okapi::IMUAxes::z); // imu
 
     double prevEnc = 0.0;
     double offsetEnc = 0.0;

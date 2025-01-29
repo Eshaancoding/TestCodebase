@@ -28,13 +28,13 @@ extern PID HeadingPID;  // declared in parameters.cpp
 // ============================================================
 
 // drive
-#define RIGHT_BOTTOM_MOTOR   -1  //5, 12, 15 do not work
-#define RIGHT_MIDDLE_MOTOR   -3
-#define RIGHT_TOP_MOTOR      4
+#define RIGHT_BOTTOM_MOTOR   3  
+#define RIGHT_MIDDLE_MOTOR   4
+#define RIGHT_TOP_MOTOR      -11 
 
-#define LEFT_BOTTOM_MOTOR    -1
-#define LEFT_MIDDLE_MOTOR    -2
-#define LEFT_TOP_MOTOR       3
+#define LEFT_BOTTOM_MOTOR    15
+#define LEFT_MIDDLE_MOTOR    13
+#define LEFT_TOP_MOTOR       -14
 
 #define BACK_TRACK_MOTOR     22
 
