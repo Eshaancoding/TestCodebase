@@ -8,9 +8,9 @@
 #include <optional>
 
 void lilRoute (bool reverse = false) {
-    drive.setToleranceParams(std::nullopt, std::nullopt, 1.0_s, std::nullopt);
+    drive.setToleranceParams(1.0_s,std::nullopt, std::nullopt, std::nullopt);
     drive.faceToPoint({3_tile, 0_in}, true);
-    drive.setToleranceParams(std::nullopt, std::nullopt, 1.3_s, std::nullopt);
+    drive.setToleranceParams( 1.3_s,std::nullopt, std::nullopt, std::nullopt);
     drive.goBackward(1.5_tile);
     drive.resetToleranceParams();
 

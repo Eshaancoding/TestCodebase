@@ -9,7 +9,7 @@
 #include "pros/rotation.hpp"
 
 #define PI 3.14159265
-#define WHEEL_DIA 2.715
+#define WHEEL_DIA 2.9
 
 // too low distance -->  higher wheel dia
 // too high distance
@@ -20,8 +20,8 @@ namespace OdomArc {
     std::atomic<okapi::QLength> yPos = 0_in;
     std::atomic<bool> calibrating;
 
-    pros::Rotation vert_track_wheel (8);
-    pros::Rotation strafe_track_wheel (14);
+    pros::Rotation vert_track_wheel (16);  //16, og 8
+    pros::Rotation strafe_track_wheel (8); //8, og 14
 
     okapi::IMU imu (8, okapi::IMUAxes::z); // imu
 

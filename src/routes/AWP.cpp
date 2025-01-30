@@ -15,20 +15,20 @@ void Routes::AWPRed () {
     eff.toggleClamp();
     drive.goForward(0.25_tile);
 
-    drive.setToleranceParams(std::nullopt, std::nullopt, 1_s, std::nullopt);
+    drive.setToleranceParams(1_s, std::nullopt, std::nullopt, std::nullopt);
     drive.turnLeft(135_deg);
     drive.resetToleranceParams();
 
     eff.setIntake(IntakeState::INTAKE);
     drive.goForward(0.8_tile);
 
-    drive.setToleranceParams(std::nullopt, std::nullopt, 1_s, std::nullopt);
+    drive.setToleranceParams(1_s,std::nullopt, std::nullopt, std::nullopt);
     drive.turnRight(40_deg);
     drive.resetToleranceParams();
 
     drive.goForward(0.8_tile);
 
-    drive.setToleranceParams(std::nullopt, std::nullopt, 1_s, std::nullopt);
+    drive.setToleranceParams(1_s,std::nullopt, std::nullopt, std::nullopt);
     drive.turnRight(10_deg);
     drive.resetToleranceParams();
 
@@ -36,7 +36,7 @@ void Routes::AWPRed () {
     pros::delay(300);
     drive.goBackward(0.5_tile);
     
-    drive.setToleranceParams(std::nullopt, std::nullopt, 1.5_s, std::nullopt);
+    drive.setToleranceParams(1.5_s, std::nullopt, std::nullopt, std::nullopt);
     drive.faceToPoint({0_in, 10_tile}, true);
     drive.resetToleranceParams();
 

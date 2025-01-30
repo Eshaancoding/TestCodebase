@@ -47,7 +47,7 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    AutonSelector::init();
+   // AutonSelector::init();
 
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
     rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
@@ -72,12 +72,16 @@ void autonomous() {
     
     eff.seeColor = false;
 
+    Routes::mogoSide();
+
+    //drive.goForward(2_tile);
+    //drive.turnLeft(180_deg);
+
     // drive.turnRight(90_deg);
     AutonSelector::State state = waitForValidState(); 
 
     if (state.status == AutonSelector::SKILL) {
         Routes::skills();
-        // drive.goforward(2_tile);
         //Console::printBrain(1,"Distance: ",leftMotorGroup.getPosition())
     }
     else {

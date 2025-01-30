@@ -171,9 +171,9 @@ public:
      * @param timeTolP    time tolerance (set null opt if no change)
      */
     void setToleranceParams (
+        std::optional<QTime> timeTolP=std::nullopt,
         std::optional<QLength> distanceTolP=std::nullopt,
         std::optional<QAngle> angleTolP=std::nullopt,
-        std::optional<QTime> timeTolP=std::nullopt,
         std::optional<double> ccFactor=std::nullopt
     );
 

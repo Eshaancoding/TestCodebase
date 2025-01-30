@@ -156,7 +156,7 @@ void Drive::move (
 
 }
 
-void Drive::setToleranceParams(std::optional<QLength> distanceTolP, std::optional<QAngle> angleTolP, std::optional<QTime> timeTolP, std::optional<double> ccFactor ) {
+void Drive::setToleranceParams(std::optional<QTime> timeTolP, std::optional<QLength> distanceTolP, std::optional<QAngle> angleTolP, std::optional<double> ccFactor ) {
     if (distanceTolP)
         distanceTol = *distanceTolP;
 
