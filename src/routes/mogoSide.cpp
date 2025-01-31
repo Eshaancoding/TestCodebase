@@ -12,11 +12,6 @@ void Routes::mogoSide () {
 
     eff.toggleBoinker();
     drive.goForward(1.63_tile);
-    // drive.goPath({ // turn to mogo
-    //     Path({0_tile,0_tile}),
-    //     Path({0_tile,1.9_tile}),
-    //     Path({0.3_tile,2_tile})
-    // });
     drive.goBackward(0.55_tile);
     eff.toggleBoinker();
     drive.goBackward(0.3_tile);
@@ -35,20 +30,22 @@ void Routes::mogoSide () {
     drive.setToleranceParams(0.75_s);
     drive.turnLeft(85_deg);
     drive.setToleranceParams(0.5_s);
-    drive.goForward(0.73_tile); // head towards mogo 2
+    eff.toggleIntakeState(SLOW);
+    drive.goForward(0.98_tile); // head towards mogo 2
     drive.resetToleranceParams();
     pros::delay(325);
 
     eff.toggleIntakeState(INACTIVE); // grab dount 2
+    drive.goBackward(0.5_tile); // go backwarde after grabbing donut
     
     
     drive.setToleranceParams(1_s);
     drive.turnRight(175_deg);
     drive.setToleranceParams(0.5_s);
-    drive.goBackward(0.55_tile);
+    drive.goBackward(1.05_tile);
     drive.resetToleranceParams();
 
-    
+
     eff.toggleClamp(); 
     eff.toggleIntakeState(INTAKE);
     pros::delay(1000);
@@ -68,26 +65,4 @@ void Routes::mogoSide () {
     eff.toggleClamp(); // unclamp
     eff.toggleIntakeState(INACTIVE);
 
-
-
-
-    // drive.goBackward(1.5_tile, {}, {});
-    // eff.toggleClamp();
-    // drive.goForward(0.35_tile); // grab mogo
-    
-    // drive.setToleranceParams(std::nullopt, std::nullopt, 1_s, std::nullopt);
-    // eff.isBlue.load() ? drive.turnRight(90_deg) : drive.turnLeft(90_deg);
-    // drive.resetToleranceParams();
-
-    // eff.setIntake(IntakeState::INTAKE);
-    // drive.goForward(1.3_tile); // grabs wall stake ring
-
-    // drive.setToleranceParams(std::nullopt, std::nullopt, 1.5_s, std::nullopt);
-    // eff.isBlue.load() ? drive.turnLeft(180_deg) : drive.turnRight(180_deg);
-    // drive.resetToleranceParams(); // faces ladder
-
-    // eff.toggleClamp(); // drops clamp
-    // eff.setIntake(IntakeState::INACTIVE);
-
-    // drive.goForward(1.6_tile); // touches ladder
 }

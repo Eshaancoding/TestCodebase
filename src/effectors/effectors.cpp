@@ -23,6 +23,8 @@ void Effectors::toggleIntakeState (IntakeState ia, bool isConveyor) {
     // disable, and press button,sdfsdfsdf then it won't satisfy this condition
     if (this->intakeActive == ia) {
         this->intakeActive = IntakeState::INACTIVE;
+    } else if(ia == IntakeState::SLOW){
+        this->intakeActive = IntakeState::SLOW;
     } else {
         this->intakeActive = ia;
     }
@@ -48,7 +50,7 @@ void Effectors::intake () {
         // Console::printBrain(3, blue, "blue");
         
         if (!see_color && state == IntakeState::INTAKE) {
-            intakeMotor.move_velocity(600);
+            intakeMotor.move_velocity(600); // fix to 600
 
         } else if (see_color && state == IntakeState::INTAKE){
             if (is_blue && hue < 10) { 
@@ -73,10 +75,16 @@ void Effectors::intake () {
             intakeMotor.move_velocity(-600);
         } else if (state == IntakeState::INACTIVE) {
             intakeMotor.move_velocity(0);
+        } else if (state == IntakeState::SLOW){
+            intakeMotor.move_velocity(350);
         }
         
         pros::delay(50);
     }
+}
+
+void Effectors::slowIntake(){
+    intakeMotor.move_velocity(300);
 }
 
 void Effectors::setIntake (bool isReverse, bool isOff) {

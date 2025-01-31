@@ -10,7 +10,8 @@
 enum IntakeState {
     INTAKE = 0,
     OUTTAKE = 1,
-    INACTIVE = 2
+    INACTIVE = 2,
+    SLOW = 3
 };
 
 enum State {
@@ -104,6 +105,8 @@ public:
     // boinker
     void toggleBoinker ();
 
+
+    void slowIntake();
 };
 
 #endif
