@@ -72,7 +72,7 @@ void autonomous() {
     
     eff.seeColor = false;
 
-    Routes::mogoSide();
+    Routes::ringSide();
 
     //drive.goForward(2_tile);
     //drive.turnLeft(180_deg);

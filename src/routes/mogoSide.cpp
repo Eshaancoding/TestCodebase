@@ -53,9 +53,9 @@ void Routes::mogoSide () {
     drive.turnRight(175_deg);
 
     // turn the arm 
-    eff.raiseArm();
-    pros::delay(400);
-    eff.stopArm();
+    // eff.raiseArm();
+    // pros::delay(400);
+    // eff.stopArm();
 
     // go forward and touch bar
 
