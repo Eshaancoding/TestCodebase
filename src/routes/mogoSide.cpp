@@ -11,35 +11,50 @@ void Routes::mogoSide () {
     OdomArc::setPos(0_in, 0_in, 1_deg); // set our default/initial position
 
     eff.toggleBoinker();
-    drive.goForward(1.7_tile);
+    drive.goForward(1.63_tile);
     // drive.goPath({ // turn to mogo
     //     Path({0_tile,0_tile}),
     //     Path({0_tile,1.9_tile}),
     //     Path({0.3_tile,2_tile})
     // });
-    drive.goBackward(0.6_tile);
+    drive.goBackward(0.55_tile);
     eff.toggleBoinker();
     drive.goBackward(0.3_tile);
 
     drive.setToleranceParams(1_s);
-    drive.faceToPoint({0_tile,-10_tile}, true);
+    drive.faceToPoint({-0.3_tile,-10.5_tile}, true);
     drive.resetToleranceParams();
     
-    drive.goBackward(0.8_tile);
+    drive.goBackward(0.83_tile);
     eff.toggleClamp(); // got the first mogo
     eff.toggleIntakeState(INTAKE); // eat first donut
-    eff.toggleClamp();
+    pros::delay(1000);
+    eff.toggleClamp(); // drop first mogo
 
 
-    drive.turnLeft(90_deg);
-    drive.goForward(0.9_tile);
-    eff.toggleIntakeState(INACTIVE);
-    drive.turnRight(150_deg);
-    drive.goBackward(1_tile);
+    drive.turnLeft(88_deg);
+    drive.setToleranceParams(0.5_s);
+    drive.goForward(0.75_tile); // head towards mogo 2
+    drive.resetToleranceParams();
+
+    eff.toggleIntakeState(INACTIVE); // grab dount 2
+    
+    
+    drive.setToleranceParams(1_s);
+    drive.turnRight(170_deg);
+    drive.setToleranceParams(0.5_s);
+    drive.goBackward(0.55_tile);
+    drive.resetToleranceParams();
     eff.toggleClamp();
     eff.toggleIntakeState(INTAKE);
-    drive.turnLeft(180_deg);
+    pros::delay(1000);
+
+    drive.setToleranceParams(1_s);
+    drive.turnRight(175_deg);
+    drive.setToleranceParams(1_s);
     drive.goForward(0.5_tile);
+    drive.resetToleranceParams();
+    eff.toggleClamp(); // unclamp
 
 
 
