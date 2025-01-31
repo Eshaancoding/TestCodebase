@@ -15,7 +15,7 @@ void Routes::ringSide () {
     drive.goPath({ // turn towards 4 stack ring
         Path({0_tile,0_tile}),
         Path({0_tile,1.15_tile}),
-        Path({0.31_tile,1.68_tile})
+        Path({0.32_tile,1.68_tile})
     }, 5_in,5_in); 
     pros::delay(600);
     eff.toggleIntakeState(INACTIVE);    
@@ -31,11 +31,13 @@ void Routes::ringSide () {
     drive.goPath({
         Path({0_tile,0_tile}),
         Path({0.5_tile,0.4_tile}),
-        Path({1.5_tile, 0.7_tile})
+        Path({1.52_tile, 0.7_tile})
     }, 5_in, 5_in);
 
-    // drive.turnRight(45_deg); // turn towards rings DO PP HERE
-    // eff.toggleBoinker(); // let go of first 4 stack ring
+    drive.setToleranceParams(1_s);
+    drive.turnRight(90_deg); // turn towards rings DO PP HERE
+    drive.resetToleranceParams();
+    drive.goForward(1.5_tile);
     // drive.goForward(1.5_tile); // intake both rings
     // drive.turnRight(90_deg);
     // drive.goForward(0.75_tile);
