@@ -149,15 +149,22 @@ void Effectors::stepArm () {
         double targetAngle = this->currentState == State::isRaising ? loadingAngle : 
                             this->currentState == State::hasDonut ? dumpAngle :
                             idleAngle; // if idle
-
+ 
         double angle = ((double)-rotationSensor.get_angle() / 100) + 296;
 
         double error = (angle - targetAngle)*3.1415926/180; // convert to radians
         double p = -30; //-25
         
+        Console::printBrain(5, "Error: %f", error*180/3.14159);
         Console::printBrain(6, "Rot sensor: %f", (double)-rotationSensor.get_angle() / 100);
         Console::printBrain(7, "angle: %f", angle);
-        armRight.move_velocity(p * error);
+        if (abs(error) > (1.5_deg).convert(okapi::radian)) {
+            armRight.move_velocity(p * error); // RUN THE ARM of error is more than tolerance
+            Console::printBrain(9, "MOVING ARM VIA PID");
+        } else {
+            arm_state == ArmState::IDLE_ARM;
+            Console::printBrain(9, "GOING BACK TO IDLE BECAUSE OF ANGLE TOLERANCE");
+        }
         Console::printBrain(8, "power: %f", p * error);
     }
     else if (arm_state == ArmState::Raising_ARM) {
@@ -166,8 +173,9 @@ void Effectors::stepArm () {
     else if (arm_state == ArmState::Lowering_ARM) {
         armRight.move_velocity(300);
     }
-    else {
+    else if (arm_state == ArmState::IDLE_ARM) {
         armRight.move_velocity(0);
+        // THIS WILL TRIGGER BRAKE MODE IF VELOCITY = 0
     }
     
 }
