@@ -104,12 +104,12 @@ void Effectors::toggleClamp(){
 
 void Effectors::raiseArm () {
     // armLeft.move_voltage(8000);
-    armRight.move_voltage(-4000);
+    armRight.move_voltage(8000);
 }
 
 void Effectors::lowerArm () {
     // armLeft.move_voltage(-8000);
-    armRight.move_voltage(4000); 
+    armRight.move_voltage(-8000); 
 }
 
 void Effectors::stopArm () {

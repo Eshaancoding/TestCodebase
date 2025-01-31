@@ -6,6 +6,8 @@
 #include "Console.h"
 #include "odom/OdomArc.h"   
 
+// RELEASE MOGO 1 AFTER YOU GO MORE INWARDS TO YOU
+
 void Routes::mogoSide () {
 
     OdomArc::setPos(0_in, 0_in, 1_deg); // set our default/initial position
