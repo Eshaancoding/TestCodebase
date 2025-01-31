@@ -25,36 +25,48 @@ void Routes::mogoSide () {
     drive.faceToPoint({-0.3_tile,-10.5_tile}, true);
     drive.resetToleranceParams();
     
-    drive.goBackward(0.83_tile);
+    drive.goBackward(0.85_tile);
     eff.toggleClamp(); // got the first mogo
     eff.toggleIntakeState(INTAKE); // eat first donut
     pros::delay(1000);
     eff.toggleClamp(); // drop first mogo
 
 
-    drive.turnLeft(88_deg);
+    drive.setToleranceParams(0.75_s);
+    drive.turnLeft(85_deg);
     drive.setToleranceParams(0.5_s);
-    drive.goForward(0.75_tile); // head towards mogo 2
+    drive.goForward(0.73_tile); // head towards mogo 2
     drive.resetToleranceParams();
+    pros::delay(325);
 
     eff.toggleIntakeState(INACTIVE); // grab dount 2
     
     
     drive.setToleranceParams(1_s);
-    drive.turnRight(170_deg);
+    drive.turnRight(175_deg);
     drive.setToleranceParams(0.5_s);
     drive.goBackward(0.55_tile);
     drive.resetToleranceParams();
-    eff.toggleClamp();
+
+    
+    eff.toggleClamp(); 
     eff.toggleIntakeState(INTAKE);
     pros::delay(1000);
-
     drive.setToleranceParams(1_s);
     drive.turnRight(175_deg);
-    drive.setToleranceParams(1_s);
-    drive.goForward(0.5_tile);
+
+    // turn the arm 
+    eff.raiseArm();
+    pros::delay(400);
+    eff.stopArm();
+
+    // go forward and touch bar
+
+    drive.setToleranceParams(1.3_s);
+    drive.goForward(0.6_tile);
     drive.resetToleranceParams();
     eff.toggleClamp(); // unclamp
+    eff.toggleIntakeState(INACTIVE);
 
 
 
