@@ -23,7 +23,8 @@ void Routes::ringSide () {
     eff.toggleIntakeState(INACTIVE);    
     
     // drive.faceToPoint({1.5_tile,1_tile},true); // face mogo
-    drive.setToleranceParams(std::nullopt, 2_in); // no changes to time tolerance, but distance tolerance is set to 1_in
+    //OdomArc::setPos(0_tile, 0_tile, -45_deg);
+    drive.setToleranceParams(std::nullopt, 3_in); // cjange d tolerance to 1_in
     drive.goBackward(1.75_tile, {{0, 0.9}}); // go back towards mogo
     drive.resetToleranceParams(); // go back to 0.5_in. 
     eff.toggleBoinker();

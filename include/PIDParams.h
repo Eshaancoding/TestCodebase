@@ -4,7 +4,7 @@
 // distance (forward/backward)
 #define Distance_P           0.068
 #define Distance_I           0
-#define Distance_D           0.043
+#define Distance_D           0.038
 #define Distance_MAXPOWER    0.6
 #define Distance_MINPOWER    0
 #define Distance_FACTOR      0.9
