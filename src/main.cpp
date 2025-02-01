@@ -47,7 +47,7 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    AutonSelector::init();
+    //AutonSelector::init();
 
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
     rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
@@ -73,7 +73,8 @@ void autonomous() {
     eff.seeColor = false;
 
     //Routes::skills();
-    // Routes::ringSide();
+    //Routes::ringSide();
+    Routes::mogoSide();
 
     //drive.goForward(2_tile);
     //drive.turnLeft(180_deg);
