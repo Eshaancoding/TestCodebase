@@ -220,7 +220,7 @@ void Routes::skills () {
     drive.faceToPoint({0.8_tile, -1_tile}, true);
     drive.goPath({
         Path({0_tile,0_tile}),
-        Path({1_tile, -0.63_tile}),
+        Path({1_tile, -0.75_tile}),
         Path({2.1_tile, -0.45_tile})
     });
     pros::delay(1000);
