@@ -11,9 +11,11 @@
 void Routes::mogoSide () {
 
     OdomArc::setPos(0_in, 0_in, 1_deg); // set our default/initial position
+    //bool is_blue = (eff.isBlue).load();
+    bool is_blue = true;
 
     eff.toggleBoinker();
-    drive.goForward(1.63_tile);
+    drive.goForward(1.65_tile);
     drive.goBackward(0.55_tile);
     eff.toggleBoinker();
     drive.goBackward(0.3_tile);
@@ -22,37 +24,37 @@ void Routes::mogoSide () {
     drive.faceToPoint({-0.3_tile,-10.5_tile}, true);
     drive.resetToleranceParams();
     
-    drive.goBackward(0.85_tile);
+    drive.goBackward(0.78_tile);
     eff.toggleClamp(); // got the first mogo
     eff.toggleIntakeState(INTAKE); // eat first donut
     pros::delay(1000);
-    eff.toggleClamp(); // drop first mogo
+    drive.goForward(0.15_tile);
 
-
-    drive.setToleranceParams(0.75_s);
-    drive.turnLeft(85_deg);
-    drive.setToleranceParams(0.5_s);
     eff.toggleIntakeState(SLOW);
-    drive.goForward(0.98_tile); // head towards mogo 2
+    drive.setToleranceParams(0.75_s);
+    is_blue ? drive.faceToPoint({20_tile, 0_tile}, true) : drive.faceToPoint({-20_tile, 0_tile}, true);
+    drive.setToleranceParams(0.5_s);
+    eff.toggleClamp(); // drop first mogo
+    drive.goForward(1.4_tile); // head towards mogo 2
     drive.resetToleranceParams();
     pros::delay(325);
 
     eff.toggleIntakeState(INACTIVE); // grab dount 2
-    drive.goBackward(0.5_tile); // go backwarde after grabbing donut
+    drive.goBackward(0.52_tile); // go backwarde after grabbing donut
     
     
     drive.setToleranceParams(1_s);
-    drive.turnRight(175_deg);
+    is_blue ? drive.turnRight(175_deg) : drive.turnRight(177_deg);
     drive.setToleranceParams(0.5_s);
-    drive.goBackward(1.05_tile);
+    drive.goBackward(1.45_tile);
     drive.resetToleranceParams();
 
 
-    eff.toggleClamp(); 
+    eff.toggleClamp(); // clamp mogo 2
     eff.toggleIntakeState(INTAKE);
     pros::delay(1000);
     drive.setToleranceParams(1_s);
-    drive.turnRight(175_deg);
+    is_blue ? drive.turnRight(175_deg) : drive.turnLeft(175_deg);
 
     // turn the arm 
     // eff.raiseArm();
@@ -62,9 +64,13 @@ void Routes::mogoSide () {
     // go forward and touch bar
 
     drive.setToleranceParams(1.3_s);
-    drive.goForward(0.6_tile);
+    drive.goForward(0.7_tile);
     drive.resetToleranceParams();
-    eff.toggleClamp(); // unclamp
+
+    eff.raiseArm();
+    pros::delay(500);
+    eff.stopArm();
     eff.toggleIntakeState(INACTIVE);
+    
 
 }

@@ -9,13 +9,15 @@
 //ringside rush
 void Routes::ringSide () {
     OdomArc::setPos(0_in, 0_in, 0_deg); // set our default/initial position
+    //bool is_blue = (eff.isBlue).load();
+    bool is_blue = false;
 
     eff.toggleBoinker();
     eff.toggleIntakeState(INTAKE);
     drive.goPath({ // turn towards 4 stack ring
         Path({0_tile,0_tile}),
-        Path({0_tile,1.15_tile}),
-        Path({0.33_tile,1.69_tile})
+        Path({0_tile, 1.15_tile}),
+        Path({is_blue ? 0.33_tile : -0.33_tile, 1.69_tile})
     }, 5_in,5_in); 
     pros::delay(600);
     eff.toggleIntakeState(INACTIVE);    
@@ -30,15 +32,15 @@ void Routes::ringSide () {
     eff.toggleIntakeState(INTAKE); // intake
     drive.goPath({
         Path({0_tile,0_tile}),
-        Path({0.5_tile,0.4_tile}),
-        Path({1.5_tile, 0.7_tile})
+        Path({is_blue ? 0.5_tile : -0.5_tile,0.4_tile}),
+        Path({is_blue ? 1.5_tile : -1.5_tile, 0.7_tile})
     }, 5_in, 5_in);
 
     drive.setToleranceParams(1_s);
-    drive.turnRight(90_deg); // turn towards rings DO PP HERE
+    is_blue ? drive.turnRight(90_deg) : drive.turnLeft(90_deg); // turn towards rings DO PP HERE
     drive.resetToleranceParams();
     drive.goForward(1.58_tile);
-    drive.turnRight(135_deg);
+    is_blue ? drive.turnRight(135_deg) : drive.turnLeft(135_deg);
     // eff.arm_state = ArmState::PID_ARM;
     // eff.currentState = State::hasDonut;
 

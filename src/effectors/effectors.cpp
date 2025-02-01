@@ -153,7 +153,7 @@ void Effectors::stepArm () {
         double angle = ((double)-rotationSensor.get_angle() / 100) + 296;
 
         double error = (angle - targetAngle)*3.1415926/180; // convert to radians
-        double p = -30; //-25
+        double p = -35; //-25
         
         Console::printBrain(5, "Error: %f", error*180/3.14159);
         Console::printBrain(6, "Rot sensor: %f", (double)-rotationSensor.get_angle() / 100);
