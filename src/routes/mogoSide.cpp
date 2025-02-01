@@ -11,8 +11,8 @@
 void Routes::mogoSide () {
 
     OdomArc::setPos(0_in, 0_in, 1_deg); // set our default/initial position
-    //bool is_blue = (eff.isBlue).load();
-    bool is_blue = true;
+    bool is_blue = (eff.isBlue).load();
+    //bool is_blue = true;
 
     eff.toggleBoinker();
     drive.goForward(1.65_tile);

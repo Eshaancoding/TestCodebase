@@ -210,8 +210,10 @@ void Routes::skills () {
     pros::delay(350);
     eff.setIntake(IntakeState::INACTIVE);
     drive.faceToPoint({-1.2_tile, -1.75_tile}, true);
-    drive.goBackward(1.2_tile);
-    eff.toggleClamp();
+    drive.setToleranceParams(std::nullopt, 5_in);
+    drive.goBackward(1.23_tile);
+    drive.resetToleranceParams();
+    eff.toggleClamp(); // grab mogo
     pros::delay(250);
 
     eff.toggleIntakeState(INTAKE);
@@ -222,13 +224,17 @@ void Routes::skills () {
         Path({2.1_tile, -0.45_tile})
     });
     pros::delay(1000);
+    drive.faceToPoint({-0.1_tile, 1_tile}, true);
+    drive.goForward(1.25_tile);
+    pros::delay(250);
 
     // face clamp to corner
-    drive.faceToPoint({-0.2_tile, -1_tile}, true);
+    drive.faceToPoint({-0.5_tile, -0.4_tile}, true);
     drive.goBackward(2.2_tile);
     eff.toggleClamp();
-    drive.faceToPoint({-10_tile, 0_tile}, true);
-    
+    drive.goForward(1_tile);
+    //drive.faceToPoint({-10_tile, 0_tile}, true);
+
 
 
 
