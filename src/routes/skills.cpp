@@ -43,7 +43,7 @@ void lilRoute (bool reverse = false) {
 
     // go back just a little bit away from wall
     drive.moveArcade(-0.2, 0);
-    reverse ? pros::delay(150) : pros::delay(130);
+    reverse ? pros::delay(130) : pros::delay(130);
     drive.moveArcade(0, 0);
 
     // face to last ring
@@ -177,7 +177,7 @@ void Routes::skills () {
     drive.resetToleranceParams();
     
     //drive.setToleranceParams(0.7_s);
-    drive.goForward(0.8_tile); // go to other side
+    drive.goForward(0.73_tile); // go more forward in prep for turn to face other side
     //drive.resetToleranceParams();
 
     drive.setToleranceParams(1_s);
@@ -185,7 +185,7 @@ void Routes::skills () {
     drive.resetToleranceParams();
 
     //drive.setToleranceParams(_s);
-    drive.goForward(2.8_tile); 
+    drive.goForward(2.9_tile);  // go to toerh side
     //drive.resetToleranceParams();
 
     drive.setToleranceParams(1.5_s);
@@ -202,28 +202,33 @@ void Routes::skills () {
     lilRoute(true);
 
     OdomArc::setPos(0_in, 0_in, 0_deg);
-    drive.goForward(2.55_tile);
-    drive.faceToPoint({0.55_tile,1.2_tile}, true);
+    drive.goForward(2.4_tile);
+    drive.faceToPoint({0.65_tile,1.1_tile}, true);
 
     eff.setIntake(IntakeState::SLOW);
     drive.goForward(1.65_tile);
-    pros::delay(480);
+    pros::delay(350);
     eff.setIntake(IntakeState::INACTIVE);
-    drive.faceToPoint({-1.2_tile, -2_tile}, true);
+    drive.faceToPoint({-1.2_tile, -1.75_tile}, true);
     drive.goBackward(1.2_tile);
     eff.toggleClamp();
+    pros::delay(250);
 
     eff.toggleIntakeState(INTAKE);
     drive.faceToPoint({0.8_tile, -1_tile}, true);
     drive.goPath({
         Path({0_tile,0_tile}),
-        Path({1_tile, -0.6_tile}),
-        Path({2_tile, -0.45_tile})
+        Path({1_tile, -0.63_tile}),
+        Path({2.1_tile, -0.45_tile})
     });
+    pros::delay(1000);
 
     // face clamp to corner
     drive.faceToPoint({-0.2_tile, -1_tile}, true);
     drive.goBackward(2.2_tile);
+    eff.toggleClamp();
+    drive.faceToPoint({-10_tile, 0_tile}, true);
+    
 
 
 
