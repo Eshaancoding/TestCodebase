@@ -140,8 +140,8 @@ void Effectors::changeState () {
 void Effectors::stepArm () {
     if (arm_state == ArmState::PID_ARM) {
         // there's no while true loop; ALL OF THESE PARAMS TUNING
-        const double loadingAngle = 18; 
-        const double dumpAngle = 138; //135
+        const double loadingAngle = 16; 
+        const double dumpAngle = 135; //135
         const double idleAngle = 1.5;
         const double initRotSensor = 0;
         // one button for motor up one button for motor down
@@ -162,7 +162,7 @@ void Effectors::stepArm () {
             armRight.move_velocity(p * error); // RUN THE ARM of error is more than tolerance
             Console::printBrain(9, "MOVING ARM VIA PID");
         } else {
-            arm_state == ArmState::IDLE_ARM;
+            arm_state = ArmState::IDLE_ARM;
             Console::printBrain(9, "GOING BACK TO IDLE BECAUSE OF ANGLE TOLERANCE");
         }
         Console::printBrain(8, "power: %f", p * error);
