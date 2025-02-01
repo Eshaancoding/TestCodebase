@@ -9,9 +9,9 @@
 
 void lilRoute (bool reverse = false) {
     drive.setToleranceParams(1.0_s,std::nullopt, std::nullopt, std::nullopt);
-    drive.faceToPoint({3_tile, 0_in}, true);
+    drive.faceToPoint({3_tile, 0_in}, true); // face clamp
     drive.setToleranceParams( 1.3_s,std::nullopt, std::nullopt, std::nullopt);
-    drive.goBackward(1.5_tile);
+    drive.goBackward(1.65_tile);
     drive.resetToleranceParams();
 
     eff.toggleClamp(); //clamp on
@@ -33,38 +33,38 @@ void lilRoute (bool reverse = false) {
     drive.resetToleranceParams();
 
     // drive to that path to just sweep in multiple mogos while intaking
-    drive.goPath({
+    drive.goPath({ // second sweep near corner grabs 2 rings
         Path({0_in, 0_in}),
-        Path({-1_tile, (reverse ? -1 : 1) * 0.22_tile}),
+        Path({-1_tile, (reverse ? -1 : 1) * 0.25_tile}),
         Path({-2.4_tile, (reverse ? -1 : 1) * 0.22_tile})
     }, 5_in, 5_in, false, 3_s);
 
     pros::delay(500);
 
-    // go back just a little bit
+    // go back just a little bit away from wall
     drive.moveArcade(-0.2, 0);
-    pros::delay(300);
+    reverse ? pros::delay(150) : pros::delay(130);
     drive.moveArcade(0, 0);
 
     // face to last ring
-    drive.setToleranceParams(1.5_s);
-    drive.faceToPoint({50_tile, (reverse ? -1 : 1) * -70_tile}, true, {{0, 0.8}}); // go a little bit slower to not move to much. 
+    drive.setToleranceParams(1.5_s); // MAKE THIS FASTER
+    drive.faceToPoint({50_tile, (reverse ? -1 : 1) * -64_tile}, true, {{0, 0.8}}); // go a little bit slower to not move to much. 
     drive.resetToleranceParams();
 
     // go forward to last ring
     drive.goForward(0.7_tile);
 
-    // face to mogo dump
+    // face to mogo dump (clamp facing corner)
     drive.setToleranceParams(1.5_s);
     drive.faceToPoint({20_tile, (reverse ? -1 : 1) * 5_tile}, true);
     drive.resetToleranceParams();
 
-    // mogo dump
+    // mogo dump (back into corner)
     drive.moveArcade(-0.5, 0);
     pros::delay(500);
     drive.moveArcade(0, 0);
 
-    eff.toggleClamp(); //clamp off
+    eff.toggleClamp(); //drop mogo in corner
     eff.setIntake(IntakeState::INACTIVE);
 }
 
@@ -161,27 +161,32 @@ void Routes::skills () {
 
     drive.goPath({ // REALLY REALLY REALLY TUNABLE!!!
         Path({0_in, 0_in}),
-        Path({1.7_tile, -1.4_tile})
+        Path({1.4_tile, -1.3_tile})
     }, 5_in, 5_in); // don't have to be too accurate!
     
     eff.setIntake(IntakeState::INACTIVE);
 
-    drive.goBackward(0.15_tile);
-    ComplexLilRoute();
+    drive.goBackward(0.15_tile); // note it doesn't go back??
+    //ComplexLilRoute();
+    lilRoute();
 
-    drive.goForward(0.1_tile);
+    drive.goForward(0.1_tile); // get out of corner
 
-    drive.setToleranceParams(1.5_s);
-    drive.faceToPoint({20_tile, 0_tile}, true);
+    drive.setToleranceParams(1_s);
+    drive.faceToPoint({20_tile, 0_tile}, true); //turn to other side of field
     drive.resetToleranceParams();
     
-    drive.goForward(0.8_tile);
+    //drive.setToleranceParams(0.7_s);
+    drive.goForward(0.8_tile); // go to other side
+    //drive.resetToleranceParams();
 
-    drive.setToleranceParams(1.5_s);
-    drive.faceToPoint({0_tile, 20_tile}, true);
+    drive.setToleranceParams(1_s);
+    drive.faceToPoint({0_tile, 20_tile}, true); 
     drive.resetToleranceParams();
 
-    drive.goForward(2.8_tile);
+    //drive.setToleranceParams(_s);
+    drive.goForward(2.8_tile); 
+    //drive.resetToleranceParams();
 
     drive.setToleranceParams(1.5_s);
     drive.turnRight(45_deg);
@@ -193,7 +198,34 @@ void Routes::skills () {
     drive.goBackward(0.2_tile);
     pros::delay(300);
 
-    ComplexLilRoute(true);
+    //ComplexLilRoute(false);
+    lilRoute(true);
+
+    OdomArc::setPos(0_in, 0_in, 0_deg);
+    drive.goForward(2.55_tile);
+    drive.faceToPoint({0.55_tile,1.2_tile}, true);
+
+    eff.setIntake(IntakeState::SLOW);
+    drive.goForward(1.65_tile);
+    pros::delay(480);
+    eff.setIntake(IntakeState::INACTIVE);
+    drive.faceToPoint({-1.2_tile, -2_tile}, true);
+    drive.goBackward(1.2_tile);
+    eff.toggleClamp();
+
+    eff.toggleIntakeState(INTAKE);
+    drive.faceToPoint({0.8_tile, -1_tile}, true);
+    drive.goPath({
+        Path({0_tile,0_tile}),
+        Path({1_tile, -0.6_tile}),
+        Path({2_tile, -0.45_tile})
+    });
+
+    // face clamp to corner
+    drive.faceToPoint({-0.2_tile, -1_tile}, true);
+    drive.goBackward(2.2_tile);
+
+
 
     // drive.goBackward(1_tile);
     // eff.toggleClamp();
