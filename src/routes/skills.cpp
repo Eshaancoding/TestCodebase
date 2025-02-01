@@ -16,6 +16,8 @@ void lilRoute (bool reverse = false) {
 
     eff.toggleClamp(); //clamp on
     eff.setIntake(IntakeState::INTAKE);
+
+    // initial sweep of rings
     drive.goPath({
         Path({0_in, 0_in}),
         Path({0.75_tile, (reverse ? -1 : 1) * -0.5_tile}),
@@ -26,8 +28,11 @@ void lilRoute (bool reverse = false) {
 
     drive.goBackward(0.24_tile);
 
+    drive.setToleranceParams(1.5_s);
     drive.faceToPoint({-1_tile, (reverse ? -1 : 1) * 0.5_tile}, true);
+    drive.resetToleranceParams();
 
+    // drive to that path to just sweep in multiple mogos while intaking
     drive.goPath({
         Path({0_in, 0_in}),
         Path({-1_tile, (reverse ? -1 : 1) * 0.22_tile}),
@@ -36,16 +41,25 @@ void lilRoute (bool reverse = false) {
 
     pros::delay(500);
 
+    // go back just a little bit
     drive.moveArcade(-0.2, 0);
     pros::delay(300);
     drive.moveArcade(0, 0);
 
+    // face to last ring
+    drive.setToleranceParams(1.5_s);
+    drive.faceToPoint({50_tile, (reverse ? -1 : 1) * -70_tile}, true, {{0, 0.8}}); // go a little bit slower to not move to much. 
+    drive.resetToleranceParams();
 
-    drive.faceToPoint({50_tile, (reverse ? -1 : 1) * -70_tile}, true);
-
+    // go forward to last ring
     drive.goForward(0.7_tile);
 
+    // face to mogo dump
+    drive.setToleranceParams(1.5_s);
     drive.faceToPoint({20_tile, (reverse ? -1 : 1) * 5_tile}, true);
+    drive.resetToleranceParams();
+
+    // mogo dump
     drive.moveArcade(-0.5, 0);
     pros::delay(500);
     drive.moveArcade(0, 0);
@@ -61,8 +75,8 @@ void Routes::skills () {
 
     drive.goPath({ // REALLY REALLY REALLY TUNABLE!!!
         Path({0_in, 0_in}),
-        Path({0.4_tile, 0_in}),
-        Path({1.9_tile, -1.25_tile})
+        Path({0.30_tile, 0_in}),
+        Path({2_tile, -1.35_tile})
     }, 5_in, 5_in); // don't have to be too accurate!
     
     eff.setIntake(IntakeState::INACTIVE);
@@ -71,11 +85,22 @@ void Routes::skills () {
     lilRoute();
 
     drive.goForward(0.1_tile);
+
+    drive.setToleranceParams(1.5_s);
     drive.faceToPoint({20_tile, 0_tile}, true);
+    drive.resetToleranceParams();
+    
     drive.goForward(0.8_tile);
+
+    drive.setToleranceParams(1.5_s);
     drive.faceToPoint({0_tile, 20_tile}, true);
+    drive.resetToleranceParams();
+
     drive.goForward(2.8_tile);
+
+    drive.setToleranceParams(1.5_s);
     drive.turnRight(45_deg);
+    drive.resetToleranceParams();
     
     eff.setIntake(IntakeState::INTAKE);
     drive.goForward(1.3_tile);

@@ -72,7 +72,8 @@ void autonomous() {
     
     eff.seeColor = false;
 
-    Routes::ringSide();
+    Routes::skills();
+    // Routes::ringSide();
 
     //drive.goForward(2_tile);
     //drive.turnLeft(180_deg);
