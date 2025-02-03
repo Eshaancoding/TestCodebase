@@ -25,7 +25,7 @@ void Routes::ringSide () {
     // drive.faceToPoint({1.5_tile,1_tile},true); // face mogo
     //OdomArc::setPos(0_tile, 0_tile, -45_deg);
     drive.setToleranceParams(std::nullopt, 3_in); // cjange d tolerance to 1_in
-    drive.goBackward(1.75_tile, {{0, 0.9}}); // go back towards mogo
+    drive.goBackward(1.53_tile, {{0, 0.9}}); // go back towards mogo og .7
     drive.resetToleranceParams(); // go back to 0.5_in. 
     eff.toggleBoinker();
     eff.toggleClamp(); // clmap mogo
@@ -45,13 +45,13 @@ void Routes::ringSide () {
     // eff.arm_state = ArmState::PID_ARM;
     // eff.currentState = State::hasDonut;
 
-    drive.setToleranceParams(std::nullopt, 2_in); // no changes to time tolerance, but distance tolerance is set to 1_in
-    drive.goForward(1.78_tile, {{0, 0.6}}); // go towards ladder, make this slower 
-    drive.resetToleranceParams();
+    // drive.setToleranceParams(std::nullopt, 2_in); // no changes to time tolerance, but distance tolerance is set to 1_in
+    // drive.goForward(1.78_tile, {{0, 0.6}}); // go towards ladder, make this slower 
+    // drive.resetToleranceParams();
 
-    eff.raiseArm();
-    pros::delay(500);
-    eff.stopArm();
+    // eff.raiseArm();
+    // pros::delay(500);
+    // eff.stopArm();
     
     // drive.goForward(1.5_tile); // intake both rings
     // drive.turnRight(90_deg);
