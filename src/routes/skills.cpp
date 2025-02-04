@@ -18,10 +18,10 @@ void lilRoute (bool reverse = false) {
     eff.setIntake(IntakeState::INTAKE);
 
     // initial sweep of rings
-    drive.goPath({
-        Path({0_in, 0_in}),
-        Path({0.75_tile, (reverse ? -1 : 1) * -0.5_tile}),
-        Path({2.35_tile, (reverse ? -1 : 1) * -1.62_tile}) // 2.3
+    drive.goPathDepr({
+        PathDepr({0_in, 0_in}),
+        PathDepr({0.75_tile, (reverse ? -1 : 1) * -0.5_tile}),
+        PathDepr({2.35_tile, (reverse ? -1 : 1) * -1.62_tile}) // 2.3
     }, 5_in, 5_in);
 
     pros::delay(500);
@@ -33,10 +33,10 @@ void lilRoute (bool reverse = false) {
     drive.resetToleranceParams();
 
     // drive to that path to just sweep in multiple mogos while intaking
-    drive.goPath({ // second sweep near corner grabs 2 rings
-        Path({0_in, 0_in}),
-        Path({-1_tile, (reverse ? -1 : 1) * 0.25_tile}),
-        Path({-2.4_tile, (reverse ? -1 : 1) * 0.22_tile})
+    drive.goPathDepr({ // second sweep near corner grabs 2 rings
+        PathDepr({0_in, 0_in}),
+        PathDepr({-1_tile, (reverse ? -1 : 1) * 0.25_tile}),
+        PathDepr({-2.4_tile, (reverse ? -1 : 1) * 0.22_tile})
     }, 5_in, 5_in, false, 3_s);
 
     pros::delay(500);
@@ -159,9 +159,9 @@ void Routes::skills () {
     eff.setIntake(IntakeState::INTAKE); 
     pros::delay(600);
 
-    drive.goPath({ // REALLY REALLY REALLY TUNABLE!!!
-        Path({0_in, 0_in}),
-        Path({1.4_tile, -1.3_tile})
+    drive.goPathDepr({ // REALLY REALLY REALLY TUNABLE!!!
+        PathDepr({0_in, 0_in}),
+        PathDepr({1.4_tile, -1.3_tile})
     }, 5_in, 5_in); // don't have to be too accurate!
     
     eff.setIntake(IntakeState::INACTIVE);
@@ -218,10 +218,10 @@ void Routes::skills () {
 
     eff.toggleIntakeState(INTAKE);
     drive.faceToPoint({0.8_tile, -1_tile}, true);
-    drive.goPath({
-        Path({0_tile,0_tile}),
-        Path({1_tile, -0.75_tile}),
-        Path({2.1_tile, -0.45_tile})
+    drive.goPathDepr({
+        PathDepr({0_tile,0_tile}),
+        PathDepr({1_tile, -0.75_tile}),
+        PathDepr({2.1_tile, -0.45_tile})
     });
     pros::delay(1000);
     drive.faceToPoint({-0.1_tile, 1_tile}, true);
@@ -234,61 +234,4 @@ void Routes::skills () {
     eff.toggleClamp();
     drive.goForward(1_tile);
     //drive.faceToPoint({-10_tile, 0_tile}, true);
-
-
-
-
-    // drive.goBackward(1_tile);
-    // eff.toggleClamp();
-    // eff.intakeToggle();
-
-    // // 
-    // drive.goPath({
-    //     Path({0_in, 0_in}),
-    //     Path({1_tile, 0.3_tile}),
-    //     Path({1.75_tile, 0.75_tile}),
-    //     Path({2_tile, 1.5_tile})
-    // });
-
-    // drive.turnLeft(180_deg);
-    // drive.goPath({
-    //     Path({0_in, 0_in}),
-    //     Path({-1_tile, -0.5_tile}),
-    //     Path({-2.5_tile, -0.5_tile})
-    // });
-
-    // drive.faceToPoint({0.5_tile, 0.5_tile}, true);
-    // drive.goForward(0.707_tile);
-    // drive.faceToPoint({3_tile, -0.5_tile}, true);
-    // drive.goBackward(1.118_tile);
-    // eff.toggleClamp();
-    
-    // ======================================================
-    // ============= third part of skills auton =============
-    // ======================================================
-    // eff.setIntake(false, true); // we are 1000% sure that our intake is off and we could use intakeToggle
-    // drive.goForward(4.123_tile);
-    // pros::delay(1500); //let ring go on intake
-    // eff.intakeToggle(); //turn off
-    // drive.faceToPoint({0_tile, -1_tile}, true);
-    // eff.intakeToggle(); //turn on
-    // drive.goForward(1_tile);
-    // pros::delay(1000);
-    // eff.intakeToggle();
-    // drive.faceToPoint({-1_tile, 1_tile}, true);
-    // drive.goBackward(1.414_tile);
-    // eff.toggleClamp(); //clamp on
-    // eff.intakeToggle(); //turn on, put rings on mogo
-    // drive.faceToPoint({-1_tile, 1_tile}, true);
-    // drive.goForward(1.414_tile);
-    // drive.faceToPoint({0_tile, -1_tile}, true);
-    // drive.goForward(1_tile);
-    // drive.faceToPoint({2_tile, 0_tile}, true);
-    // drive.goForward(1.5_tile);
-    // drive.faceToPoint({-0.5_tile, 1_tile}, true); // weird
-    // drive.goBackward(1.12_tile);
-    // eff.toggleClamp(); //clamp off, mogo in corner
-    // eff.intakeToggle(); //intake off
-    // drive.faceToPoint({0_tile, 1_tile}, true);
-    // drive.goForward(5_tile); //slam mogo in corner
 }

@@ -14,10 +14,10 @@ void Routes::ringSide () {
 
     eff.toggleBoinker();
     eff.toggleIntakeState(INTAKE);
-    drive.goPath({ // turn towards 4 stack ring
-        Path({0_tile,0_tile}),
-        Path({0_tile, 1.15_tile}),
-        Path({is_blue ? 0.33_tile : -0.33_tile, 1.69_tile})
+    drive.goPathDepr({ // turn towards 4 stack ring
+        PathDepr({0_tile,0_tile}),
+        PathDepr({0_tile, 1.15_tile}),
+        PathDepr({is_blue ? 0.33_tile : -0.33_tile, 1.69_tile})
     }, 5_in,5_in); 
     pros::delay(600);
     eff.toggleIntakeState(INACTIVE);    
@@ -31,10 +31,10 @@ void Routes::ringSide () {
     eff.toggleClamp(); // clmap mogo
 
     eff.toggleIntakeState(INTAKE); // intake
-    drive.goPath({
-        Path({0_tile,0_tile}),
-        Path({is_blue ? 0.5_tile : -0.5_tile,0.4_tile}),
-        Path({is_blue ? 1.5_tile : -1.5_tile, 0.7_tile})
+    drive.goPathDepr({
+        PathDepr({0_tile,0_tile}),
+        PathDepr({is_blue ? 0.5_tile : -0.5_tile,0.4_tile}),
+        PathDepr({is_blue ? 1.5_tile : -1.5_tile, 0.7_tile})
     }, 5_in, 5_in);
 
     drive.setToleranceParams(1_s);

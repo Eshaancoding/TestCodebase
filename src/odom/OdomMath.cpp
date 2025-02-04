@@ -1,6 +1,6 @@
+#include <vector>
 #include "okapi/api/odometry/odomMath.hpp"
 #include "Odom/Math.h"
-#include "Console.h"
 
 QAngle Math::restrictAngle180(QAngle angle) {
     // >= 180, goes negative (-180)
@@ -111,7 +111,7 @@ std::vector<Point> Math::circleLineIntersection (
             return {};
     }
     else { // there may exist two points
-        vector<Point> pot_points = {};
+        std::vector<Point> pot_points = {};
         
         // find first potential point
         QLength x1 = ((d_discrim * d_y + sign(d_y) * d_x * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
