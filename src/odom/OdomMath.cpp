@@ -1,3 +1,4 @@
+#include "okapi/api/odometry/odomMath.hpp"
 #include "Odom/Math.h"
 #include "Console.h"
 
@@ -53,5 +54,84 @@ Point Math::findPointOffset(OdomState state, QLength dist) {
         state.x + okapi::sin(state.theta) * dist,
         state.y + okapi::cos(state.theta) * dist,
     };
+}
 
+Point Math::add (okapi::OdomState orig, Point p) {
+    p.x += orig.x;
+    p.y += orig.y;
+    return p; 
+}
+
+double Math::sign (double x) {
+    if (x < 0) return -1;
+    else return 1;
+}
+
+std::vector<Point> Math::circleLineIntersection (
+    Point currentPosition,      // center of circle
+    QLength lookaheadDistance,  // radius of circle
+    Point lineOne, // line starting point
+    Point lineTwo  // line ending point
+) {
+    const QLength pot_points_tol = 0.1_in;
+
+    auto x1_offset = lineOne.x - currentPosition.x;
+    auto y1_offset = lineOne.y - currentPosition.y;
+
+    auto x2_offset = lineTwo.x - currentPosition.x;
+    auto y2_offset = lineTwo.y - currentPosition.y;
+
+    auto d_x = (x2_offset - x1_offset).convert(okapi::inch);
+    auto d_y = (y2_offset - y1_offset).convert(okapi::inch);
+    auto d_r = sqrt(pow(d_x, 2) + pow(d_y, 2));
+
+    auto d_discrim = (x1_offset.convert(okapi::inch) * y2_offset.convert(okapi::inch)) - (x2_offset.convert(okapi::inch) * y1_offset.convert(okapi::inch));
+
+    auto discriminant = (pow(d_r, 2) * pow(lookaheadDistance.convert(okapi::inch), 2))  - pow(d_discrim, 2);
+
+    // find min and max points
+    auto minX = min(lineOne.x, lineTwo.x) - pot_points_tol;
+    auto maxX = max(lineOne.x, lineTwo.x) + pot_points_tol;
+
+    auto minY = min(lineOne.y, lineTwo.y) - pot_points_tol;
+    auto maxY = max(lineOne.y, lineTwo.y) + pot_points_tol;
+
+    if (discriminant < 0) return {}; // there is no points
+    else if (discriminant == 0) { // only one point exists
+        QLength x = ((d_discrim * d_y) / pow(d_r, 2)) * 1_in;
+        QLength y = ((-d_discrim * d_x) / pow(d_r, 2)) * 1_in;
+            
+        // check whether it's within the points
+        auto solX = x + currentPosition.x;
+        auto solY = y + currentPosition.y;
+
+        if (minX <= solX && solX <= maxX && minY <= solY && solY <= maxY)
+            return { {solX, solY} };
+        else 
+            return {};
+    }
+    else { // there may exist two points
+        vector<Point> pot_points = {};
+        
+        // find first potential point
+        QLength x1 = ((d_discrim * d_y + sign(d_y) * d_x * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
+        QLength y1 = ((-d_discrim * d_x + abs(d_y) * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
+        Point sol1 = {x1 + currentPosition.x, y1 + currentPosition.y};
+        
+        // find second potential point
+        QLength x2 = ((d_discrim * d_y - sign(d_y) * d_x * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
+        QLength y2 = ((-d_discrim * d_x - abs(d_y) * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
+        Point sol2 = {x2 + currentPosition.x, y2 + currentPosition.y};
+        
+        // find is between
+        if (minX <= sol1.x && sol1.x <= maxX && minY <= sol1.y && sol1.y <= maxY) {
+            pot_points.push_back(sol1);
+        }
+        
+        if (minX <= sol2.x && sol2.x <= maxX && minY <= sol2.y && sol2.y <= maxY) {
+            pot_points.push_back(sol2);
+        }
+        
+        return pot_points;
+    }
 }

@@ -1,91 +1,10 @@
 #include "drive.h"
 #include "odom/Math.h"
 #include "odom/OdomArc.h"
-#include "odom/OdomCustom.h"
 #include "PIDParams.h"
 
-double sign (double x) {
-    if (x < 0) return -1;
-    else return 1;
-}
-
-std::vector<Point> circleLineIntersection (
-    Point currentPosition,      // center of circle
-    QLength lookaheadDistance,  // radius of circle
-    Point lineOne, // line starting point
-    Point lineTwo  // line ending point
-) {
-    const QLength pot_points_tol = 0.1_in;
-
-    // lineOne.x -= currentPosition.x;
-    // lineOne.y -= currentPosition.y;
-
-    // lineTwo.x -= currentPosition.x;
-    // lineTwo.y -= currentPosition.y;
-
-    auto x1_offset = lineOne.x - currentPosition.x;
-    auto y1_offset = lineOne.y - currentPosition.y;
-
-    auto x2_offset = lineTwo.x - currentPosition.x;
-    auto y2_offset = lineTwo.y - currentPosition.y;
-
-    auto d_x = (x2_offset - x1_offset).convert(okapi::inch);
-    auto d_y = (y2_offset - y1_offset).convert(okapi::inch);
-    auto d_r = sqrt(pow(d_x, 2) + pow(d_y, 2));
-
-    auto d_discrim = (x1_offset.convert(okapi::inch) * y2_offset.convert(okapi::inch)) - (x2_offset.convert(okapi::inch) * y1_offset.convert(okapi::inch));
-
-    auto discriminant = (pow(d_r, 2) * pow(lookaheadDistance.convert(okapi::inch), 2))  - pow(d_discrim, 2);
-
-    // find min and max points
-    auto minX = min(lineOne.x, lineTwo.x) - pot_points_tol;
-    auto maxX = max(lineOne.x, lineTwo.x) + pot_points_tol;
-
-    auto minY = min(lineOne.y, lineTwo.y) - pot_points_tol;
-    auto maxY = max(lineOne.y, lineTwo.y) + pot_points_tol;
-
-    if (discriminant < 0) return {}; // there is no points
-    else if (discriminant == 0) { // only one point exists
-        QLength x = ((d_discrim * d_y) / pow(d_r, 2)) * 1_in;
-        QLength y = ((-d_discrim * d_x) / pow(d_r, 2)) * 1_in;
-            
-        // check whether it's within the points
-        auto solX = x + currentPosition.x;
-        auto solY = y + currentPosition.y;
-
-        if (minX <= solX && solX <= maxX && minY <= solY && solY <= maxY)
-            return { {solX, solY} };
-        else 
-            return {};
-    }
-    else { // there may exist two points
-        vector<Point> pot_points = {};
-        
-        // find first potential point
-        QLength x1 = ((d_discrim * d_y + sign(d_y) * d_x * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
-        QLength y1 = ((-d_discrim * d_x + abs(d_y) * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
-        Point sol1 = {x1 + currentPosition.x, y1 + currentPosition.y};
-        
-        // find second potential point
-        QLength x2 = ((d_discrim * d_y - sign(d_y) * d_x * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
-        QLength y2 = ((-d_discrim * d_x - abs(d_y) * sqrt(discriminant)) / pow(d_r, 2)) * 1_in;
-        Point sol2 = {x2 + currentPosition.x, y2 + currentPosition.y};
-        
-        // find is between
-        if (minX <= sol1.x && sol1.x <= maxX && minY <= sol1.y && sol1.y <= maxY) {
-            pot_points.push_back(sol1);
-        }
-        
-        if (minX <= sol2.x && sol2.x <= maxX && minY <= sol2.y && sol2.y <= maxY) {
-            pot_points.push_back(sol2);
-        }
-        
-        return pot_points;
-    }
-}
-
-void Drive::goPath (
-    std::initializer_list<Path> paths_initializer,
+void Drive::goPathDepr (
+    std::initializer_list<PathDepr> paths_initializer,
     QLength callbackTol,
     QLength endTol,
     bool isReverse,
@@ -97,13 +16,13 @@ void Drive::goPath (
     // =============== First convert all points to absolute if relative =============== 
     // and also convert to vector
     auto current_pos = OdomArc::getPos();
-    vector<Path> paths;
+    vector<PathDepr> paths;
 
     for (int i = 0; i < paths_initializer.size(); i++) {
         okapi::Point new_point = (paths_initializer.begin()+i)->point;
         new_point.x += current_pos.x;
         new_point.y += current_pos.y;
-        paths.push_back(Path(
+        paths.push_back(PathDepr(
             new_point,
             (paths_initializer.begin()+i)->headingFactor,
             (paths_initializer.begin()+i)->distanceFactor,
@@ -159,7 +78,7 @@ void Drive::goPath (
             
             // find circle line intersection
             for (int x = 0; x < paths.size()-1; x++) {
-                auto result = circleLineIntersection(
+                auto result = Math::circleLineIntersection(
                     {current_pos.x, current_pos.y},
                     lookaheadDistance,
                     (paths.begin()+x)->point,

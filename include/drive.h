@@ -5,18 +5,24 @@
 #include "effectors.h"
 #include "parameters.h"
 #include "main.h"
+#include <initializer_list>
 #include <map>
 #include "MovingAverage.h"
 #include "Odom/Math.h"
 
 class Path {
 public:
+    Path() {}
+};
+
+class PathDepr {
+public:
     okapi::Point point;
     std::optional<std::function<void()>> callback;
     double headingFactor, distanceFactor;
     okapi::QLength lookaheadDistance;
 
-    Path (
+    PathDepr (
         okapi::Point p, 
         double headingF=1, // left and right factor; 1 is full speed, 0.3 is 30% speed 
         double distanceF=1, // forward and backward, 1 is full speed, 0.3 is 30% speed.
@@ -186,12 +192,16 @@ public:
      * @param isReverse to check whether the robot is going in reverse or not
      * @param maxTime set the max time for the entire movement
      */
-    void goPath (
-        std::initializer_list<Path> paths_initializer,        
+    void goPathDepr (
+        std::initializer_list<PathDepr> paths_initializer,        
         QLength callbackTol=5_in,
         QLength endTol=2_in,
         bool isReverse=false,
         std::optional<QTime> maxTime=nullopt
+    );
+
+    void move (
+        std::initializer_list<Path> paths
     );
    
 
