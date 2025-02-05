@@ -19,6 +19,8 @@ QUANTITY_TYPE(0, 1, -1, 0, QSpeed)
 constexpr QSpeed mps = meter / second;
 constexpr QSpeed miph = mile / hour;
 constexpr QSpeed kmph = kilometer / hour;
+constexpr QSpeed tps = tile / second; // added tile per second
+constexpr QSpeed fps = foot / second; // added feet per second
 
 inline namespace literals {
 constexpr QSpeed operator"" _mps(long double x) {
@@ -30,6 +32,15 @@ constexpr QSpeed operator"" _miph(long double x) {
 constexpr QSpeed operator"" _kmph(long double x) {
   return static_cast<double>(x) * kilometer / hour;
 }
+
+constexpr QSpeed operator"" _tps (long double x) {
+  return static_cast<double>(x) * tps;
+}
+
+constexpr QSpeed operator"" _fps (long double x) {
+  return static_cast<double>(x) * fps;
+}
+
 constexpr QSpeed operator"" _mps(unsigned long long int x) {
   return static_cast<double>(x) * mps;
 }
@@ -38,6 +49,14 @@ constexpr QSpeed operator"" _miph(unsigned long long int x) {
 }
 constexpr QSpeed operator"" _kmph(unsigned long long int x) {
   return static_cast<double>(x) * kilometer / hour;
+}
+
+constexpr QSpeed operator"" _tps (unsigned long long int x) {
+  return static_cast<double>(x) * tps;
+}
+
+constexpr QSpeed operator"" _fps (unsigned long long int x) {
+  return static_cast<double>(x) * fps;
 }
 } // namespace literals
 } // namespace okapi

@@ -1,3 +1,7 @@
+/**
+* DEPRECATED!
+ */
+
 #include "drive.h"
 #include "odom/Math.h"
 #include "odom/OdomArc.h"

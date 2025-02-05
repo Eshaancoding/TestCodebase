@@ -1,18 +1,50 @@
 #ifndef DRIVE_H
 #define DRIVE_H
 
+#include "moveParams.h"
 #include "Console.h"
 #include "effectors.h"
+#include "okapi/api/units/QAcceleration.hpp"
+#include "okapi/api/units/QLength.hpp"
+#include "okapi/api/units/QSpeed.hpp"
 #include "parameters.h"
 #include "main.h"
+#include <functional>
 #include <initializer_list>
 #include <map>
+#include <optional>
 #include "MovingAverage.h"
 #include "Odom/Math.h"
 
-class Path {
+class DrivePoint {
 public:
-    Path() {}
+    okapi::Point point;
+    std::optional<std::function<void()>> callback;
+    
+    // all of these variables will be active at the START of this Point and END at the start of the next Point 
+    okapi::QLength lookaheadDistance;
+    okapi::QSpeed max_speed; // note that if distance between points are short, it will be set to curvature speed, not max speed
+    okapi::QAcceleration max_acc;
+
+    // if path is short (can't accelerate/deaccelerate given max speed/max acceleration)
+    // then it will be assumed that the points are in CURVATURE speed
+    okapi::QSpeed curvature_speed; 
+
+    DrivePoint  (
+        okapi::Point point, 
+        okapi::QLength lookaheadDistance = LOOKAHEAD_DIST,          // for angle
+        okapi::QSpeed max_speed = MAX_SPEED,                            // for max speed during movement
+        okapi::QSpeed curvature_speed = CURVATURE_SPEED,                // if path is short, will be given a different speed (less than max-speed) to give a smooth turn
+        okapi::QAcceleration max_acc = MAX_ACCELERATION,                // for accelerating/decelerating during movement
+        std::optional<std::function<void()>> callback = std::nullopt    // call function if reaches point (with point_tolerance defined at move funciton). Ex: Alter effector state
+    ) :    
+        point(point),
+        lookaheadDistance(lookaheadDistance),
+        max_speed(max_speed),
+        curvature_speed(curvature_speed),
+        max_acc(max_acc),
+        callback(callback)
+    {};
 };
 
 class PathDepr {
@@ -200,8 +232,13 @@ public:
         std::optional<QTime> maxTime=nullopt
     );
 
+    // overall general function 
+    /**
+     * @brief Overall general function for move
+     */
     void move (
-        std::initializer_list<Path> paths
+        std::initializer_list<DrivePoint> points,
+        QLength point_tolerance
     );
    
 
