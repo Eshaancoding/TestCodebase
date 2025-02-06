@@ -14,10 +14,9 @@
 
 void Drive::move (
     std::initializer_list<DrivePoint> points,
-    QLength point_tolerance
+    QLength point_tolerance,
+    QAcceleration max_acc
 ) {
-    // ======= Convert points into bezier curve ======= 
-
     // ============= Setup Main Loop ============= 
     DistancePID.reset();
     HeadingPID.reset();

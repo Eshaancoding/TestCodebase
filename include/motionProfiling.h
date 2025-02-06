@@ -2,64 +2,86 @@
 #define MOTION_PROFILING
 
 #include "drive.h"
+#include "okapi/api/units/QAcceleration.hpp"
+#include "okapi/api/units/QLength.hpp"
+#include "okapi/api/units/QSpeed.hpp"
+#include "okapi/api/units/QTime.hpp"
 
-class Shape {
+
+class PathSegment {
 public:
-    virtual double y (double x) { return 0.0; };
-    virtual double area (double x) { return 0.0; } ;
-    virtual bool in_bounds (double x) { return false; };
-};
+    QSpeed speed;
+    QTime time;    
 
-class Square : public Shape {
-public: 
-    double h;
-    double min;
-    double max;
-
-    Square (
-        double h,
-        double min,
-        double max
+    PathSegment(
+        QSpeed speed,
+        QTime time
     ) : 
-        h(h),
-        min(min),
-        max(max)
+        speed(speed),
+        time(time)
     {};
-
-    double y (double x) override;
-    double area (double x) override;
-    bool in_bounds (double x) override;
-};
-
-class Triangle : public Shape {
-    double y1;
-    double y2;
-    double min;
-    double max;
-
-    Triangle (
-        double y1,
-        double y2,
-        double min,
-        double max
-    ) : 
-        y1(y1),
-        y2(y2),
-        min(min),
-        max(max)
-    {};
-
-    double y (double x) override;
-    double area (double x) override;
-    bool in_bounds (double x) override;
 };
 
 class MotionProfiling {
-public: 
-    // safe pointers :D
-    vector<unique_ptr<Shape>> shapes;
+private: 
+    vector<PathSegment> shapes;
+    QAcceleration acc;
+    QTime total_time;
 
-    MotionProfiling (vector<DrivePoint> points);
+public:
+    MotionProfiling (vector<DrivePoint> points, QAcceleration acc);
+    QSpeed vel (QTime s);
+    QLength dist (QTime s);
 };
 
 #endif
+
+/*
+
+
+double MotionProfiling :: vel (double s) {
+    // check if we are in acceleration or deceleration
+    double speed_beginning = this->shapes[0].speed;
+    double speed_end = this->shapes[this->shapes.size() - 1].speed;
+
+    // acceleration
+    if (s <= speed_beginning / acc) {
+        return acc * s;
+    } 
+
+    // deacceleration
+    auto decel_start = this->total_time - (speed_end / acc);
+    if (s >= decel_start && s <= this->total_time) {
+        return speed_end - (acc * (s - decel_start));
+    }
+
+    // check whether we are accelerating/decelerrating in between movements
+    double t = 0;
+    for (int i = 0; i < this->shapes.size() - 1; i++) {
+        auto first_shape = this->shapes[i];
+        auto second_shape = this->shapes[i+1];
+        double avg_y = (first_shape.speed + second_shape.speed) / 2.0;
+
+        t += first_shape.time;
+        double tol = abs( (second_shape.speed - first_shape.speed) / (2 * acc) ); 
+
+        if (s >= t - tol && s <= t + tol) {
+            std::cout << "In range: " << t - tol << " to " << t + tol << " | v: " << s << std::endl;
+            double acc_line = (second_shape.speed > first_shape.speed) ? acc : -acc;
+            return (acc_line * (s - t) + avg_y);
+        }
+    }
+
+    // else, we are in cruise
+    t = 0;
+    for (auto sh : this->shapes) {
+        t += sh.time;
+        if (s <= t) {
+            std::cout << "In cruise: " << s << " < " << t << " | v: " << sh.speed << std::endl;
+            return sh.speed;
+        };
+    }
+    
+    return 0;
+}
+*/

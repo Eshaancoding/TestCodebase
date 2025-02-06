@@ -23,26 +23,17 @@ public:
     
     // all of these variables will be active at the START of this Point and END at the start of the next Point 
     okapi::QLength lookaheadDistance;
-    okapi::QSpeed max_speed; // note that if distance between points are short, it will be set to curvature speed, not max speed
-    okapi::QAcceleration max_acc;
-
-    // if path is short (can't accelerate/deaccelerate given max speed/max acceleration)
-    // then it will be assumed that the points are in CURVATURE speed
-    okapi::QSpeed curvature_speed; 
+    okapi::QSpeed max_speed;
 
     DrivePoint  (
         okapi::Point point, 
-        okapi::QLength lookaheadDistance = LOOKAHEAD_DIST,          // for angle
+        okapi::QLength lookaheadDistance = LOOKAHEAD_DIST,              // for angle displacement
         okapi::QSpeed max_speed = MAX_SPEED,                            // for max speed during movement
-        okapi::QSpeed curvature_speed = CURVATURE_SPEED,                // if path is short, will be given a different speed (less than max-speed) to give a smooth turn
-        okapi::QAcceleration max_acc = MAX_ACCELERATION,                // for accelerating/decelerating during movement
         std::optional<std::function<void()>> callback = std::nullopt    // call function if reaches point (with point_tolerance defined at move funciton). Ex: Alter effector state
     ) :    
         point(point),
         lookaheadDistance(lookaheadDistance),
         max_speed(max_speed),
-        curvature_speed(curvature_speed),
-        max_acc(max_acc),
         callback(callback)
     {};
 };
@@ -238,7 +229,8 @@ public:
      */
     void move (
         std::initializer_list<DrivePoint> points,
-        QLength point_tolerance
+        QLength point_tolerance,
+        QAcceleration max_acc3 = MAX_ACCELERATION,
     );
    
 
