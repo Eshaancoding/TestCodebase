@@ -26,7 +26,6 @@ namespace OdomArc {
 
     okapi::IMU imu (8, okapi::IMUAxes::z); // imu
 
-    double prevEnc = 0.0;
 
     double prevDi = 0.0;
     double prevDib = 0.0;
@@ -125,7 +124,6 @@ namespace OdomArc {
             prevAng = ang;
             prevDib = dib;
 
-            //prevEnc = currentEnc; 
             pros::delay(25); 
         }
     }
