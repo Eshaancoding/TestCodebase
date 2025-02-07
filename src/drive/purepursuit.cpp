@@ -7,6 +7,8 @@
 #include "odom/OdomArc.h"
 #include "Console.h"
 
+#define LOOKAHEAD_DIST 3_in
+
 void Drive::goPathDepr (
     std::initializer_list<PathDepr> paths_initializer,
     QLength callbackTol,

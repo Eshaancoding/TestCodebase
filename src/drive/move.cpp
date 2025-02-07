@@ -10,17 +10,38 @@
 #include "odom/OdomArc.h"
 #include "pros/rtos.h"
 #include <cmath>
+#include "moveParams.h"
+
+DrivePoint :: DrivePoint (
+    okapi::Point point, 
+    optional<okapi::QLength> lookaheadDistance,
+    optional<okapi::QSpeed> max_speed,
+    optional<double> kp,
+    optional<std::function<void()>> callback
+) {
+    this->point = point;
+    this->lookaheadDistance = (lookaheadDistance == nullopt) ? LOOKAHEAD_DIST : (*lookaheadDistance);
+    this->max_speed = (max_speed == nullopt) ? MAX_SPEED : (*max_speed);
+    this->kp = (kp == nullopt) ? KP : (*kp);
+    this->callback = callback;
+}
 
 void Drive::move (
     std::initializer_list<DrivePoint> points,
-    QLength point_tolerance,
-    QAcceleration max_acc,
-    QTime timeout,
-    QLength end_tolerance
+    optional<QLength> point_tolerance,
+    optional<QAcceleration> max_acc,
+    optional<QTime> timeout,
+    optional<QLength> end_tolerance
 ) {
+    // ========= Set Optional to Defaults defined in moveParams.h ========= 
+    if (point_tolerance == nullopt) point_tolerance = POINT_TOLERANCE;
+    if (max_acc == nullopt) max_acc = MAX_ACCELERATION;
+    if (timeout == nullopt) timeout = TIMEOUT;
+    if (end_tolerance == nullopt) end_tolerance = END_TOLERANCE;
+
     // ============= Setup Main Loop ============= 
     OdomArc::resetDistTravelled();
-    MotionProfiling mt_profile (points, max_acc);
+    MotionProfiling mt_profile (points, *max_acc);
     double current_kp = points.begin()->kp;
 
     DistancePID.reset();
@@ -44,7 +65,7 @@ void Drive::move (
         // max speed, acceleration, and curvature speed are accounted for throughout the path in motion profiling 
         for (int i = pointIdx; i < points.size(); i++) {
             auto drive_point = *(points.begin() + i);
-            if (Math::distance(current_pos, drive_point.point) <= point_tolerance) {
+            if (Math::distance(current_pos, drive_point.point) <= (*point_tolerance)) {
                 lookahead_dist = drive_point.lookaheadDistance;
                 current_kp = drive_point.kp;
                 if (drive_point.callback) (*drive_point.callback)();
@@ -102,8 +123,8 @@ void Drive::move (
 
         // ============= Check if end program ============= 
         if (
-            (elapsed >= (mt_profile.get_total_time() + timeout)) ||  // timeout
-            (abs(dist_err) <= end_tolerance)                    // end tolerance
+            (elapsed >= (mt_profile.get_total_time() + (*timeout))) ||  // timeout
+            (abs(dist_err) <= (*end_tolerance))                    // end tolerance
         ) {
             mainLoop = false;
             break;

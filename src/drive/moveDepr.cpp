@@ -8,7 +8,8 @@
 #include "parameters.h"
 #include "odom/OdomArc.h"
 #include "PIDParams.h"
-#include "moveParams.h"
+
+#define LOOKAHEAD_DIST 3_in
 
 void Drive::move (
     Point point, 

@@ -1,7 +1,6 @@
 #ifndef DRIVE_H
 #define DRIVE_H
 
-#include "moveParams.h"
 #include "okapi/api/units/QAcceleration.hpp"
 #include "okapi/api/units/QLength.hpp"
 #include "okapi/api/units/QSpeed.hpp"
@@ -10,6 +9,7 @@
 #include <initializer_list>
 #include <map>
 #include <optional>
+using namespace std;
 
 class DrivePoint {
 public:
@@ -23,17 +23,11 @@ public:
 
     DrivePoint  (
         okapi::Point point, 
-        okapi::QLength lookaheadDistance = LOOKAHEAD_DIST,              // for angle displacement
-        okapi::QSpeed max_speed = MAX_SPEED,                            // for max speed during movement
-        double kp = KP,                                                 // Proportion for controlling motion profiling --> robot power
-        std::optional<std::function<void()>> callback = std::nullopt    // call function if reaches point (with point_tolerance defined at move funciton). Ex: Alter effector state
-    ) :    
-        point(point),
-        lookaheadDistance(lookaheadDistance),
-        max_speed(max_speed),
-        callback(callback),
-        kp(kp)
-    {};
+        optional<okapi::QLength> lookaheadDistance = nullopt,              // for angle displacement
+        optional<okapi::QSpeed> max_speed = nullopt,                            // for max speed during movement
+        optional<double> kp = nullopt,                                                 // Proportion for controlling motion profiling --> robot power
+        optional<std::function<void()>> callback = nullopt    // call function if reaches point (with point_tolerance defined at move funciton). Ex: Alter effector state
+    );
 };
 
 class PathDepr {
@@ -227,10 +221,10 @@ public:
      */
     void move (
         std::initializer_list<DrivePoint> points,
-        QLength point_tolerance,
-        QAcceleration max_acc = MAX_ACCELERATION,
-        QTime timeout = TIMEOUT,
-        QLength end_tolerance = END_TOLERANCE
+        optional<QLength> point_tolerance = nullopt,
+        optional<QAcceleration> max_acc = nullopt,
+        optional<QTime> timeout = nullopt,
+        optional<QLength> end_tolerance = nullopt
     );
    
 
