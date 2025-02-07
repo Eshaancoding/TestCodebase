@@ -3,6 +3,7 @@
 
 #include "main.h"
 #include "Math.h"
+#include "okapi/api/units/QLength.hpp"
 #include "parameters.h"
 #include <iostream>
 using namespace std;
@@ -21,6 +22,8 @@ namespace OdomArc {
     double distanceGet ();
     double distanceb ();
     double angleGet ();
+    void resetDistTravelled ();
+    QLength getDistTravelled ();
 };
 
 

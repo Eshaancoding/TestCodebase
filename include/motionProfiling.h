@@ -48,14 +48,16 @@ public:
 class MotionProfiling {
 private: 
     std::vector<Line> lines;
+    QTime total_time;
     QAcceleration acc;
     bool is_debug;
     
 public:
-    MotionProfiling (vector<DrivePoint> points, QAcceleration acc);
+    MotionProfiling (std::vector<DrivePoint> points, QAcceleration acc);
     QSpeed vel (QTime t);
     QLength dist (QTime t);
     void set_debug (bool is_debug);
+    QTime get_total_time ();
 };
 
 #endif

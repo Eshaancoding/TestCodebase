@@ -1,12 +1,9 @@
 #include "motionProfiling.h"
-#include "odom/Math.h"
-#include "okapi/api/units/QAcceleration.hpp"
-#include "okapi/api/units/QAngularAcceleration.hpp"
 #include "okapi/api/units/QLength.hpp"
 #include "okapi/api/units/QSpeed.hpp"
 #include "okapi/api/units/QTime.hpp"
-#include "pros/apix.h"
-#include <memory>
+#include "Odom/Math.h"
+using namespace std;
 
 MotionProfiling :: MotionProfiling (vector<DrivePoint> points, QAcceleration acc) {
     this->acc = acc;
@@ -74,13 +71,15 @@ MotionProfiling :: MotionProfiling (vector<DrivePoint> points, QAcceleration acc
     ));
 
     // time smooth
-    QTime currentX = 0_s;
+    QTime currentTime = 0_s;
     for (int i = 0; i < this->lines.size(); i++) {
         QTime w = this->lines[i].t2 - this->lines[i].t1;
-        this->lines[i].t1 = currentX;
-        this->lines[i].t2 = w + currentX;
-        currentX += w;
+        this->lines[i].t1 = currentTime;
+        this->lines[i].t2 = w + currentTime;
+        currentTime += w;
     }
+
+    this->total_time = currentTime; // set total time
 }
 
 QSpeed MotionProfiling :: vel (QTime t) {
@@ -96,4 +95,8 @@ QLength MotionProfiling :: dist (QTime t) {
         out += l.area(t);
     }
     return out;
+}
+
+QTime MotionProfiling :: get_total_time () {
+    return this->total_time;
 }

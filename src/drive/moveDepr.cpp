@@ -8,6 +8,7 @@
 #include "parameters.h"
 #include "odom/OdomArc.h"
 #include "PIDParams.h"
+#include "moveParams.h"
 
 void Drive::move (
     Point point, 

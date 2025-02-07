@@ -1,7 +1,6 @@
-#include "Console.h"
 #include "drive.h"
 #include "Odom/Math.h"
-#include "odom/OdomCustom.h"
+#include "motionProfiling.h"
 #include "okapi/api/odometry/odomState.hpp"
 #include "okapi/api/units/QAcceleration.hpp"
 #include "okapi/api/units/QAngle.hpp"
@@ -15,9 +14,15 @@
 void Drive::move (
     std::initializer_list<DrivePoint> points,
     QLength point_tolerance,
-    QAcceleration max_acc
+    QAcceleration max_acc,
+    QTime timeout,
+    QLength end_tolerance
 ) {
     // ============= Setup Main Loop ============= 
+    OdomArc::resetDistTravelled();
+    MotionProfiling mt_profile (points, max_acc);
+    double current_kp = points.begin()->kp;
+
     DistancePID.reset();
     HeadingPID.reset();
 
@@ -26,29 +31,31 @@ void Drive::move (
 
     auto start = pros::c::millis();
     bool mainLoop = true;
-    bool is_reverse = Math::anglePoint(OdomCustom::getPos(), (points.begin()+1)->point) > 90_deg;
+    bool is_reverse = Math::anglePoint(OdomArc::getPos(), (points.begin()+1)->point) > 90_deg;
 
     // ============= Main Loop ============= 
     while (mainLoop) {
-
         // ============= Get current conditions ============= 
-        auto elapsed_sec = double(pros::c::millis() - start) / 1000;
+        QTime elapsed = (pros::c::millis() - start) * 1_ms;
         auto current_pos = OdomArc::getPos();
+        current_pos.theta += (is_reverse ? 180_deg : 0_deg); // if reverse, act like we are going forward (we reverse motor direction)
 
-        // ======== Set lookahead distance and call callback ======
+        // ======== Set lookahead distance, kp, and call callback ======
         // max speed, acceleration, and curvature speed are accounted for throughout the path in motion profiling 
         for (int i = pointIdx; i < points.size(); i++) {
             auto drive_point = *(points.begin() + i);
             if (Math::distance(current_pos, drive_point.point) <= point_tolerance) {
                 lookahead_dist = drive_point.lookaheadDistance;
+                current_kp = drive_point.kp;
                 if (drive_point.callback) (*drive_point.callback)();
                 pointIdx++;
                 break;
             }
         }
 
-        // ============= Calculate the motion profiling ============= 
-
+        // ============= Calculate the motion profiling & forward motion vel ============= 
+        QLength dist_err = (mt_profile.dist(elapsed) - OdomArc::getDistTravelled());
+        double fw_motor_vel = dist_err.convert(okapi::inch) * current_kp;
     
         // ============= Find Goal Point for Heading ============= 
         vector<Point> pot_points = {}; 
@@ -77,8 +84,30 @@ void Drive::move (
             }
         }
 
-        // find angle error
-        QAngle angle_err = Math::anglePoint(current_pos, target_point);
+        // find angle error (if valid point. Else, we assume 0_deg angle err)
+        QAngle angle_err = 
+            (target_point.x != -1_in && target_point.y != -1_in) ? 
+                Math::anglePoint(current_pos, target_point) 
+            : 0_deg;
+
+        // angle motor vel
+        QSpeed target_vel = mt_profile.vel(elapsed);
+        double ang_motor_vel = ROBOT_WIDTH.convert(okapi::foot) * sin(angle_err.convert(radian)) / lookahead_dist.convert(okapi::foot) * target_vel.convert(fps);
+        
+        // ============= Move Robot! ============= 
+        drive.moveArcade(
+            fw_motor_vel * (is_reverse ? -1 : 1),
+            ang_motor_vel
+        );
+
+        // ============= Check if end program ============= 
+        if (
+            (elapsed >= (mt_profile.get_total_time() + timeout)) ||  // timeout
+            (abs(dist_err) <= end_tolerance)                    // end tolerance
+        ) {
+            mainLoop = false;
+            break;
+        }
 
         // ============= Delay ============= 
         pros::delay(10);

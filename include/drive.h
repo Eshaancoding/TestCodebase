@@ -2,19 +2,14 @@
 #define DRIVE_H
 
 #include "moveParams.h"
-#include "Console.h"
-#include "effectors.h"
 #include "okapi/api/units/QAcceleration.hpp"
 #include "okapi/api/units/QLength.hpp"
 #include "okapi/api/units/QSpeed.hpp"
-#include "parameters.h"
 #include "main.h"
 #include <functional>
 #include <initializer_list>
 #include <map>
 #include <optional>
-#include "MovingAverage.h"
-#include "Odom/Math.h"
 
 class DrivePoint {
 public:
@@ -24,17 +19,20 @@ public:
     // all of these variables will be active at the START of this Point and END at the start of the next Point 
     okapi::QLength lookaheadDistance;
     okapi::QSpeed max_speed;
+    double kp;
 
     DrivePoint  (
         okapi::Point point, 
         okapi::QLength lookaheadDistance = LOOKAHEAD_DIST,              // for angle displacement
         okapi::QSpeed max_speed = MAX_SPEED,                            // for max speed during movement
+        double kp = KP,                                                 // Proportion for controlling motion profiling --> robot power
         std::optional<std::function<void()>> callback = std::nullopt    // call function if reaches point (with point_tolerance defined at move funciton). Ex: Alter effector state
     ) :    
         point(point),
         lookaheadDistance(lookaheadDistance),
         max_speed(max_speed),
-        callback(callback)
+        callback(callback),
+        kp(kp)
     {};
 };
 
@@ -88,7 +86,7 @@ private:
         bool headingActivated=true, 
         bool distanceActivated=true,
         bool setFactorCC=true,
-        std::map<double, pair<double, double>> factorMap={},
+        std::map<double, std::pair<double, double>> factorMap={},
         std::map<double, std::function<void()>> callbackMap={}
     );
 
@@ -220,7 +218,7 @@ public:
         QLength callbackTol=5_in,
         QLength endTol=2_in,
         bool isReverse=false,
-        std::optional<QTime> maxTime=nullopt
+        std::optional<QTime> maxTime=std::nullopt
     );
 
     // overall general function 
@@ -230,7 +228,9 @@ public:
     void move (
         std::initializer_list<DrivePoint> points,
         QLength point_tolerance,
-        QAcceleration max_acc3 = MAX_ACCELERATION,
+        QAcceleration max_acc = MAX_ACCELERATION,
+        QTime timeout = TIMEOUT,
+        QLength end_tolerance = END_TOLERANCE
     );
    
 

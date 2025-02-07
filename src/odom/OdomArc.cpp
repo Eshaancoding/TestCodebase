@@ -18,6 +18,7 @@ namespace OdomArc {
     std::atomic<okapi::QAngle> currentAngle = 0_deg;
     std::atomic<okapi::QLength> xPos = 0_in;
     std::atomic<okapi::QLength> yPos = 0_in;
+    std::atomic<okapi::QLength> distTravelled = 0_ft; 
     std::atomic<bool> calibrating;
 
     pros::Rotation vert_track_wheel (16);  //16, og 8
@@ -26,19 +27,17 @@ namespace OdomArc {
     okapi::IMU imu (8, okapi::IMUAxes::z); // imu
 
     double prevEnc = 0.0;
-    double offsetEnc = 0.0;
-    double offsetEncBack = 0.0;
 
     double prevDi = 0.0;
     double prevDib = 0.0;
     double prevAng = 0.0;
 
     double distanceGet() {
-        return -vert_track_wheel.get_position() * ((PI*WHEEL_DIA)/36000); // ticks -> inches
+        return -vert_track_wheel.get_position() * ((PI*WHEEL_DIA)/36000);  // ticks --> inches
     }
 
     double distanceb(){
-        return strafe_track_wheel.get_position() * ((PI*WHEEL_DIA)/36000);
+        return strafe_track_wheel.get_position() * ((PI*WHEEL_DIA)/36000); // ticks --> inches
     }
 
     double angleGet () { // in angle
@@ -53,8 +52,6 @@ namespace OdomArc {
         prevAng = init_angle.convert(okapi::radian); // ehhh not sure
         prevDib = 0;
         calibrating = false;
-        offsetEnc = distanceGet();
-        offsetEncBack = distanceb();
 
         pros::delay(1000);
 
@@ -66,6 +63,8 @@ namespace OdomArc {
         xPos = 0_in;
         yPos = 0_in;
         currentAngle = init_angle;
+
+        distTravelled = 0_ft;
     }
 
     /*
@@ -104,20 +103,21 @@ namespace OdomArc {
 
             if (true) { // set true to debug
                 Console::printBrain(4, "x: %f y: %f ang: %f",(float)xPos.load().convert(okapi::tile), (float)yPos.load().convert(okapi::tile), ang * 180/PI);
-                // Console::printBrain(5, "xarc_f: %f", (float)xarc_f);
-                // Console::printBrain(6, "yarc_f: %f", (float)yarc_f);
-                // Console::printBrain(7, "di: %f IMU: %f", (float)di, (float)ang);
-                // Console::printBrain(8, "Vert Tracking wheel front: %f", (float)vert_track_wheel.get_position());
+                Console::printBrain(5, "Vert Tracking wheel front: %f", (float)vert_track_wheel.get_position());
+                Console::printBrain(6, "Total Distance: %f ft | %f tile", (float)distTravelled.load().convert(foot), (float)distTravelled.load().convert(tile));
             }
 
-            // add delta x and delta y from front and back tracking wheel together
-            xPos = (xPos.load().convert(okapi::inch) + xarc_f*cos(ang) + yarc_f*(sin(ang))) * 1_in;
-            yPos = (yPos.load().convert(okapi::inch) + (-xarc_f*cos(ang)) + yarc_f*cos(ang)) * 1_in;
+            double f_xd = xarc_f * cos(ang) + yarc_f * sin(ang);  // x delta from forward tracking wheel
+            double f_yd = -xarc_f * cos(ang) + yarc_f * cos(ang); // y delta from forward tracking wheel
+            double b_xd = 0; // x delta from backward tracking wheel
+            double b_yd = 0; // y delta from backward tracking wheel
 
-            /* old code w/o back tracking wheel in case something goes horribly wrong
-            xPos = (xPos.load().convert(okapi::inch) + xarc*cos(ang) + yarc*(sin(ang))) * 1_in;
-            yPos = (yPos.load().convert(okapi::inch) + (-xarc*cos(ang)) + yarc*cos(ang)) * 1_in;
-            */
+            xPos = (xPos.load().convert(okapi::inch) + f_xd + b_xd) * 1_in;
+            yPos = (yPos.load().convert(okapi::inch) + f_yd + b_yd) * 1_in;
+
+            // calculate delta distance travelled 
+            QLength delta_d = sqrt(pow(f_xd + b_xd, 2) + pow(f_yd + b_yd, 2)) * 1_in;
+            distTravelled = distTravelled.load() + delta_d;
 
             currentAngle = ang * 1_rad;
 
@@ -148,5 +148,13 @@ namespace OdomArc {
     // calibrating
     bool isCalibrating () {
         return calibrating.load();
+    }
+
+    void resetDistTravelled () {
+        distTravelled = 0_ft; // atomic set
+    }
+
+    QLength getDistTravelled () {
+        return distTravelled.load();
     }
 };

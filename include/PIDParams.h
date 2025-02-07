@@ -21,9 +21,6 @@
 #define Heading_SLEW         1 // <=========== really important
 #define Heading_MINERRDISI   0.25 // min error to disable I, NOT NEEDED IF I = 0 
 
-// default parameters for pure pursuit
-#define LOOKAHEAD_DIST 0.5_tile // adjust in drive.h again
-
 // Take a look at parameters.h for Distance, Angle, and Time Tolerance
 #define DISTANCE_TOLERANCE 0.5_in 
 #define ANGLE_TOLERANCE 0.51_deg
