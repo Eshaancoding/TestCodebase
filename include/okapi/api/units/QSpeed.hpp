@@ -20,7 +20,7 @@ constexpr QSpeed mps = meter / second;
 constexpr QSpeed miph = mile / hour;
 constexpr QSpeed kmph = kilometer / hour;
 constexpr QSpeed tps = tile / second; // added tile per second
-constexpr QSpeed fps = foot / second; // added feet per second
+constexpr QSpeed fps = foot / second; // added ft per second
 
 inline namespace literals {
 constexpr QSpeed operator"" _mps(long double x) {
