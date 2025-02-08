@@ -36,6 +36,7 @@ namespace OdomArc {
     }
 
     double distanceb(){
+        // tune it such that positive values from the backward wheel means robot is going into the -x axis
         return strafe_track_wheel.get_position() * ((PI*WHEEL_DIA)/36000); // ticks --> inches
     }
 
@@ -103,13 +104,14 @@ namespace OdomArc {
             if (true) { // set true to debug
                 Console::printBrain(4, "x: %f y: %f ang: %f",(float)xPos.load().convert(okapi::tile), (float)yPos.load().convert(okapi::tile), ang * 180/PI);
                 Console::printBrain(5, "Vert Tracking wheel front: %f", (float)vert_track_wheel.get_position());
-                Console::printBrain(6, "Total Distance: %f ft | %f tile", (float)distTravelled.load().convert(foot), (float)distTravelled.load().convert(tile));
+                Console::printBrain(6, "Vert Tracking wheel back: %f", (float)strafe_track_wheel.get_position());
+                Console::printBrain(7, "Total Distance: %f ft | %f tile", (float)distTravelled.load().convert(foot), (float)distTravelled.load().convert(tile));
             }
 
-            double f_xd = xarc_f * cos(ang) + yarc_f * sin(ang);  // x delta from forward tracking wheel
+            double f_xd =  xarc_f * cos(ang) + yarc_f * sin(ang);  // x delta from forward tracking wheel
             double f_yd = -xarc_f * cos(ang) + yarc_f * cos(ang); // y delta from forward tracking wheel
-            double b_xd = 0; // x delta from backward tracking wheel
-            double b_yd = 0; // y delta from backward tracking wheel
+            double b_xd =  xarc_b * cos(ang + (PI/2)) + yarc_b * sin(ang + (PI/2));  // x delta from backward tracking wheel (note that positive values from backward sensor --> robot going in positive x-axis)
+            double b_yd = -xarc_b * cos(ang + (PI/2)) + yarc_b * sin(ang + (PI/2));  // y delta from backward tracking wheel (note that positive values from backward sensor --> robot going in positive x-axis)
 
             xPos = (xPos.load().convert(okapi::inch) + f_xd + b_xd) * 1_in;
             yPos = (yPos.load().convert(okapi::inch) + f_yd + b_yd) * 1_in;
@@ -118,13 +120,13 @@ namespace OdomArc {
             QLength delta_d = sqrt(pow(f_xd + b_xd, 2) + pow(f_yd + b_yd, 2)) * 1_in;
             distTravelled = distTravelled.load() + delta_d;
 
+            // update internal variables
             currentAngle = ang * 1_rad;
-
             prevDi = di;
             prevAng = ang;
             prevDib = dib;
 
-            pros::delay(25); 
+            pros::delay(10); 
         }
     }
 
