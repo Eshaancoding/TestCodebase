@@ -29,23 +29,20 @@ DrivePoint :: DrivePoint (
 void Drive::move (
     std::initializer_list<DrivePoint> points,
     optional<QLength> point_tolerance,
-    optional<QAcceleration> max_acc,
+    optional<QAcceleration> accel,
     optional<QTime> timeout,
     optional<QLength> end_tolerance
 ) {
     // ========= Set Optional to Defaults defined in moveParams.h ========= 
     if (point_tolerance == nullopt) point_tolerance = POINT_TOLERANCE;
-    if (max_acc == nullopt) max_acc = MAX_ACCELERATION;
+    if (accel == nullopt) accel = MAX_ACCEL;
     if (timeout == nullopt) timeout = TIMEOUT;
     if (end_tolerance == nullopt) end_tolerance = END_TOLERANCE;
 
     // ============= Setup Main Loop ============= 
     OdomArc::resetDistTravelled();
-    MotionProfiling mt_profile (points, *max_acc);
+    MotionProfiling mt_profile (points, *accel);
     double current_kp = points.begin()->kp;
-
-    DistancePID.reset();
-    HeadingPID.reset();
 
     QLength lookahead_dist = points.begin()->lookaheadDistance; 
     int pointIdx = 0; // last point that we hit
@@ -115,7 +112,7 @@ void Drive::move (
         QSpeed target_vel = mt_profile.vel(elapsed);
         double ang_motor_vel = ROBOT_WIDTH.convert(okapi::foot) * sin(angle_err.convert(radian)) / lookahead_dist.convert(okapi::foot) * target_vel.convert(fps);
         
-        // ============= Move Robot! ============= 
+        // ============= Move Robot ============= 
         drive.moveArcade(
             fw_motor_vel * (is_reverse ? -1 : 1),
             ang_motor_vel

@@ -2,6 +2,8 @@
 #define DRIVE_H
 
 #include "okapi/api/units/QAcceleration.hpp"
+#include "okapi/api/units/QAngularAcceleration.hpp"
+#include "okapi/api/units/QAngularSpeed.hpp"
 #include "okapi/api/units/QLength.hpp"
 #include "okapi/api/units/QSpeed.hpp"
 #include "main.h"
@@ -52,7 +54,6 @@ public:
     {};
 };
 
-// I could make this a namespace idk why im making it a class
 class Drive {
 private:
     QLength distanceTol;
@@ -110,8 +111,10 @@ public:
      */
     void goForward (
         QLength distance,
-        std::map<double, double> factorMap={},
-        std::map<double, std::function<void()>> callbackMap={}
+        optional<QSpeed> vel = nullopt,
+        optional<QAcceleration> accel = nullopt,
+        optional<QTime> timeout = nullopt,
+        optional<QLength> end_tolerance = nullopt
     );
 
     /**
@@ -123,8 +126,10 @@ public:
      */
     void goBackward (
         QLength distance,
-        std::map<double, double> factorMap={},
-        std::map<double, std::function<void()>> callbackMap={}
+        optional<QSpeed> vel = nullopt,
+        optional<QAcceleration> accel = nullopt,
+        optional<QTime> timeout = nullopt,
+        optional<QLength> end_tolerance = nullopt
     );
 
     /**
@@ -136,8 +141,11 @@ public:
      */
     void turnLeft (
         QAngle ang,
-        std::map<double, double> factorMap={},
-        std::map<double, std::function<void()>> callbackMap={}
+        optional<QAngularSpeed> vel = nullopt,
+        optional<QAngularAcceleration> accel = nullopt,
+        optional<double> kp = nullopt,
+        optional<QTime> timeout = nullopt,
+        optional<QAngle> end_tolerance = nullopt
     );
 
     /**
@@ -149,39 +157,11 @@ public:
      */
     void turnRight (
         QAngle ang,
-        std::map<double, double> factorMap={},
-        std::map<double, std::function<void()>> callbackMap={}
-    );
-
-    /**
-     * @brief faces to point that can be relative or absolute
-     * 
-     * @param point the point (or offset) to face the angle
-     * @param isRelative is true, uses relative positioning if false then no
-     * @param factorMap the factor map used to slow down robot in the middle of run 
-     * @param callbackMap the map used to execute functions in the middle of the run (ex: running intake at 50% of run)
-     */
-    void faceToPoint (
-        Point point,
-        bool isRelative,
-        std::map<double, double> factorMap={},
-        std::map<double, std::function<void()>> callbackMap={}
-    );
-
-    /**
-     * @brief goes to point that can be relative or absolute
-     * 
-     * @param point the point (or offset) to face the angle
-     * @param isRelative is true, uses relative positioning if false then no
-     * @param factorMap the factor map used to slow down robot in the middle of run 
-     * @param callbackMap the map used to execute functions in the middle of the run (ex: running intake at 50% of run)
-     */
-    void goToPoint (
-        Point point,
-        bool isRelative,
-        bool isCC=false,
-        std::map<double, double> factorMap={},
-        std::map<double, std::function<void()>> callbackMap={}
+        optional<QAngularSpeed> vel = nullopt,
+        optional<QAngularAcceleration> accel = nullopt,
+        optional<double> kp = nullopt,
+        optional<QTime> timeout = nullopt,
+        optional<QAngle> end_tolerance = nullopt
     );
 
     /**
@@ -215,18 +195,27 @@ public:
         std::optional<QTime> maxTime=std::nullopt
     );
 
-    // overall general function 
+    // overall general function for going forward and turning at the same time
     /**
      * @brief Overall general function for move
      */
     void move (
         std::initializer_list<DrivePoint> points,
         optional<QLength> point_tolerance = nullopt,
-        optional<QAcceleration> max_acc = nullopt,
+        optional<QAcceleration> accel = nullopt,
         optional<QTime> timeout = nullopt,
         optional<QLength> end_tolerance = nullopt
     );
-   
+
+    // similar to move, but for just turning (faceToPoint)
+    void faceToPoint (
+        Point targetPoint,
+        optional<QAngularSpeed> vel = nullopt,
+        optional<QAngularAcceleration> accel = nullopt,
+        optional<double> kp = nullopt,
+        optional<QTime> timeout = nullopt,
+        optional<QAngle> end_tolerance = nullopt
+    );
 
     /**
      * @brief resets tolerance params

@@ -10,7 +10,23 @@
 #pragma once
 
 #include "okapi/api/units/RQuantity.hpp"
+#include "okapi/api/units/QAngle.hpp"
+#include "okapi/api/units/QTime.hpp"
 
 namespace okapi {
 QUANTITY_TYPE(0, 0, -2, 1, QAngularAcceleration)
+
+constexpr QAngularAcceleration dps2 = (degree) / (second * second); // degree per second
+
+inline namespace literals {
+
+constexpr QAngularAcceleration operator"" _dps2(long double x) {
+  return x * dps2;
+}
+constexpr QAngularAcceleration operator"" _dps2(unsigned long long int x) {
+  return static_cast<double>(x) * dps2;
+}
+
+}
+
 }

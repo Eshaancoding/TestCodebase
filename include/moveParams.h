@@ -1,15 +1,23 @@
 // These are default values. They can be changed at routes!
-
 // note that deprecated (purepursuit.cpp) lookahead dist is defined in it's own file.
 // note that deprecated (moveDepr.cpp) lookahead dist is defined in it's own file.
-#define LOOKAHEAD_DIST 3_in     
 
-#define MAX_SPEED 2.3_fps           // feet per second
-#define MAX_ACCELERATION 4_fps2     // foot per second squared
+// for forward/backward
+#define LOOKAHEAD_DIST   3_in         // lookahead distance that determines angle control
+#define MAX_SPEED        2.3_fps      // feet per second
+#define MAX_ACCEL        4_fps2       // foot per second squared
+#define KP               1.82         // P parameter between odom distance and target distance from motion profiling
+#define END_TOLERANCE    2_in         // Tolerance of distance traveled before end of movement
+#define POINT_TOLERANCE  3_in         // Tolerance to set lookahead distance, kp, and callback function as movement occurs
 
-#define KP 1.82
-#define TIMEOUT 3_s // the timeout we have before stopping while loop; adds this value with the estimated amount of time to finish movement.
-#define END_TOLERANCE 2_in // measured in the distance travelled by the robot.
-#define POINT_TOLERANCE 3_in
+// for turning movement
+#define MAX_ANG_SPEED   2_dps         // degree per second
+#define MAX_ANG_ACCEL   2_dps2        // degree per second squared  
+#define KP_ANG          1.83          // P parameter between current angle and target angle from motion profiling
+#define ANG_TOLERANCE   1_deg         // angle tolerance before quitting tolerance
 
-// make sure you define ROBOT_WIDTH correctly in parameters.h
+// the timeout we have before stopping while loop; adds this value with the estimated amount of time to finish movement.
+// same for angle and distance movements
+#define TIMEOUT 3_s 
+
+// ****************** make sure you define ROBOT_WIDTH correctly in parameters.h ****************** 

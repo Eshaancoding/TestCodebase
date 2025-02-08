@@ -8,6 +8,7 @@
 #include <optional>
 
 void lilRoute (bool reverse = false) {
+    /*
     drive.setToleranceParams(1.0_s,std::nullopt, std::nullopt, std::nullopt);
     drive.faceToPoint({3_tile, 0_in}, true); // face clamp
     drive.setToleranceParams( 1.3_s,std::nullopt, std::nullopt, std::nullopt);
@@ -66,10 +67,13 @@ void lilRoute (bool reverse = false) {
 
     eff.toggleClamp(); //drop mogo in corner
     eff.setIntake(IntakeState::INACTIVE);
+
+    */
 }
 
 // complex lil route is basically the route but we are doing wall stakes :D
 void ComplexLilRoute (bool reverse = false) {
+    /*
     drive.setToleranceParams(1.0_s,std::nullopt, std::nullopt, std::nullopt);
     drive.faceToPoint({3_tile, 0_in}, true);
     drive.setToleranceParams( 1.3_s,std::nullopt, std::nullopt, std::nullopt);
@@ -152,9 +156,12 @@ void ComplexLilRoute (bool reverse = false) {
 
     // eff.toggleClamp(); //clamp off
     // eff.setIntake(IntakeState::INACTIVE);
+
+    */
 }
 
 void Routes::skills () {
+    /*
     OdomArc::setPos(0_in, 0_in, 90_deg);
     eff.setIntake(IntakeState::INTAKE); 
     pros::delay(600);
@@ -234,4 +241,6 @@ void Routes::skills () {
     eff.toggleClamp();
     drive.goForward(1_tile);
     //drive.faceToPoint({-10_tile, 0_tile}, true);
+
+    */
 }

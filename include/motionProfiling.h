@@ -3,24 +3,10 @@
 
 #include "drive.h"
 #include "okapi/api/units/QAcceleration.hpp"
+#include "okapi/api/units/QAngularAcceleration.hpp"
 #include "okapi/api/units/QLength.hpp"
 #include "okapi/api/units/QSpeed.hpp"
 #include "okapi/api/units/QTime.hpp"
-
-
-class PathSegment {
-public:
-    QSpeed speed;
-    QTime time;    
-
-    PathSegment(
-        QSpeed speed,
-        QTime time
-    ) : 
-        speed(speed),
-        time(time)
-    {};
-};
 
 class Line {
 public: 

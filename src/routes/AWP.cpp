@@ -7,6 +7,8 @@
 #include "odom/OdomArc.h"   
 
 void Routes::AWPRed () {
+    /*    
+
     eff.isBlue = false;
 
     OdomArc::setPos(0_in, 0_in, 0_deg); // set our default/initial position
@@ -57,4 +59,6 @@ void Routes::AWPRed () {
     drive.goForward(1_tile);
     drive.turnRight(180_deg);
     drive.goForward(2_tile);
+
+    */
 }

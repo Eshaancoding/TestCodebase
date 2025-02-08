@@ -8,6 +8,8 @@
 
 //ringside rush
 void Routes::ringSide () {
+    /*    
+
     OdomArc::setPos(0_in, 0_in, 0_deg); // set our default/initial position
     bool is_blue = (eff.isBlue).load();
     //bool is_blue = false;
@@ -42,6 +44,9 @@ void Routes::ringSide () {
     drive.resetToleranceParams();
     drive.goForward(1.58_tile);
     is_blue ? drive.turnRight(135_deg) : drive.turnLeft(135_deg);
+
+    */
+
     // eff.arm_state = ArmState::PID_ARM;
     // eff.currentState = State::hasDonut;
 

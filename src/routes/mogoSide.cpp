@@ -10,6 +10,8 @@
 
 void Routes::mogoSide () {
 
+    /*
+
     OdomArc::setPos(0_in, 0_in, 1_deg); // set our default/initial position
     bool is_blue = (eff.isBlue).load();
     //bool is_blue = false;
@@ -75,6 +77,8 @@ void Routes::mogoSide () {
     pros::delay(500);
     eff.stopArm();
     eff.toggleIntakeState(INACTIVE);
+
+    */
     
 
 }
