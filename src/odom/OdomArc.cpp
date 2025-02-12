@@ -9,7 +9,8 @@
 #include "pros/rotation.hpp"
 
 #define PI 3.14159265
-#define WHEEL_DIA 2.9
+#define WHEEL_DIA_VERT 2.0
+#define WHEEL_DIA_STRAFE 2.9
 
 // too low distance -->  higher wheel dia
 // too high distance
@@ -22,9 +23,9 @@ namespace OdomArc {
     std::atomic<bool> calibrating;
 
     pros::Rotation vert_track_wheel (16);  //16, og 8
-    pros::Rotation strafe_track_wheel (8); //8, og 14
+    pros::Rotation strafe_track_wheel (12); //8, og 14
 
-    okapi::IMU imu (8, okapi::IMUAxes::z); // imu
+    okapi::IMU imu (9, okapi::IMUAxes::z); // imu
 
 
     double prevDi = 0.0;
@@ -32,12 +33,12 @@ namespace OdomArc {
     double prevAng = 0.0;
 
     double distanceGet() {
-        return -vert_track_wheel.get_position() * ((PI*WHEEL_DIA)/36000);  // ticks --> inches
+        return vert_track_wheel.get_position() * ((PI*WHEEL_DIA_VERT)/36000);  // ticks --> inches
     }
 
     double distanceb(){
         // tune it such that positive values from the backward wheel means robot is going into the -x axis
-        return strafe_track_wheel.get_position() * ((PI*WHEEL_DIA)/36000); // ticks --> inches
+        return strafe_track_wheel.get_position() * ((PI*WHEEL_DIA_STRAFE)/36000); // ticks --> inches
     }
 
     double angleGet () { // in angle
@@ -88,30 +89,31 @@ namespace OdomArc {
             double Ddib = dib - prevDib;
 
             double ang = angleGet(); // angle of robot in rad
-            double Dang = ang - prevAng; // delta angle
+            double Dang = ang - prevAng + 1e-10; // delta angle
 
             double rFront = Ddi/Dang;
             double rBack = Ddib/Dang;
 
             // forward
-            double xarc_f = rFront*(1-cos(Dang));
-            double yarc_f = rFront*(sin(Dang));
+            double xarc_f = rFront * (1 - cos(Dang));
+            double yarc_f = rFront * sin(Dang);
 
             // backward
-            double xarc_b = rBack * sin(Dang);
-            double yarc_b = rBack * (1 - cos(Dang));
+            double xarc_b = rBack * (1 - cos(Dang));
+            double yarc_b = rBack * sin(Dang);
 
             if (true) { // set true to debug
                 Console::printBrain(4, "x: %f y: %f ang: %f",(float)xPos.load().convert(okapi::tile), (float)yPos.load().convert(okapi::tile), ang * 180/PI);
                 Console::printBrain(5, "Vert Tracking wheel front: %f", (float)vert_track_wheel.get_position());
                 Console::printBrain(6, "Vert Tracking wheel back: %f", (float)strafe_track_wheel.get_position());
                 Console::printBrain(7, "Total Distance: %f ft | %f tile", (float)distTravelled.load().convert(foot), (float)distTravelled.load().convert(tile));
+                Console::printBrain(8, "Dangle: %f", Dang);
             }
 
-            double f_xd =  xarc_f * cos(ang) + yarc_f * sin(ang);  // x delta from forward tracking wheel
-            double f_yd = -xarc_f * cos(ang) + yarc_f * cos(ang); // y delta from forward tracking wheel
-            double b_xd =  xarc_b * cos(ang + (PI/2)) + yarc_b * sin(ang + (PI/2));  // x delta from backward tracking wheel (note that positive values from backward sensor --> robot going in positive x-axis)
-            double b_yd = -xarc_b * cos(ang + (PI/2)) + yarc_b * sin(ang + (PI/2));  // y delta from backward tracking wheel (note that positive values from backward sensor --> robot going in positive x-axis)
+            double f_xd =  xarc_f * cos(ang)          + yarc_f * sin(ang);  // x delta from forward tracking wheel
+            double f_yd = -xarc_f * cos(ang)          + yarc_f * cos(ang); // y delta from forward tracking wheel
+            double b_xd =  xarc_b * cos(ang - (PI/2)) + yarc_b * sin(ang - (PI/2));  // x delta from backward tracking wheel (note that positive values from backward sensor --> robot going in positive x-axis)
+            double b_yd = -xarc_b * cos(ang - (PI/2)) + yarc_b * cos(ang - (PI/2));  // y delta from backward tracking wheel (note that positive values from backward sensor --> robot going in positive x-axis)
 
             xPos = (xPos.load().convert(okapi::inch) + f_xd + b_xd) * 1_in;
             yPos = (yPos.load().convert(okapi::inch) + f_yd + b_yd) * 1_in;

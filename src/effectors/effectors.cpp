@@ -155,17 +155,17 @@ void Effectors::stepArm () {
         double error = (angle - targetAngle)*3.1415926/180; // convert to radians
         double p = -35; //-25
         
-        Console::printBrain(5, "Error: %f", error*180/3.14159);
-        Console::printBrain(6, "Rot sensor: %f", (double)-rotationSensor.get_angle() / 100);
-        Console::printBrain(7, "angle: %f", angle);
+        // Console::printBrain(5, "Error: %f", error*180/3.14159);
+        // Console::printBrain(6, "Rot sensor: %f", (double)-rotationSensor.get_angle() / 100);
+        // Console::printBrain(7, "angle: %f", angle);
         if (abs(error) > (1.5_deg).convert(okapi::radian)) {
             armRight.move_velocity(p * error); // RUN THE ARM of error is more than tolerance
-            Console::printBrain(9, "MOVING ARM VIA PID");
+            // Console::printBrain(9, "MOVING ARM VIA PID");
         } else {
             arm_state = ArmState::IDLE_ARM;
-            Console::printBrain(9, "GOING BACK TO IDLE BECAUSE OF ANGLE TOLERANCE");
+            // Console::printBrain(9, "GOING BACK TO IDLE BECAUSE OF ANGLE TOLERANCE");
         }
-        Console::printBrain(8, "power: %f", p * error);
+        // Console::printBrain(8, "power: %f", p * error);
     }
     else if (arm_state == ArmState::Raising_ARM) {
         armRight.move_velocity(-300);

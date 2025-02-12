@@ -47,7 +47,7 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    AutonSelector::init();
+    // AutonSelector::init();
 
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
     rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
@@ -61,7 +61,6 @@ void initialize() {
     // make sure to change all instances to OdomArc asw (instead of OdomCustom)
     OdomArc::init(); 
     Task task (OdomArc::MainLoop); 
-
     Task colorCheck (Effectors::intake);
 }
 
