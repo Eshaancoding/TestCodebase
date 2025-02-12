@@ -102,7 +102,7 @@ namespace OdomArc {
             double xarc_b = rBack * (1 - cos(Dang));
             double yarc_b = rBack * sin(Dang);
 
-            if (true) { // set true to debug
+            if (false) { // set true to debug
                 Console::printBrain(4, "x: %f y: %f ang: %f",(float)xPos.load().convert(okapi::tile), (float)yPos.load().convert(okapi::tile), ang * 180/PI);
                 Console::printBrain(5, "Vert Tracking wheel front: %f", (float)vert_track_wheel.get_position());
                 Console::printBrain(6, "Vert Tracking wheel back: %f", (float)strafe_track_wheel.get_position());

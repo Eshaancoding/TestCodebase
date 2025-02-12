@@ -1,3 +1,4 @@
+#include "Console.h"
 #include "drive.h"
 #include "Odom/Math.h"
 #include "motionProfiling.h"
@@ -113,10 +114,23 @@ void Drive::move (
         QSpeed target_vel = mt_profile.vel(elapsed);
         double ang_motor_vel = ROBOT_WIDTH.convert(okapi::foot) * sin(angle_err.convert(radian)) / lookahead_dist.convert(okapi::foot) * target_vel.convert(fps);
         
+        // ============= Debug ============= 
+        if (true) {
+            Console::printBrain(0, "Total dist travelled: %f tile", total_dist_travelled.convert(tile));
+            Console::printBrain(1, "MT dist target: %f tile", mt_profile.dist(elapsed).convert(tile));
+            Console::printBrain(2, "Error: %f in", (mt_profile.dist(elapsed) - total_dist_travelled).convert(inch));
+            Console::printBrain(3, "*** FW motor vel: %f ***", fw_motor_vel);
+            Console::printBrain(4, "================ Angle ================");
+            Console::printBrain(5, "Target vel: %f tile/sec", mt_profile.vel(elapsed).convert(tps));
+            Console::printBrain(6, "angle err: %f deg", angle_err.convert(degree));
+            Console::printBrain(7, "*** ANG motor vel: %f ***", ang_motor_vel);
+        }
+        
         // ============= Move Robot ============= 
+        // note that 600 = drive base blue
         drive.moveArcade(
-            fw_motor_vel * (is_reverse ? -1 : 1),
-            ang_motor_vel
+            (fw_motor_vel / 600) * (is_reverse ? -1 : 1),
+            (ang_motor_vel / 600)
         );
 
         // ============= Check if end program ============= 
@@ -130,6 +144,10 @@ void Drive::move (
 
         // ============= Delay ============= 
         pros::delay(10);
+    }
+
+    if (true) { // if debug
+        Console::printBrain(8, "Done with movement");
     }
 
     drive.moveArcade(0,0); // ensure movement stops at end.

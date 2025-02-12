@@ -71,7 +71,7 @@ void autonomous() {
     
     eff.seeColor = false;
 
-    drive.goForward(1_tile);
+    drive.goForward(4_tile);
 
     // AutonSelector::State state = waitForValidState(); 
 
