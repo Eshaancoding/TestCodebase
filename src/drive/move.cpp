@@ -72,7 +72,8 @@ void Drive::move (
         }
 
         // ============= Calculate the motion profiling & forward motion vel ============= 
-        QLength dist_err = (mt_profile.dist(elapsed) - OdomArc::getDistTravelled());
+        QLength total_dist_travelled = OdomArc::getDistTravelled();
+        QLength dist_err = (mt_profile.dist(elapsed) - total_dist_travelled);
         double fw_motor_vel = dist_err.convert(okapi::inch) * current_kp;
     
         // ============= Find Goal Point for Heading ============= 
@@ -121,7 +122,7 @@ void Drive::move (
         // ============= Check if end program ============= 
         if (
             (elapsed >= (mt_profile.get_total_time() + (*timeout))) ||  // timeout
-            (abs(dist_err) <= (*end_tolerance))                    // end tolerance
+            (abs(mt_profile.get_total_distance() - total_dist_travelled) <= (*end_tolerance))                    // end tolerance
         ) {
             mainLoop = false;
             break;

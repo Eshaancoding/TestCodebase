@@ -35,6 +35,7 @@ class MotionProfiling {
 private: 
     std::vector<Line> lines;
     QTime total_time;
+    QLength total_distance;
     QAcceleration acc;
     bool is_debug;
     
@@ -44,6 +45,7 @@ public:
     QLength dist (QTime t);
     void set_debug (bool is_debug);
     QTime get_total_time ();
+    QLength get_total_distance ();
 };
 
 #endif

@@ -11,10 +11,13 @@ MotionProfiling :: MotionProfiling (vector<DrivePoint> points, QAcceleration acc
     QSpeed prev_speed = 0.0_fps;
 
     // =========== create basic lines ===========
+    this->total_distance = 0_in;
     for (int i = 0; i < points.size() - 1; i++) {
         QLength dist = Math::distance(points[i].point, points[i+1].point);
         QSpeed max_speed = points[i].max_speed;
         QTime time_sec = (dist / max_speed);
+
+        this->total_distance += dist;
 
         QSpeed y_diff = abs(max_speed - prev_speed);
         
@@ -99,4 +102,8 @@ QLength MotionProfiling :: dist (QTime t) {
 
 QTime MotionProfiling :: get_total_time () {
     return this->total_time;
+}
+
+QLength MotionProfiling :: get_total_distance () {
+    return this->total_distance;
 }
