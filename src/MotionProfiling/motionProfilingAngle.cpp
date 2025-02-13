@@ -20,6 +20,7 @@ MotionProfilingAngle :: MotionProfilingAngle (
 
     // =========== create basic lines ===========
     QAngle angle_err = Math::anglePoint(current_pos, target_pos);
+    this->angle_need_turn = angle_err;
     QTime time_sec = (angle_err / speed);
     
     this->line_angles.push_back(LineAngle(
@@ -66,7 +67,7 @@ QAngularSpeed MotionProfilingAngle :: vel (QTime t) {
     return 0_dps; // degree per second
 }
 
-QAngle MotionProfilingAngle :: dist (QTime t) {
+QAngle MotionProfilingAngle :: ang (QTime t) {
     QAngle out = 0_deg; 
     for (auto l : this->line_angles) {
         out += l.area(t);
@@ -76,4 +77,8 @@ QAngle MotionProfilingAngle :: dist (QTime t) {
 
 QTime MotionProfilingAngle :: get_total_time () {
     return this->total_time;
+}
+
+QAngle MotionProfilingAngle :: get_angle_total () {
+    return this->angle_need_turn;
 }

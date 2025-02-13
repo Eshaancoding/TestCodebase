@@ -11,10 +11,10 @@
 #define POINT_TOLERANCE  3_in         // Tolerance to set lookahead distance, kp, and callback function as movement occurs
 
 // for turning movement
-#define MAX_ANG_SPEED   2_dps         // degree per second
-#define MAX_ANG_ACCEL   2_dps2        // degree per second squared  
-#define KP_ANG          1.83          // P parameter between current angle and target angle from motion profiling
-#define ANG_TOLERANCE   1_deg         // angle tolerance before quitting tolerance
+#define MAX_ANG_SPEED   205_dps         // degree per second
+#define MAX_ANG_ACCEL   400_dps2        // degree per second squared  
+#define KP_ANG          4.62         // P parameter between current angle and target angle from motion profiling
+#define ANG_TOLERANCE   0.1_deg         // angle tolerance before quitting tolerance
 
 // the timeout we have before stopping while loop; adds this value with the estimated amount of time to finish movement.
 // same for angle and distance movements

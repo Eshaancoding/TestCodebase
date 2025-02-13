@@ -38,6 +38,7 @@ public:
 class MotionProfilingAngle {
 private: 
     vector<LineAngle> line_angles;
+    QAngle angle_need_turn; // the total angle that needs to be turned (this is simply the target angle - current angle)
     QAngle target_angle;
     QTime total_time;
     QAngularAcceleration acc;
@@ -55,9 +56,10 @@ public:
     );
 
     QAngularSpeed vel (QTime t);
-    QAngle dist (QTime t);
+    QAngle ang (QTime t);
     void set_debug (bool is_debug);
     QTime get_total_time ();
+    QAngle get_angle_total ();
 };
 
 #endif

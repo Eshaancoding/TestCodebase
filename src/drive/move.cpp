@@ -1,3 +1,4 @@
+#include "controller.h"
 #include "Console.h"
 #include "drive.h"
 #include "Odom/Math.h"
@@ -52,6 +53,9 @@ void Drive::move (
     bool mainLoop = true;
     bool is_reverse = Math::anglePoint(OdomArc::getPos(), (points.begin()+1)->point) > 90_deg;
 
+    QLength avg_err_in = 0_in;
+    int itr = 0;
+
     // ============= Main Loop ============= 
     while (mainLoop) {
         // ============= Get current conditions ============= 
@@ -77,6 +81,9 @@ void Drive::move (
         QLength dist_err = (mt_profile.dist(elapsed) - total_dist_travelled);
         double fw_motor_vel = dist_err.convert(okapi::inch) * current_kp;
     
+        avg_err_in += dist_err;
+        itr += 1;
+
         // ============= Find Goal Point for Heading ============= 
         vector<Point> pot_points = {}; 
         Point target_point = {-1_in, -1_in};
@@ -148,6 +155,7 @@ void Drive::move (
 
     if (true) { // if debug
         Console::printBrain(8, "Done with movement");
+        Control::printController(0, "avg in: %f", avg_err_in.convert(inch) / itr);
     }
 
     drive.moveArcade(0,0); // ensure movement stops at end.
