@@ -3,7 +3,7 @@
 // note that deprecated (moveDepr.cpp) lookahead dist is defined in it's own file.
 
 // for forward/backward
-#define LOOKAHEAD_DIST   3_in         // lookahead distance that determines angle control
+#define LOOKAHEAD_DIST   0.3_tile         // lookahead distance that determines angle control
 #define MAX_SPEED        2.5_tps      // tile per second
 #define MAX_ACCEL        12_tps2       // tile per second squared
 #define KP               20.42        // FROM 0 - 600: P parameter between odom distance and target distance from motion profiling

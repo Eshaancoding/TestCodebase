@@ -1,18 +1,11 @@
-#include "Console.h"
 #include "controller.h"
 #include "drive.h"
 #include "Odom/Math.h"
 #include "motionProfilingAngle.h"
 #include "odom/OdomArc.h"
-
 #include "okapi/api/odometry/odomState.hpp"
-#include "okapi/api/units/QAcceleration.hpp"
 #include "okapi/api/units/QAngle.hpp"
-#include "okapi/api/units/QLength.hpp"
-#include "okapi/api/units/QSpeed.hpp"
-
 #include "moveParams.h"
-#include "okapi/impl/device/controller.hpp"
 #include <cmath>
 
 void Drive :: faceToPoint (
