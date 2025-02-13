@@ -74,19 +74,19 @@ void autonomous() {
     drive.move(
         {
             DrivePoint({0_in, 0_in}),
-            DrivePoint({0_in, -4_tile}),
+            DrivePoint({1_tile, 4_tile}),
         }
     );
 
-    drive.turnRight(90_deg);
-    drive.turnRight(90_deg);
+    // drive.turnRight(90_deg);
+    // drive.turnRight(90_deg);
 
-    drive.move(
-        {
-            DrivePoint({0_in, -4_tile}),
-            DrivePoint({0_in, 0_in}),
-        }
-    );
+    // drive.move(
+    //     {
+    //         DrivePoint({0_in, -4_tile}),
+    //         DrivePoint({0_in, 0_in}),
+    //     }
+    // );
 
     // AutonSelector::State state = waitForValidState(); 
 

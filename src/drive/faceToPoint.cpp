@@ -32,8 +32,12 @@ void Drive :: faceToPoint (
    
     // ============= Setup Main Loop ============= 
     auto initial_pos = OdomArc::getPos();
-    auto initial_angle = initial_pos.theta;
-    MotionProfilingAngle mt_profile (initial_pos, targetPoint, *accel, *vel);
+    MotionProfilingAngle mt_profile (
+        initial_pos, 
+        targetPoint, 
+        *accel, 
+        *vel
+    );
     double current_kp = *kp;
     
     auto start = pros::c::millis();
@@ -41,6 +45,7 @@ void Drive :: faceToPoint (
     
     QAngle min_ang_err = 0_deg;
     QAngle max_ang_err = 0_deg;
+    bool stbool = false;
     
     // ============= Main Loop ============= 
     while (mainLoop) {
@@ -49,21 +54,22 @@ void Drive :: faceToPoint (
         auto current_pos = OdomArc::getPos();
 
         // ============= Calculate the motion profiling & forward motion vel ============= 
-        QAngle angle_delta_current = Math::restrictAngle180(current_pos.theta - initial_angle); 
+        QAngle ang_to_go = OdomMath::computeAngleToPoint(targetPoint, current_pos);
+        QAngle angle_delta_current = Math::restrictAngle180(mt_profile.get_angle_total() - ang_to_go); 
         QAngle ang_error = (mt_profile.ang(elapsed) - angle_delta_current);
         double turn_motor_vel = ang_error.convert(okapi::degree) * current_kp;
 
-        if (ang_error < min_ang_err) min_ang_err = ang_error;
-        if (ang_error > max_ang_err) max_ang_err = ang_error;
+        if (ang_error < min_ang_err || stbool) min_ang_err = ang_error;
+        if (ang_error > max_ang_err || stbool) max_ang_err = ang_error;
+        stbool = true;
 
         // ============= Debug ============= 
         if (true) {
-            Console::printBrain(0, "Angle delta current: %f deg", angle_delta_current.convert(degree));
-            Console::printBrain(1, "Target angle: %f deg", mt_profile.ang(elapsed).convert(degree));
-            Console::printBrain(2, "Angle error: %f deg", ang_error.convert(degree));
-            Console::printBrain(3, "Turn motor vel: %f", turn_motor_vel);
-            Console::printBrain(4, "Total angle %f deg", mt_profile.get_angle_total().convert(degree));
-            
+            printf("* Angle delta current: %f *", angle_delta_current.convert(degree));
+            printf("* Target angle: %f *", mt_profile.ang(elapsed).convert(degree));
+            printf("* Angle error: %f *", ang_error.convert(degree));
+            printf("* Turn motor vel: %f *", turn_motor_vel);
+            printf("* Total angle %f *", mt_profile.get_angle_total().convert(degree));
         }
 
         // ============= Move Robot ============= 

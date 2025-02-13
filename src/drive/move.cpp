@@ -51,10 +51,11 @@ void Drive::move (
 
     auto start = pros::c::millis();
     bool mainLoop = true;
-    bool is_reverse = Math::anglePoint(OdomArc::getPos(), (points.begin()+1)->point) > 90_deg;
+    bool is_reverse = Math::anglePoint(OdomArc::getPos(), (points.begin()+1)->point).abs() > 90_deg;
 
-    QLength avg_err_in = 0_in;
-    int itr = 0;
+    QLength max_err = 0_in;
+    QLength min_err = 0_in;
+    bool stbool = false;
 
     // ============= Main Loop ============= 
     while (mainLoop) {
@@ -81,8 +82,9 @@ void Drive::move (
         QLength dist_err = (mt_profile.dist(elapsed) - total_dist_travelled);
         double fw_motor_vel = dist_err.convert(okapi::inch) * current_kp;
     
-        avg_err_in += dist_err;
-        itr += 1;
+        if (dist_err < min_err || stbool) min_err = dist_err;
+        if (dist_err > max_err || stbool) max_err = dist_err;
+        stbool = true;
 
         // ============= Find Goal Point for Heading ============= 
         vector<Point> pot_points = {}; 
@@ -123,14 +125,13 @@ void Drive::move (
         
         // ============= Debug ============= 
         if (true) {
-            Console::printBrain(0, "Total dist travelled: %f tile", total_dist_travelled.convert(tile));
-            Console::printBrain(1, "MT dist target: %f tile", mt_profile.dist(elapsed).convert(tile));
-            Console::printBrain(2, "Error: %f in", (mt_profile.dist(elapsed) - total_dist_travelled).convert(inch));
-            Console::printBrain(3, "*** FW motor vel: %f ***", fw_motor_vel);
-            Console::printBrain(4, "================ Angle ================");
-            Console::printBrain(5, "Target vel: %f tile/sec", mt_profile.vel(elapsed).convert(tps));
-            Console::printBrain(6, "angle err: %f deg", angle_err.convert(degree));
-            Console::printBrain(7, "*** ANG motor vel: %f ***", ang_motor_vel);
+            printf("* Total dist travelled: %f *", total_dist_travelled.convert(tile));
+            printf("* MT dist target: %f *", mt_profile.dist(elapsed).convert(tile));
+            printf("* Error: %f *", (mt_profile.dist(elapsed) - total_dist_travelled).convert(inch));
+            printf("* FW motor vel: %f *", fw_motor_vel);
+            printf("* Target vel: %f *", mt_profile.vel(elapsed).convert(tps));
+            printf("* angle err: %f *", angle_err.convert(degree));
+            printf("* ANG motor vel: %f *", ang_motor_vel);
         }
         
         // ============= Move Robot ============= 
@@ -155,7 +156,7 @@ void Drive::move (
 
     if (true) { // if debug
         Console::printBrain(8, "Done with movement");
-        Control::printController(0, "avg in: %f", avg_err_in.convert(inch) / itr);
+        Control::printController(0, "%f to %f", min_err.convert(inch), max_err.convert(inch));
     }
 
     drive.moveArcade(0,0); // ensure movement stops at end.
