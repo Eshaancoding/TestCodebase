@@ -4,7 +4,7 @@
 
 // for forward/backward
 #define LOOKAHEAD_DIST   3_in         // lookahead distance that determines angle control
-#define MAX_SPEED        3_tps      // tile per second
+#define MAX_SPEED        2.5_tps      // tile per second
 #define MAX_ACCEL        12_tps2       // tile per second squared
 #define KP               20.42        // FROM 0 - 600: P parameter between odom distance and target distance from motion profiling
 #define END_TOLERANCE    0.05_in      // Tolerance of distance traveled before end of movement

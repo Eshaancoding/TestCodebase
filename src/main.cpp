@@ -71,8 +71,22 @@ void autonomous() {
     
     eff.seeColor = false;
 
-    // drive.goForward(4_tile);
-    drive.turnRight(178_deg);
+    drive.move(
+        {
+            DrivePoint({0_in, 0_in}),
+            DrivePoint({0_in, -4_tile}),
+        }
+    );
+
+    drive.turnRight(90_deg);
+    drive.turnRight(90_deg);
+
+    drive.move(
+        {
+            DrivePoint({0_in, -4_tile}),
+            DrivePoint({0_in, 0_in}),
+        }
+    );
 
     // AutonSelector::State state = waitForValidState(); 
 
