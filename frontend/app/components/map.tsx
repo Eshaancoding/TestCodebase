@@ -98,7 +98,7 @@ export default function Map (props: { imageUrl: string }) {
           <Image image={image} width={775} height={775} />
           <Line key={2} points={points.map((val) => [val.x, val.y]).flat()} stroke="black" strokeWidth={2} />
           {points.map((point, i) => (
-            <Circle key={i} x={point.x} y={point.y} radius={(currentHover == i || selected == i) ? 10 : 5} fill={selected == i ? "black" : "red"} />
+            <Circle key={i} x={point.x} y={point.y} radius={(currentHover == i || selected == i) ? 10 : 5} fill={selected == i ? "red" : "black"} />
           ))}
         </Layer>
       </Stage>
