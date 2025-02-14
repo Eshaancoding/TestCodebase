@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Stage, Layer, Image, Circle, Line } from "react-konva";
 import useImage from "use-image";
 
@@ -18,25 +18,45 @@ function tileToPxl (x:number, y:number) {
   }
 }
 
-export default function Map (props: { imageUrl: string }) {
+export default function Map (props: { imageUrl: string, paths: any[], pathSelect: number, setPaths: (v:any) => void }) {
+  let paths = props.paths;
+  let pathSelect = props.pathSelect;
   const [image] = useImage(props.imageUrl);
-  const [points, setPoints] = useState([] as any[]);
   const [currentX, setCurrentX] = useState(0)
   const [currentY, setCurrentY] = useState(0)
   const [currentHover, setCurrentHover] = useState(-1)
   const [selected, setIsSelected] = useState(-1)
   const isDrawing = useRef(false);
 
+  useEffect(() => {
+    setCurrentHover(-1) // any update in paths will deselect everything
+    setIsSelected(-1)
+  }, [pathSelect])
+
+  const points = useMemo(() => {
+    if (pathSelect != -1 && paths[pathSelect]["type"] == "path") {
+      return paths[pathSelect]["points"]
+    }
+    else {
+      return []
+    }
+  }, [paths, pathSelect])
+
   const handleClick = (e:any) => {
     const { x, y } = e.target.getStage().getPointerPosition();
-       
 
     if (currentHover != -1) {
       setIsSelected(selected == currentHover ? -1 : currentHover)
       return;
     }
 
-    setPoints([...points, { x, y }]);
+    if (pathSelect != -1 && paths[pathSelect]["type"] == "path") {
+      let points = paths[pathSelect]["points"].slice()
+      points = [...points, {x, y} ]
+      let pathsCopy = paths.slice()
+      pathsCopy[pathSelect]["points"] = points
+      props.setPaths(pathsCopy)
+    }
   };
 
   const handleMouseDown = (e:any) => {
@@ -54,7 +74,9 @@ export default function Map (props: { imageUrl: string }) {
     if (selected != -1) {
       let copy = points.slice()
       copy[selected] = point
-      setPoints(copy)
+      let pathsCopy = paths.slice()
+      pathsCopy[pathSelect]["points"] = copy
+      props.setPaths(pathsCopy)
       return
     }
 
@@ -96,10 +118,38 @@ export default function Map (props: { imageUrl: string }) {
       >
         <Layer>
           <Image image={image} width={775} height={775} />
-          <Line key={2} points={points.map((val) => [val.x, val.y]).flat()} stroke="black" strokeWidth={2} />
-          {points.map((point, i) => (
-            <Circle key={i} x={point.x} y={point.y} radius={(currentHover == i || selected == i) ? 10 : 5} fill={selected == i ? "red" : "black"} />
-          ))}
+          {paths.map((element:any, index:number) => {
+            if (element["type"] == "path" && element["display"]) {
+              let points = element["points"]
+              return (
+                <Line 
+                  key={index} 
+                  points={points.map((val:any) => [val.x, val.y]).flat()} 
+                  stroke={(index == pathSelect) ? "blue" : "black"}
+                  strokeWidth={2} 
+                />
+              ) 
+            }
+          })}          
+
+          {paths.map((element:any, index:number) => {
+            if (element["type"] == "path" && element["display"]) {
+              let points = element["points"] 
+              return points.map((point:any, i:number) => {
+                return (
+                  <Circle 
+                    key={index * 100 + i} 
+                    x={point.x} 
+                    y={point.y} 
+                    radius={((currentHover == i || selected == i) && index == pathSelect) ? 10 : 5} 
+                    fill={(selected == i && index == pathSelect) ? "red" : (index == pathSelect ? "blue" : "black")} 
+                  />
+                )
+              })
+            }
+          })}
+
+          
         </Layer>
       </Stage>
       <p className="absolute left-0 mt-2 ">Cursor: ({currentX} tile, {currentY} tile)</p>
