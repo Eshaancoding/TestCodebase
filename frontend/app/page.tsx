@@ -92,6 +92,45 @@ export default function Home() {
     setPaths(d)
   }
 
+  function setCode (idx: number, code: string) {
+    let d = paths.slice()
+    d[idx]["code"] = code
+    setPaths(d)
+  }
+
+  function setAngle (idx: number, angle: string) {
+    let d = paths.slice()
+    try {
+      let ang = parseFloat(angle) 
+      if (ang < 0) {
+        d[idx]["direction"] = d[idx]["direction"] == "left" ? "right" : "left"
+      }
+      d[idx]["angle"] = Math.abs(ang) % 180
+      setPaths(d)
+    } catch (e:any) {
+    }
+  }
+
+  function goUp (idx: number) {
+    if (idx > 0) {
+      let d = paths.slice()
+      let v = d.splice(idx, 1)
+      console.log(v)
+      d.splice(idx-1, 0, v[0])
+      setPaths(d)
+    }
+  }
+
+  function goDown (idx: number) {
+    if (idx < paths.length - 1) {
+      let d = paths.slice()
+      let v = d.splice(idx, 1)
+      console.log(v)
+      d.splice(idx+1, 0, v[0])
+      setPaths(d)
+    }
+  }
+
   return (
     <div className="absolute items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)] h-full w-full p-4">
       <div className="grid grid-cols-8 gap-4 w-full h-full">
@@ -109,10 +148,10 @@ export default function Home() {
             {paths.map((element:any, index:number) => {
               if (element["type"] == "path") {
                 return (
-                  <div key={index} className="flex gap-4">
+                  <div key={index} className="flex gap-2">
                     <button 
                       onClick={() => setPathSel(index)} 
-                      className="bg-neutral-800 w-full rounded-[15px] p-4 flex items-center gap-2 justify-between border-blue-500"
+                      className="bg-neutral-800 w-full rounded-[15px] p-4 flex items-center gap-2 justify-between border-blue-500 mr-2"
                       style={{
                         borderWidth: pathSelect == index ? "4px" : "0px",
                       }}
@@ -121,49 +160,71 @@ export default function Home() {
                       <p>{element["points"].length} points</p>
                     </button>
                     {element['display'] ?
-                      <img onClick={() => toggleDisplay(index)} src="eye-off.svg" className="w-[35px] cursor-pointer" />
+                      <img onClick={() => toggleDisplay(index)} src="eye-off.svg" className="w-[30px] cursor-pointer" />
                     :
-                      <img onClick={() => toggleDisplay(index)} src="eye.svg" className="w-[35px] cursor-pointer" />
+                      <img onClick={() => toggleDisplay(index)} src="eye.svg" className="w-[30px] cursor-pointer" />
                     }
-                    <img onClick={() => deletePath(index)} src="trash.svg" className="w-[35px] cursor-pointer" />
+                    <img onClick={() => goDown(index)} src="angle-down.svg" className="w-[30px] cursor-pointer" />
+                    <img onClick={() => goUp(index)} src="angle-down.svg" className="rotate-180 w-[30px] cursor-pointer" />
+                    <img onClick={() => deletePath(index)} src="trash.svg" className="w-[30px] cursor-pointer" />
                   </div>
                 )
               } 
               else if (element["type"] == "turn") {
                 return (
-                  <div key={index} className="flex gap-4">
+                  <div key={index} className="flex gap-2">
                     <button 
-                      onClick={() => setPathSel(index)} 
-                      className="bg-neutral-800 w-full rounded-[15px] p-4 flex items-center gap-2 justify-between border-blue-500"
+                      onClick={() => setPathSel(-1)} 
+                      className="bg-neutral-800 w-full rounded-[15px] p-4 flex items-center justify-between border-blue-500 mr-2"
                       style={{
                         borderWidth: pathSelect == index ? "4px" : "0px",
                       }}
                     >
-                      <p className="text-[20px]">Turn {element["direction"]} {element["angle"]} deg</p>
+                      <p className="text-[20px] text-left w-[100px]">Turn {element["direction"]}</p>
+                      <div className="flex items-center">
+                        <input 
+                          value={element["angle"]} 
+                          onChange={(e) => setAngle(index, e.target.value)} 
+                          className="w-[100px] text-right outline-none bg-neutral-800 p-2 rounded-md text-right" 
+                          type="number" 
+                          placeholder="90"
+                        /> 
+                        <p>deg</p>
+                      </div>
                     </button>
-                    {element['display'] ?
-                      <img onClick={() => toggleDisplay(index)} src="eye-off.svg" className="w-[35px] cursor-pointer" />
+                    {/* {element['display'] ?
+                      <img onClick={() => toggleDisplay(index)} src="eye-off.svg" className="w-[30px] cursor-pointer" />
                     :
-                      <img onClick={() => toggleDisplay(index)} src="eye.svg" className="w-[35px] cursor-pointer" />
-                    }
-                    <img onClick={() => deletePath(index)} src="trash.svg" className="w-[35px] cursor-pointer" />
+                      <img onClick={() => toggleDisplay(index)} src="eye.svg" className="w-[30px] cursor-pointer" />
+                    } */}
+                    <img onClick={() => goDown(index)} src="angle-down.svg" className="w-[30px] cursor-pointer" />
+                    <img onClick={() => goUp(index)} src="angle-down.svg" className="rotate-180 w-[30px] cursor-pointer" />
+                    <img onClick={() => deletePath(index)} src="trash.svg" className="w-[30px] cursor-pointer" />
                   </div>
                 )
               }
               else if (element["type"] == "code") {
                 return (
-                  <div key={index} className="flex gap-4">
+                  <div key={index} className="flex gap-2">
                     <button 
-                      onClick={() => setPathSel(index)} 
-                      className="bg-neutral-800 w-full rounded-[15px] p-4 flex items-center gap-2 justify-between border-blue-500"
+                      onClick={() => setPathSel(-1)} 
+                      className="bg-neutral-800 w-full rounded-[15px] p-4 flex items-center justify-between border-blue-500 mr-2"
                       style={{
                         borderWidth: pathSelect == index ? "4px" : "0px",
                       }}
                     >
                       <p className="text-[20px]">Code</p>
-                      <p className="max-w-[100px] text-neutral-400 text-[14px]">{element["code"]}</p>
+                      <input 
+                        value={element["code"]} 
+                        onChange={(e) => setCode(index, e.target.value)} 
+                        className="w-[250px] outline-none bg-neutral-800 p-2 rounded-md text-right" 
+                        type="text" 
+                        placeholder="Enter Code Here"
+                      /> 
                     </button>
-                    <img onClick={() => deletePath(index)} src="trash.svg" className="w-[35px] cursor-pointer" />
+                    <img onClick={() => goDown(index)} src="angle-down.svg" className="w-[30px] cursor-pointer" />
+                    <img onClick={() => goUp(index)} src="angle-down.svg" className="rotate-180 w-[30px] cursor-pointer" />
+                    <img onClick={() => deletePath(index)} src="trash.svg" className="w-[30px] cursor-pointer" />
                   </div>
                 )
               }
