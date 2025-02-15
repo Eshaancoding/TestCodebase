@@ -6,19 +6,20 @@ import Collapsable from "./components/collapsable";
 import Map from "./components/map";
 import Prompt from "./components/prompt";
 import { useAtom } from "jotai";
-import { ang_tolerance, def_kp, def_lookhead_dist, def_max_acc, def_max_speed, end_tolerance, kp_angle, max_ang_acc, max_ang_speed, point_tolerance } from "./var";
-import { Component } from "./components/testComponent";
+import { ang_tolerance, def_kp, def_lookhead_dist, def_max_acc, def_max_speed, end_tolerance, ki_atom, kp_angle, max_ang_acc, max_ang_speed, pathsAtom, pathSelectAtom, point_tolerance } from "./var";
+import PathInfo from "./components/PathInfo";
 
 export default function Home() {
   // yes I am ignoring the entire point of typescript but... I'm in a hurry to complete this
-  const [paths, setPaths] = useState([] as any[]) 
-  const [pathSelect, setPathSelect] = useState(-1)
+  const [paths, setPaths] = useAtom(pathsAtom)
+  const [pathSelect, setPathSelect] = useAtom(pathSelectAtom)
 
   // use atom values
   const [lhd, setLHD] = useAtom(def_lookhead_dist)
   const [ms, setMS] = useAtom(def_max_speed);
   const [ma, setMA] = useAtom(def_max_acc)
   const [kp, setKP] = useAtom(def_kp)
+  const [ki, setKI] = useAtom(ki_atom)
   const [end_tol, setEndTol] = useAtom(end_tolerance)
   const [pt, setPT] = useAtom(point_tolerance)
 
@@ -174,9 +175,6 @@ export default function Home() {
         <div className="col-span-4 min-w-[300px] p-4 border-neutral-700 w-full h-full border-neutral-800 border-2 rounded-xl flex justify-center flex-col items-center">
           <Map 
             imageUrl="regularField.png" 
-            paths={paths}
-            pathSelect={pathSelect}
-            setPaths={setPaths}
           />
         </div> 
         <div className="col-span-2 min-w-[300px] p-4 border-neutral-700 w-full h-full border-neutral-800 border-2 rounded-xl overflow-y-auto">
@@ -186,6 +184,7 @@ export default function Home() {
             <Prompt label="Max Speed" unit="tile/sec" update={setMS} value={ms} />
             <Prompt label="Max Acceleration" unit="tile/sec^2" update={setMA} value={ma} />
             <Prompt label="KP" unit="" update={setKP} value={kp} />
+            <Prompt label="KI" unit="" update={setKI} value={ki} />
             <Prompt label="End Tolerance" unit="in" update={setEndTol} value={end_tol} />
             <Prompt label="Point Tolerance" unit="in" update={setPT} value={pt} />
           </Collapsable>
@@ -197,8 +196,12 @@ export default function Home() {
             <Prompt label="Angle Tolerance" unit="deg" update={setAngTol} value={angTol} />
           </Collapsable>
 
-          <Collapsable title="Path Information">
-            <Component />
+          <Collapsable title="Motion Profile">
+            {(pathSelect != -1 && paths[pathSelect]["type"] == "path" && paths[pathSelect]["points"].length > 1) ? 
+              <PathInfo />               
+            :
+              <p>No path selected</p>
+            }
           </Collapsable>
 
           <Collapsable title="Run Program">

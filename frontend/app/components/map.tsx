@@ -5,25 +5,25 @@ import { Stage, Layer, Image, Circle, Line } from "react-konva";
 import useImage from "use-image";
 import Prompt from "./prompt";
 import { useAtom } from "jotai";
-import { def_kp, def_lookhead_dist, def_max_speed } from "../var";
+import { def_kp, def_lookhead_dist, def_max_speed, pathsAtom, pathSelectAtom } from "../var";
 
-function pxlToTiles (x:number, y:number) {
+export function pxlToTiles (x:number, y:number) {
   return {
     x: (x - 25) * 6 / 725,
     y: 6 - (y - 25.75) * 6 / 725
   }
 }
 
-function tileToPxl (x:number, y:number) {
+export function tileToPxl (x:number, y:number) {
   return {
     x: (x * 725 / 6) + 25,
     y: ((6 - y) * 725 / 6) + 25.75
   }
 }
 
-export default function Map (props: { imageUrl: string, paths: any[], pathSelect: number, setPaths: (v:any) => void }) {
-  let paths = props.paths;
-  let pathSelect = props.pathSelect;
+export default function Map (props: { imageUrl: string }) {
+  const [paths, setPaths] = useAtom(pathsAtom)
+  const [pathSelect, ] = useAtom(pathSelectAtom)
 
   const [ms, ] = useAtom(def_max_speed);
   const [kp, ] = useAtom(def_kp)
@@ -41,10 +41,6 @@ export default function Map (props: { imageUrl: string, paths: any[], pathSelect
     setCurrentHover(-1) // any update in paths will deselect everything
     setIsSelected(-1)
   }, [pathSelect])
-
-  useEffect(() => {
-    console.log(paths)
-  }, [paths])
 
   const points = useMemo(() => {
     if (pathSelect != -1 && paths[pathSelect]["type"] == "path") {
@@ -83,7 +79,7 @@ export default function Map (props: { imageUrl: string, paths: any[], pathSelect
       } ]
       let pathsCopy = paths.slice()
       pathsCopy[pathSelect]["points"] = points
-      props.setPaths(pathsCopy)
+      setPaths(pathsCopy)
     }
   };
 
@@ -100,7 +96,7 @@ export default function Map (props: { imageUrl: string, paths: any[], pathSelect
       copy[selected].y = point.y
       let pathsCopy = paths.slice()
       pathsCopy[pathSelect]["points"] = copy
-      props.setPaths(pathsCopy)
+      setPaths(pathsCopy)
       return
     }
 
@@ -128,7 +124,8 @@ export default function Map (props: { imageUrl: string, paths: any[], pathSelect
   function setEditPoint (param: string, value:any) {
     let copyPath = paths.slice()
     copyPath[pathSelect]["points"][edit][param] = value
-    props.setPaths(copyPath)
+    console.log("set paths")
+    setPaths(copyPath.slice())
   }
 
   return (
