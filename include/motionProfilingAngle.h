@@ -39,10 +39,8 @@ class MotionProfilingAngle {
 private: 
     vector<LineAngle> line_angles;
     QAngle angle_need_turn; // the total angle that needs to be turned (this is simply the target angle - current angle)
-    QAngle target_angle;
     QTime total_time;
-    QAngularAcceleration acc;
-    bool is_debug;
+    okapi::OdomState currentPos; 
     
 public:
     // more simple version than distance Motion Profiling
@@ -56,8 +54,7 @@ public:
     );
 
     QAngularSpeed vel (QTime t);
-    QAngle ang (QTime t);
-    void set_debug (bool is_debug);
+    Point target_point (QTime t);
     QTime get_total_time ();
     QAngle get_angle_total ();
 };

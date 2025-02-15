@@ -37,7 +37,6 @@ private:
     QTime total_time;
     QLength total_distance;
     QAcceleration acc;
-    bool is_debug;
     
 public:
     MotionProfiling (std::vector<DrivePoint> points, QAcceleration acc);

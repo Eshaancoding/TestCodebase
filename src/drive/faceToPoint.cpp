@@ -33,24 +33,31 @@ void Drive :: faceToPoint (
     );
     double current_kp = *kp;
     
-    auto start = pros::c::millis();
     bool mainLoop = true;
     
     QAngle min_ang_err = 0_deg;
     QAngle max_ang_err = 0_deg;
     bool stbool = false;
     
+    QTime tTest = 0.0_s;
+    while (tTest <= 2.0_s) {
+        printf("* t: %f *\n", tTest.convert(second));
+        printf("* Vel: %f *\n", mt_profile.vel(tTest).convert(dps));
+        tTest += 0.1_s; 
+        pros::delay(200);
+    }
+    
     // ============= Main Loop ============= 
+    auto start = pros::c::millis();
     while (mainLoop) {
         // get current conditions
         QTime elapsed = (pros::c::millis() - start) * 1_ms;
         auto current_pos = OdomArc::getPos();
 
         // ============= Calculate the motion profiling & forward motion vel ============= 
-        QAngle ang_to_go = OdomMath::computeAngleToPoint(targetPoint, current_pos);
-        QAngle angle_delta_current = Math::restrictAngle180(mt_profile.get_angle_total() - ang_to_go); 
-        QAngle ang_error = (mt_profile.ang(elapsed) - angle_delta_current);
-        double turn_motor_vel = ang_error.convert(okapi::degree) * current_kp;
+        Point t_point = mt_profile.target_point(elapsed);
+        QAngle ang_error = Math::anglePoint(current_pos, t_point);
+        double turn_motor_vel = ang_error.convert(okapi::degree) * current_kp + KI;
 
         if (ang_error < min_ang_err || stbool) min_ang_err = ang_error;
         if (ang_error > max_ang_err || stbool) max_ang_err = ang_error;
@@ -58,11 +65,10 @@ void Drive :: faceToPoint (
 
         // ============= Debug ============= 
         if (true) {
-            printf("* Angle delta current: %f *", angle_delta_current.convert(degree));
-            printf("* Target angle: %f *", mt_profile.ang(elapsed).convert(degree));
-            printf("* Angle error: %f *", ang_error.convert(degree));
-            printf("* Turn motor vel: %f *", turn_motor_vel);
-            printf("* Total angle %f *", mt_profile.get_angle_total().convert(degree));
+            printf("* Motion Profile Vel: %f *\n", mt_profile.vel(elapsed).convert(dps) * M_PI / 180);
+            printf("* Ang Error: %f *\n", ang_error.convert(radian));
+            printf("* Turn motor vel: %f *\n", turn_motor_vel / 600);
+            printf("********************\n");
         }
 
         // ============= Move Robot ============= 
@@ -74,7 +80,7 @@ void Drive :: faceToPoint (
         // ============= Check if end program ============= 
         if (
             (elapsed >= (mt_profile.get_total_time() + (*timeout))) ||  // timeout
-            (abs(mt_profile.get_angle_total() - angle_delta_current) <= (*end_tolerance))                   // end tolerance
+            (abs(ang_to_go) <= (*end_tolerance))                   // end tolerance
         ) {
             mainLoop = false;
             break;

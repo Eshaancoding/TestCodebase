@@ -11,12 +11,22 @@ export default function Home() {
   const [pathSelect, setPathSelect] = useState(-1)
 
   function addPath () {
+    // add point from last path automatically
+    let p = [] as any[]
+    for (let i = paths.length - 1; i > -1; i--) {
+      if (paths[i]["type"] == "path" && paths[i]["points"].length > 0) {
+        let points = paths[i]["points"]
+        p.push(points[points.length - 1])
+        break
+      }
+    }
     setPaths([...paths, {
       "type": "path",
-      "points": [],
+      "points": p,
       "display": true
     }])
   }
+
 
   function addTurn () {
     setPaths([...paths, {

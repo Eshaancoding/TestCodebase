@@ -66,7 +66,7 @@ public:
     Effectors () : 
         // for motor group: BACK LEFT 11, bottom left motor 13 top left motor 14
         //armLeft(6, pros::E_MOTOR_GEAR_200),
-        armRight(20, pros::E_MOTOR_GEAR_100),
+        armRight(22, pros::E_MOTOR_GEAR_100),
         conveyorMotor(21), // intake 21
         clampPiston('B'),
         boinkerPiston('A'),

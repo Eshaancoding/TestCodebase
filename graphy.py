@@ -6,12 +6,6 @@ import queue
 import sys
 import re
 
-# Search for path. Use *echo $env:PATH*
-PATH_EXE = """
-C:\Users\eshaa\AppData\Roaming\Code\User\globalStorage\sigbots.pros\install\pros-cli-windows\pros.exe
-"""
-
-
 def run_program(command, output_queue):
     """Runs the given command and puts stdout lines into the queue."""
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
@@ -26,7 +20,7 @@ def update_plot(frame, data_dict, output_queue, lines):
     """Fetches new data from the queue and updates the plot."""
     while not output_queue.empty():
         try:
-            line = output_queue.get_nowait()
+            line = str(output_queue.get_nowait()).strip()
             if len(line) > 0: print(line) # update the stdout
             if line[:2] == "* " and line[-2:] == " *":
                 line = line[2:-2]
@@ -37,9 +31,9 @@ def update_plot(frame, data_dict, output_queue, lines):
                 if key not in data_dict:
                     data_dict[key] = []
                 data_dict[key].append(value)
-                if len(data_dict[key]) > 100:  # Keep only the last 100 points
+                if len(data_dict[key]) > 200:  # Keep only the last 200 points
                     data_dict[key].pop(0)
-        except ValueError:
+        except Exception:
             pass  # Ignore invalid data
     
     ax.clear()
@@ -52,7 +46,7 @@ def update_plot(frame, data_dict, output_queue, lines):
     return lines
 
 # Command to run the external program (modify as needed)
-command = [PATH_EXE.strip(), "mut"]  # Example: Running another Python script
+command = ["pros", "mut"]  # Example: Running another Python script
 
 # Create a queue to store output
 output_queue = queue.Queue()

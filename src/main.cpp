@@ -71,12 +71,14 @@ void autonomous() {
     
     eff.seeColor = false;
 
-    drive.move(
-        {
-            DrivePoint({0_in, 0_in}),
-            DrivePoint({1_tile, 4_tile}),
-        }
-    );
+    // drive.move(
+    //     {
+    //         DrivePoint({0_in, 0_in}),
+    //         DrivePoint({1_tile, 4_tile}),
+    //     }
+    // );
+    drive.turnRight(180_deg);
+    // drive.goForward(2_tile);
 
     // drive.turnRight(90_deg);
     // drive.turnRight(90_deg);

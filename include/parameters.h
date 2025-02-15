@@ -35,8 +35,8 @@ extern PID HeadingPID;  // declared in parameters.cpp
 #define RIGHT_TOP_MOTOR      -11 
 
 #define LEFT_BOTTOM_MOTOR    1
-#define LEFT_MIDDLE_MOTOR    13
-#define LEFT_TOP_MOTOR       -14
+#define LEFT_MIDDLE_MOTOR    14
+#define LEFT_TOP_MOTOR       -13
 
 #define BACK_TRACK_MOTOR     22
 

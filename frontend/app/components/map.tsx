@@ -26,6 +26,7 @@ export default function Map (props: { imageUrl: string, paths: any[], pathSelect
   const [currentY, setCurrentY] = useState(0)
   const [currentHover, setCurrentHover] = useState(-1)
   const [selected, setIsSelected] = useState(-1)
+  const [edit, setIsEdit] = useState(-1)
   const isDrawing = useRef(false);
 
   useEffect(() => {
@@ -46,7 +47,15 @@ export default function Map (props: { imageUrl: string, paths: any[], pathSelect
     const { x, y } = e.target.getStage().getPointerPosition();
 
     if (currentHover != -1) {
-      setIsSelected(selected == currentHover ? -1 : currentHover)
+      if (edit == currentHover) {
+        setIsEdit(-1)
+      }
+      else if (selected == currentHover) {
+        setIsEdit(currentHover)
+        setIsSelected(-1)
+      } else {
+        setIsSelected(currentHover)
+      }
       return;
     }
 
@@ -142,7 +151,11 @@ export default function Map (props: { imageUrl: string, paths: any[], pathSelect
                     x={point.x} 
                     y={point.y} 
                     radius={((currentHover == i || selected == i) && index == pathSelect) ? 10 : 5} 
-                    fill={(selected == i && index == pathSelect) ? "red" : (index == pathSelect ? "blue" : "black")} 
+                    fill={
+                      (edit == i && index == pathSelect) ? "green" : 
+                      (selected == i && index == pathSelect) ? "red" : 
+                      (index == pathSelect ? "blue" : "black")
+                    } 
                   />
                 )
               })

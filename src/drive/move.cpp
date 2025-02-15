@@ -80,7 +80,7 @@ void Drive::move (
         // ============= Calculate the motion profiling & forward motion vel ============= 
         QLength total_dist_travelled = OdomArc::getDistTravelled();
         QLength dist_err = (mt_profile.dist(elapsed) - total_dist_travelled);
-        double fw_motor_vel = dist_err.convert(okapi::inch) * current_kp;
+        double fw_motor_vel = dist_err.convert(okapi::inch) * current_kp + KI;
     
         if (dist_err < min_err || stbool) min_err = dist_err;
         if (dist_err > max_err || stbool) max_err = dist_err;
@@ -125,13 +125,14 @@ void Drive::move (
         
         // ============= Debug ============= 
         if (true) {
-            printf("* Total dist travelled: %f *", total_dist_travelled.convert(tile));
-            printf("* MT dist target: %f *", mt_profile.dist(elapsed).convert(tile));
-            printf("* Error: %f *", (mt_profile.dist(elapsed) - total_dist_travelled).convert(inch));
-            printf("* FW motor vel: %f *", fw_motor_vel);
-            printf("* Target vel: %f *", mt_profile.vel(elapsed).convert(tps));
-            printf("* angle err: %f *", angle_err.convert(degree));
-            printf("* ANG motor vel: %f *", ang_motor_vel);
+            printf("* Total dist travelled: %f *\n", total_dist_travelled.convert(tile));
+            printf("* MT dist target: %f *\n", mt_profile.dist(elapsed).convert(tile));
+            // printf("* Error: %f *\n", (mt_profile.dist(elapsed) - total_dist_travelled).convert(inch));
+            printf("* FW motor vel [0-1]: %f *\n", fw_motor_vel/600);
+            // printf("* Target vel: %f *\n", mt_profile.vel(elapsed).convert(tps));
+            // printf("* angle err: %f *\n", angle_err.convert(degree));
+            // printf("* ANG motor vel: %f *\n", ang_motor_vel);
+            printf("********************\n");
         }
         
         // ============= Move Robot ============= 

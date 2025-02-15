@@ -14,12 +14,12 @@ MotionProfilingAngle :: MotionProfilingAngle (
     QAngularAcceleration accel, 
     QAngularSpeed speed
 ) {
-    this->acc = accel;
 
     QSpeed prev_speed = 0.0_fps;
 
     // =========== create basic lines ===========
     QAngle angle_err = Math::anglePoint(current_pos, target_pos);
+    this->currentPos = current_pos;
     this->angle_need_turn = angle_err;
     QTime time_sec = (angle_err / speed);
     
@@ -31,19 +31,19 @@ MotionProfilingAngle :: MotionProfilingAngle (
     )); 
     
 
-    this->line_angles[0].t2 -= speed / (2 * this->acc);
+    this->line_angles[0].t2 -= speed / (2 * accel);
     this->line_angles.insert(this->line_angles.begin(), LineAngle(
         0_s,
-        speed / this->acc,
+        speed / accel,
         0_dps, 
         speed 
     ));
 
     // add lines for deacceleration
-    this->line_angles[this->line_angles.size() - 1].t2 -= speed / (2 * this->acc);
+    this->line_angles[this->line_angles.size() - 1].t2 -= speed / (2 * accel);
     this->line_angles.push_back(LineAngle(
         0_s,
-        speed / this->acc,
+        speed / accel,
         speed,
         0_dps
     ));
@@ -67,18 +67,20 @@ QAngularSpeed MotionProfilingAngle :: vel (QTime t) {
     return 0_dps; // degree per second
 }
 
-QAngle MotionProfilingAngle :: ang (QTime t) {
+Point MotionProfilingAngle :: target_point (QTime t) {
     QAngle out = 0_deg; 
     for (auto l : this->line_angles) {
         out += l.area(t);
     }
-    return out;
+
+    Point p = {
+        this->currentPos.x + 10_tile * cos(this->currentPos.theta + out),
+        this->currentPos.y + 10_tile * sin(this->currentPos.theta + out)
+    };
+
+    return p;
 }
 
 QTime MotionProfilingAngle :: get_total_time () {
     return this->total_time;
-}
-
-QAngle MotionProfilingAngle :: get_angle_total () {
-    return this->angle_need_turn;
 }
