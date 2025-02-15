@@ -7,6 +7,7 @@ import Map from "./components/map";
 import Prompt from "./components/prompt";
 import { useAtom } from "jotai";
 import { ang_tolerance, def_kp, def_lookhead_dist, def_max_acc, def_max_speed, end_tolerance, kp_angle, max_ang_acc, max_ang_speed, point_tolerance } from "./var";
+import { Component } from "./components/testComponent";
 
 export default function Home() {
   // yes I am ignoring the entire point of typescript but... I'm in a hurry to complete this
@@ -197,7 +198,7 @@ export default function Home() {
           </Collapsable>
 
           <Collapsable title="Path Information">
-            Stuff
+            <Component />
           </Collapsable>
 
           <Collapsable title="Run Program">
