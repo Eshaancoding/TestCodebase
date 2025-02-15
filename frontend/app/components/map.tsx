@@ -192,7 +192,7 @@ export default function Map (props: { imageUrl: string }) {
           
         </Layer>
       </Stage>
-      <p className="absolute left-0 mt-2 ">Cursor: ({currentX} tile, {currentY} tile)</p>
+      {edit == -1 && <p className="absolute left-0 mt-2 ">Cursor: ({currentX} tile, {currentY} tile)</p>}
 
       {edit != -1 && pathSelect != -1 &&
         <div className="flex flex-col my-8">

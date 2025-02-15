@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Button from "./components/button";
 import Collapsable from "./components/collapsable";
 import Map from "./components/map";
@@ -8,6 +7,8 @@ import Prompt from "./components/prompt";
 import { useAtom } from "jotai";
 import { ang_tolerance, def_kp, def_lookhead_dist, def_max_acc, def_max_speed, end_tolerance, ki_atom, kp_angle, max_ang_acc, max_ang_speed, pathsAtom, pathSelectAtom, point_tolerance } from "./var";
 import PathInfo from "./components/PathInfo";
+import getDefValues from "./backend/getDefValues";
+import { useEffect } from "react";
 
 export default function Home() {
   // yes I am ignoring the entire point of typescript but... I'm in a hurry to complete this
@@ -27,6 +28,25 @@ export default function Home() {
   const [angSp, setAngSp] = useAtom(max_ang_speed)
   const [kpAng, setKpAng] = useAtom(kp_angle)
   const [angTol, setAngTol] = useAtom(ang_tolerance)
+
+  useEffect(() => { 
+    async function a () {
+      let val = await getDefValues()
+      let di = val.parsedDictionary
+      console.log(di)
+      setLHD(di['LOOKAHEAD_DIST'])  
+      setMS(di['MAX_SPEED'])
+      setMA(di['MAX_ACCEL'])
+      setKP(di["KP"])
+      setKI(di["KI"])
+      setEndTol(di["END_TOLERANCE"])
+      setPT(di["POINT_TOLERANCE"])
+      setAngAcc(di["MAX_ANG_ACCEL"])
+      setAngSp(di["MAX_ANG_SPEED"])
+      setAngTol(di["ANG_TOLERANCE"])
+    }
+    a()
+  })
 
   // helper functions
   function addPath () {
@@ -115,7 +135,6 @@ export default function Home() {
     if (idx > 0) {
       let d = paths.slice()
       let v = d.splice(idx, 1)
-      console.log(v)
       d.splice(idx-1, 0, v[0])
       setPaths(d)
     }
@@ -125,7 +144,6 @@ export default function Home() {
     if (idx < paths.length - 1) {
       let d = paths.slice()
       let v = d.splice(idx, 1)
-      console.log(v)
       d.splice(idx+1, 0, v[0])
       setPaths(d)
     }
@@ -217,7 +235,7 @@ export default function Home() {
                       <input 
                         value={element["code"]} 
                         onChange={(e) => setCode(index, e.target.value)} 
-                        className="w-[250px] outline-none bg-neutral-800 p-2 rounded-md text-right" 
+                        className="w-[200px] outline-none bg-neutral-800 p-2 rounded-md text-right" 
                         type="text" 
                         placeholder="Enter Code Here"
                       /> 
