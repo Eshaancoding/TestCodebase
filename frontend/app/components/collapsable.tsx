@@ -1,6 +1,4 @@
 "use client";
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import ArrowDownIcon from '@mui/icons-material/ArrowDown';
 import { useState } from 'react';
 
 export default function Collapsable (props: { title: string, children: any }) {

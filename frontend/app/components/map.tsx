@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect, useMemo, Ref } from "react";
 import { Stage, Layer, Image, Circle, Line } from "react-konva";
 import useImage from "use-image";
 import Prompt from "./prompt";
 import { useAtom } from "jotai";
 import { def_kp, def_lookhead_dist, def_max_speed, pathsAtom, pathSelectAtom } from "../var";
+import Button from "./button";
 
 export function pxlToTiles (x:number, y:number) {
   return {
@@ -35,6 +36,7 @@ export default function Map (props: { imageUrl: string }) {
   const [currentHover, setCurrentHover] = useState(-1)
   const [selected, setIsSelected] = useState(-1)
   const [edit, setIsEdit] = useState(-1)
+  const stage = useRef(undefined as any)
   const isDrawing = useRef(false);
 
   useEffect(() => {
@@ -54,19 +56,20 @@ export default function Map (props: { imageUrl: string }) {
   const handleClick = (e:any) => {
     const { x, y } = e.target.getStage().getPointerPosition();
 
-    if (currentHover != -1) {
-      if (edit == currentHover) {
-        setIsEdit(-1)
-      }
-      else if (selected == currentHover) {
-        setIsEdit(currentHover)
-        setIsSelected(-1)
-      } else {
-        setIsSelected(currentHover)
-      }
+    // ensure that we are hovering over point and we are not editing a point currently in move
+    if (currentHover != -1 && selected != currentHover && e.evt.button === 2) {
+      setIsEdit(currentHover == edit ? -1 : currentHover)
+      return;
+    }
+    else if (e.evt.button == 2) return; // only right click we add point
+
+    // ensure we are hovering over point and we are not editing a point current in edit
+    if (currentHover != -1 && edit != currentHover) {
+      setIsSelected(currentHover == selected ? -1 : currentHover) 
       return;
     }
 
+    // add point
     if (pathSelect != -1 && paths[pathSelect]["type"] == "path") {
       let points = paths[pathSelect]["points"].slice()
       points = [...points, {
@@ -124,13 +127,25 @@ export default function Map (props: { imageUrl: string }) {
   function setEditPoint (param: string, value:any) {
     let copyPath = paths.slice()
     copyPath[pathSelect]["points"][edit][param] = value
-    console.log("set paths")
     setPaths(copyPath.slice())
   }
+
+  function deletePoint () {
+    let copyPath = paths.slice() 
+    let a = []
+    copyPath[pathSelect]["points"].splice(edit, 1)
+    setIsEdit(-1)
+    setIsSelected(-1)
+    setCurrentHover(-1)
+    setPaths(copyPath)
+  }
+
+  stage.current?.on("contextmenu", (e:any) => { e.evt.preventDefault() })
 
   return (
     <div className="absolute">
       <Stage
+        ref={stage}
         width={775}
         height={775}
         onClick={handleClick}
@@ -180,35 +195,38 @@ export default function Map (props: { imageUrl: string }) {
       <p className="absolute left-0 mt-2 ">Cursor: ({currentX} tile, {currentY} tile)</p>
 
       {edit != -1 && pathSelect != -1 &&
-        <div className="flex gap-4 my-8">
-          <Prompt 
-            label="Max Speed" 
-            unit="tile/sec" 
-            update={(v) => setEditPoint("maxSpeed", v)} 
-            value={paths[pathSelect]["points"][edit]["maxSpeed"]} 
-          />
+        <div className="flex flex-col my-8">
+          <div className="flex gap-4">
+            <Prompt 
+              label="Max Speed" 
+              unit="tile/sec" 
+              update={(v) => setEditPoint("maxSpeed", v)} 
+              value={paths[pathSelect]["points"][edit]["maxSpeed"]} 
+            />
 
-          <Prompt 
-            label="Callback" 
-            unit="" 
-            update={(v) => setEditPoint("callback", v)} 
-            value={paths[pathSelect]["points"][edit]["callback"]} 
-            isText 
-          />
+            <Prompt 
+              label="Callback" 
+              unit="" 
+              update={(v) => setEditPoint("callback", v)} 
+              value={paths[pathSelect]["points"][edit]["callback"]} 
+              isText 
+            />
 
-          <Prompt 
-            label="KP" 
-            unit="" 
-            update={(v) => setEditPoint("kp", v)} 
-            value={paths[pathSelect]["points"][edit]["kp"]} 
-          />
+            <Prompt 
+              label="KP" 
+              unit="" 
+              update={(v) => setEditPoint("kp", v)} 
+              value={paths[pathSelect]["points"][edit]["kp"]} 
+            />
 
-          <Prompt 
-            label="Lookahead Distance" 
-            unit="tile" 
-            update={(v) => setEditPoint("lookaheadDist", v)} 
-            value={paths[pathSelect]["points"][edit]["lookaheadDist"]} 
-          />
+            <Prompt 
+              label="Lookahead Distance" 
+              unit="tile" 
+              update={(v) => setEditPoint("lookaheadDist", v)} 
+              value={paths[pathSelect]["points"][edit]["lookaheadDist"]} 
+            />
+          </div>
+          <Button text="Delete Point" class="bg-red-600 w-[150px] text-center" f={deletePoint} />
         </div>
       }
     </div>
