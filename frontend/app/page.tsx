@@ -5,18 +5,44 @@ import Button from "./components/button";
 import Collapsable from "./components/collapsable";
 import Map from "./components/map";
 import Prompt from "./components/prompt";
+import { useAtom } from "jotai";
+import { ang_tolerance, def_kp, def_lookhead_dist, def_max_acc, def_max_speed, end_tolerance, kp_angle, max_ang_acc, max_ang_speed, point_tolerance } from "./var";
 
 export default function Home() {
-  const [paths, setPaths] = useState([] as any[])
+  // yes I am ignoring the entire point of typescript but... I'm in a hurry to complete this
+  const [paths, setPaths] = useState([] as any[]) 
   const [pathSelect, setPathSelect] = useState(-1)
 
+  // use atom values
+  const [lhd, setLHD] = useAtom(def_lookhead_dist)
+  const [ms, setMS] = useAtom(def_max_speed);
+  const [ma, setMA] = useAtom(def_max_acc)
+  const [kp, setKP] = useAtom(def_kp)
+  const [end_tol, setEndTol] = useAtom(end_tolerance)
+  const [pt, setPT] = useAtom(point_tolerance)
+
+  const [angAcc, setAngAcc] = useAtom(max_ang_acc)
+  const [angSp, setAngSp] = useAtom(max_ang_speed)
+  const [kpAng, setKpAng] = useAtom(kp_angle)
+  const [angTol, setAngTol] = useAtom(ang_tolerance)
+
+  // helper functions
   function addPath () {
     // add point from last path automatically
     let p = [] as any[]
     for (let i = paths.length - 1; i > -1; i--) {
       if (paths[i]["type"] == "path" && paths[i]["points"].length > 0) {
         let points = paths[i]["points"]
-        p.push(points[points.length - 1])
+        let xPoint = points[points.length - 1].x
+        let yPoint = points[points.length - 1].y
+        p.push({
+          x: xPoint,
+          y: yPoint,
+          maxSpeed: ms,
+          callback: "",
+          kp: kp,
+          lookaheadDist: lhd
+        })
         break
       }
     }
@@ -66,8 +92,8 @@ export default function Home() {
 
   return (
     <div className="absolute items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)] h-full w-full p-4">
-      <div className="grid grid-cols-8 grid-rows-8 gap-4 w-full h-full">
-        <div className="col-span-2 row-span-7 p-4 border-neutral-700 w-full h-full border-neutral-800 border-2 rounded-xl overflow-y-auto">
+      <div className="grid grid-cols-8 gap-4 w-full h-full">
+        <div className="col-span-2 p-4 border-neutral-700 w-full h-full border-neutral-800 border-2 rounded-xl overflow-y-auto">
           <div className="flex justify-between mb-8 flex-col gap-2">
             <h1 className="font-bold text-[30px] w-full text-center">Paths</h1>  
             <div className="flex justify-between w-full">
@@ -144,7 +170,7 @@ export default function Home() {
 
         </div> 
 
-        <div className="col-span-4 row-span-7 min-w-[300px] p-4 border-neutral-700 w-full h-full border-neutral-800 border-2 rounded-xl flex justify-center flex-col items-center">
+        <div className="col-span-4 min-w-[300px] p-4 border-neutral-700 w-full h-full border-neutral-800 border-2 rounded-xl flex justify-center flex-col items-center">
           <Map 
             imageUrl="regularField.png" 
             paths={paths}
@@ -152,32 +178,33 @@ export default function Home() {
             setPaths={setPaths}
           />
         </div> 
-        <div className="col-span-2 row-span-8 min-w-[300px] p-4 border-neutral-700 w-full h-full border-neutral-800 border-2 rounded-xl overflow-y-auto">
+        <div className="col-span-2 min-w-[300px] p-4 border-neutral-700 w-full h-full border-neutral-800 border-2 rounded-xl overflow-y-auto">
 
           <Collapsable title="Default Distance Params">
-            <Prompt label="Lookahead Distance" unit="tiles" update={(a:string) => console.log(a)} placeholder="0.3" />
-            <Prompt label="Max Speed" unit="tile/sec" update={() => console.log("sdf")} placeholder="2.5"/>
-            <Prompt label="Max Acceleration" unit="tile/sec^2" update={() => console.log("sdf")} placeholder="12" />
-            <Prompt label="KP" unit="" update={() => console.log("sdf")} placeholder="20.42" />
-            <Prompt label="End Tolerance" unit="in" update={() => console.log("sdf")} placeholder="0.05"/>
-            <Prompt label="Point Tolerance" unit="in" update={() => console.log("sdf")} placeholder="3" />
+            <Prompt label="Lookahead Distance" unit="tiles" update={setLHD} value={lhd} />
+            <Prompt label="Max Speed" unit="tile/sec" update={setMS} value={ms} />
+            <Prompt label="Max Acceleration" unit="tile/sec^2" update={setMA} value={ma} />
+            <Prompt label="KP" unit="" update={setKP} value={kp} />
+            <Prompt label="End Tolerance" unit="in" update={setEndTol} value={end_tol} />
+            <Prompt label="Point Tolerance" unit="in" update={setPT} value={pt} />
           </Collapsable>
           
           <Collapsable title="Default Point Turn params">
-            <Prompt label="Max Angular Speed" unit="degree/sec" update={() => console.log("sdf")} placeholder="205"/>
-            <Prompt label="Max Angular Acceleration" unit="degree/sec^2" update={() => console.log("sdf")} placeholder="400" />
-            <Prompt label="KP Angle" unit="" update={() => console.log("sdf")} placeholder="4.62" />
-            <Prompt label="Angle Tolerance" unit="deg" update={() => console.log("sdf")} placeholder="0.1"/>
+            <Prompt label="Max Angular Speed" unit="degree/sec" update={setAngSp} value={angSp} />
+            <Prompt label="Max Angular Acceleration" unit="degree/sec^2" update={setAngAcc} value={angAcc} />
+            <Prompt label="KP Angle" unit="" update={setKpAng} value={kpAng} />
+            <Prompt label="Angle Tolerance" unit="deg" update={setAngTol} value={angTol} />
           </Collapsable>
 
           <Collapsable title="Path Information">
             Stuff
           </Collapsable>
+
+          <Collapsable title="Run Program">
+            <Prompt label="Program" update={() => console.log("sdf")} isText />
+          </Collapsable>
           
         </div>
-        <div className="col-span-6 row-span-1 min-w-[300px] p-4 border-neutral-800 w-full h-full border-neutral-700 border-2 rounded-xl">
-
-        </div> 
       </div>
     </div>
   );

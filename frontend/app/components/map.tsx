@@ -3,6 +3,9 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Stage, Layer, Image, Circle, Line } from "react-konva";
 import useImage from "use-image";
+import Prompt from "./prompt";
+import { useAtom } from "jotai";
+import { def_kp, def_lookhead_dist, def_max_speed } from "../var";
 
 function pxlToTiles (x:number, y:number) {
   return {
@@ -21,6 +24,11 @@ function tileToPxl (x:number, y:number) {
 export default function Map (props: { imageUrl: string, paths: any[], pathSelect: number, setPaths: (v:any) => void }) {
   let paths = props.paths;
   let pathSelect = props.pathSelect;
+
+  const [ms, ] = useAtom(def_max_speed);
+  const [kp, ] = useAtom(def_kp)
+  const [lhd, ] = useAtom(def_lookhead_dist)
+
   const [image] = useImage(props.imageUrl);
   const [currentX, setCurrentX] = useState(0)
   const [currentY, setCurrentY] = useState(0)
@@ -33,6 +41,10 @@ export default function Map (props: { imageUrl: string, paths: any[], pathSelect
     setCurrentHover(-1) // any update in paths will deselect everything
     setIsSelected(-1)
   }, [pathSelect])
+
+  useEffect(() => {
+    console.log(paths)
+  }, [paths])
 
   const points = useMemo(() => {
     if (pathSelect != -1 && paths[pathSelect]["type"] == "path") {
@@ -61,16 +73,18 @@ export default function Map (props: { imageUrl: string, paths: any[], pathSelect
 
     if (pathSelect != -1 && paths[pathSelect]["type"] == "path") {
       let points = paths[pathSelect]["points"].slice()
-      points = [...points, {x, y} ]
+      points = [...points, {
+        x: x, 
+        y: y,
+        maxSpeed: ms,
+        callback: "",
+        kp: kp,
+        lookaheadDist: lhd
+      } ]
       let pathsCopy = paths.slice()
       pathsCopy[pathSelect]["points"] = points
       props.setPaths(pathsCopy)
     }
-  };
-
-  const handleMouseDown = (e:any) => {
-    isDrawing.current = true;
-    const pos = e.target.getStage().getPointerPosition();
   };
 
   const handleMouseMove = (e:any) => {
@@ -82,7 +96,8 @@ export default function Map (props: { imageUrl: string, paths: any[], pathSelect
 
     if (selected != -1) {
       let copy = points.slice()
-      copy[selected] = point
+      copy[selected].x = point.x
+      copy[selected].y = point.y
       let pathsCopy = paths.slice()
       pathsCopy[pathSelect]["points"] = copy
       props.setPaths(pathsCopy)
@@ -110,9 +125,11 @@ export default function Map (props: { imageUrl: string, paths: any[], pathSelect
     }
   };
 
-  const handleMouseUp = () => {
-    isDrawing.current = false;
-  };
+  function setEditPoint (param: string, value:any) {
+    let copyPath = paths.slice()
+    copyPath[pathSelect]["points"][edit][param] = value
+    props.setPaths(copyPath)
+  }
 
   return (
     <div className="absolute">
@@ -120,9 +137,7 @@ export default function Map (props: { imageUrl: string, paths: any[], pathSelect
         width={775}
         height={775}
         onClick={handleClick}
-        onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
         className=""
       >
         <Layer>
@@ -166,6 +181,39 @@ export default function Map (props: { imageUrl: string, paths: any[], pathSelect
         </Layer>
       </Stage>
       <p className="absolute left-0 mt-2 ">Cursor: ({currentX} tile, {currentY} tile)</p>
+
+      {edit != -1 && pathSelect != -1 &&
+        <div className="flex gap-4 my-8">
+          <Prompt 
+            label="Max Speed" 
+            unit="tile/sec" 
+            update={(v) => setEditPoint("maxSpeed", v)} 
+            value={paths[pathSelect]["points"][edit]["maxSpeed"]} 
+          />
+
+          <Prompt 
+            label="Callback" 
+            unit="" 
+            update={(v) => setEditPoint("callback", v)} 
+            value={paths[pathSelect]["points"][edit]["callback"]} 
+            isText 
+          />
+
+          <Prompt 
+            label="KP" 
+            unit="" 
+            update={(v) => setEditPoint("kp", v)} 
+            value={paths[pathSelect]["points"][edit]["kp"]} 
+          />
+
+          <Prompt 
+            label="Lookahead Distance" 
+            unit="tile" 
+            update={(v) => setEditPoint("lookaheadDist", v)} 
+            value={paths[pathSelect]["points"][edit]["lookaheadDist"]} 
+          />
+        </div>
+      }
     </div>
   );
 };
