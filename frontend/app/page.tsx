@@ -9,9 +9,7 @@ import { ang_tolerance, def_kp, def_lookhead_dist, def_max_acc, def_max_speed, e
 import PathInfo from "./components/PathInfo";
 import getDefValues from "./backend/getDefValues";
 import { useEffect, useState } from "react";
-import readProgram from "./backend/readProgram";
-import writeProgram from "./backend/writeProgram";
-import Codebase from "./components/codebase";
+import Codebase from "./components/Codebase";
 
 export default function Home() {
   // yes I am ignoring the entire point of typescript but... I'm in a hurry to complete this
@@ -260,9 +258,7 @@ export default function Home() {
         </div> 
 
         <div className="col-span-4 min-w-[300px] p-4 border-neutral-700 w-full h-full border-neutral-800 border-2 rounded-xl flex justify-center flex-col items-center">
-          <Map 
-            imageUrl="regularField.png" 
-          />
+          <Map />
         </div> 
         <div className="col-span-2 min-w-[300px] p-4 border-neutral-700 w-full h-full border-neutral-800 border-2 rounded-xl overflow-y-auto">
 

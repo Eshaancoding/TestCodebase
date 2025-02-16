@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Button from "./button";
 import Prompt from "./prompt";
 import { useAtom } from "jotai";
-import { pathsAtom, pathSelectAtom } from "../var";
+import { is_skills, pathsAtom, pathSelectAtom } from "../var";
 import writeProgram from "../backend/writeProgram";
 import readProgram from "../backend/readProgram";
 import { isRunning as ProgRunning, returnText, startProgram, stopProgram } from "../backend/Program";
@@ -16,6 +16,7 @@ export default function Codebase () {
     const [isRun, setIsRunning] = useState(false)
     const [currentInterval, setCurrentInterval] = useState(undefined as NodeJS.Timeout | undefined)
     const [availableFiles, setAvailableFiles] = useState([] as string[])
+    const [, setIsSkills] = useAtom(is_skills)
     
     useEffect(() => {
         async function a () {
@@ -59,6 +60,13 @@ export default function Codebase () {
             setProgram("")
         }
         else {
+            if (file.includes("skill")) {
+                setIsSkills(true)
+            } 
+            else {
+                setIsSkills(false)
+            }
+            
             setProgram(file)
             setPaths(await readProgram(file))
         }

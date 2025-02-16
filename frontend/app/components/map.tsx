@@ -5,7 +5,7 @@ import { Stage, Layer, Image, Circle, Line } from "react-konva";
 import useImage from "use-image";
 import Prompt from "./prompt";
 import { useAtom } from "jotai";
-import { def_kp, def_lookhead_dist, def_max_speed, pathsAtom, pathSelectAtom } from "../var";
+import { def_kp, def_lookhead_dist, def_max_speed, is_skills, pathsAtom, pathSelectAtom } from "../var";
 import Button from "./button";
 
 // MAKE SURE YOU CHANGE TILETOPXL ON READPROGRAM.TSX
@@ -17,7 +17,7 @@ export function pxlToTiles (x:number, y:number) {
   }
 }
 
-export default function Map (props: { imageUrl: string }) {
+export default function Map () {
   const [paths, setPaths] = useAtom(pathsAtom)
   const [pathSelect, ] = useAtom(pathSelectAtom)
 
@@ -25,7 +25,10 @@ export default function Map (props: { imageUrl: string }) {
   const [kp, ] = useAtom(def_kp)
   const [lhd, ] = useAtom(def_lookhead_dist)
 
-  const [image] = useImage(props.imageUrl);
+  const [isSkill, ] = useAtom(is_skills)
+
+  const [regField] = useImage("regularField.png");
+  const [skillsField] = useImage("skills.png")
   const [currentX, setCurrentX] = useState(0)
   const [currentY, setCurrentY] = useState(0)
   const [currentHover, setCurrentHover] = useState(-1)
@@ -149,7 +152,7 @@ export default function Map (props: { imageUrl: string }) {
         className=""
       >
         <Layer>
-          <Image image={image} width={775} height={775} />
+          <Image image={isSkill ? skillsField : regField} width={775} height={775} />
           {paths.map((element:any, index:number) => {
             if (element["type"] == "path" && element["display"]) {
               let points = element["points"]

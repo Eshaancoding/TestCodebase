@@ -161,86 +161,14 @@ void ComplexLilRoute (bool reverse = false) {
 }
 
 void Routes::skills () {
-    /*
-    OdomArc::setPos(0_in, 0_in, 90_deg);
-    eff.setIntake(IntakeState::INTAKE); 
-    pros::delay(600);
 
-    drive.goPathDepr({ // REALLY REALLY REALLY TUNABLE!!!
-        PathDepr({0_in, 0_in}),
-        PathDepr({1.4_tile, -1.3_tile})
-    }, 5_in, 5_in); // don't have to be too accurate!
-    
-    eff.setIntake(IntakeState::INACTIVE);
+	drive.move({
+		DrivePoint({0.1738_tile, 2.9979_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.4221_tile, 2.9897_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.6621_tile, 2.8903_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.8441_tile, 2.7662_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.251_tile, 1.7483_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	});
 
-    drive.goBackward(0.15_tile); // note it doesn't go back??
-    //ComplexLilRoute();
-    lilRoute();
 
-    drive.goForward(0.1_tile); // get out of corner
-
-    drive.setToleranceParams(1_s);
-    drive.faceToPoint({20_tile, 0_tile}, true); //turn to other side of field
-    drive.resetToleranceParams();
-    
-    //drive.setToleranceParams(0.7_s);
-    drive.goForward(0.73_tile); // go more forward in prep for turn to face other side
-    //drive.resetToleranceParams();
-
-    drive.setToleranceParams(1_s);
-    drive.faceToPoint({0_tile, 20_tile}, true); 
-    drive.resetToleranceParams();
-
-    //drive.setToleranceParams(_s);
-    drive.goForward(2.9_tile);  // go to toerh side
-    //drive.resetToleranceParams();
-
-    drive.setToleranceParams(1.5_s);
-    drive.turnRight(45_deg);
-    drive.resetToleranceParams();
-    
-    eff.setIntake(IntakeState::INTAKE);
-    drive.goForward(1.3_tile);
-    eff.setIntake(IntakeState::INACTIVE);
-    drive.goBackward(0.2_tile);
-    pros::delay(300);
-
-    //ComplexLilRoute(false);
-    lilRoute(true);
-
-    OdomArc::setPos(0_in, 0_in, 0_deg);
-    drive.goForward(2.4_tile);
-    drive.faceToPoint({0.65_tile,1.1_tile}, true);
-
-    eff.setIntake(IntakeState::SLOW);
-    drive.goForward(1.65_tile);
-    pros::delay(350);
-    eff.setIntake(IntakeState::INACTIVE);
-    drive.faceToPoint({-1.2_tile, -1.75_tile}, true);
-    drive.setToleranceParams(std::nullopt, 5_in);
-    drive.goBackward(1.23_tile);
-    drive.resetToleranceParams();
-    eff.toggleClamp(); // grab mogo
-    pros::delay(250);
-
-    eff.toggleIntakeState(INTAKE);
-    drive.faceToPoint({0.8_tile, -1_tile}, true);
-    drive.goPathDepr({
-        PathDepr({0_tile,0_tile}),
-        PathDepr({1_tile, -0.75_tile}),
-        PathDepr({2.1_tile, -0.45_tile})
-    });
-    pros::delay(1000);
-    drive.faceToPoint({-0.1_tile, 1_tile}, true);
-    drive.goForward(1.25_tile);
-    pros::delay(250);
-
-    // face clamp to corner
-    drive.faceToPoint({-0.5_tile, -0.4_tile}, true);
-    drive.goBackward(2.2_tile);
-    eff.toggleClamp();
-    drive.goForward(1_tile);
-    //drive.faceToPoint({-10_tile, 0_tile}, true);
-
-    */
 }
