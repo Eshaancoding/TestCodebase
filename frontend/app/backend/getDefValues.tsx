@@ -4,13 +4,11 @@ import fs from "fs"
 import path from "path";
 
 export default async function getDefValues () {
-    const codebaseDir = path.join(__dirname, "..", "..", "..", ".."); // Change filename
-
+    const codebaseDir = path.join(process.cwd(), ".."); // Change filename
     let parsedDictionary = {} as any
 
     // parse moveParams
     const moveParamsFile = path.join(codebaseDir, "include", "moveParams.h")
-    console.log(moveParamsFile)
     const fileContent = fs.readFileSync(moveParamsFile, "utf-8").toString().trim()
     const lines = fileContent.split("\n")
     for (let i = 0; i < lines.length; i++) {

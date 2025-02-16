@@ -8,7 +8,8 @@ import { useAtom } from "jotai";
 import { ang_tolerance, def_kp, def_lookhead_dist, def_max_acc, def_max_speed, end_tolerance, ki_atom, kp_angle, max_ang_acc, max_ang_speed, pathsAtom, pathSelectAtom, point_tolerance } from "./var";
 import PathInfo from "./components/PathInfo";
 import getDefValues from "./backend/getDefValues";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import readProgram from "./backend/readProgram";
 
 export default function Home() {
   // yes I am ignoring the entire point of typescript but... I'm in a hurry to complete this
@@ -29,11 +30,14 @@ export default function Home() {
   const [kpAng, setKpAng] = useAtom(kp_angle)
   const [angTol, setAngTol] = useAtom(ang_tolerance)
 
+  // program
+  const [parsed, setParsed] = useState(false)
+  const [program, setProgram] = useState("")
+
   useEffect(() => { 
     async function a () {
       let val = await getDefValues()
       let di = val.parsedDictionary
-      console.log(di)
       setLHD(di['LOOKAHEAD_DIST'])  
       setMS(di['MAX_SPEED'])
       setMA(di['MAX_ACCEL'])
@@ -44,9 +48,12 @@ export default function Home() {
       setAngAcc(di["MAX_ANG_ACCEL"])
       setAngSp(di["MAX_ANG_SPEED"])
       setAngTol(di["ANG_TOLERANCE"])
+      setParsed(true)
     }
-    a()
-  })
+    if (!parsed) {
+      a()
+    }
+  }, [])
 
   // helper functions
   function addPath () {
@@ -283,8 +290,13 @@ export default function Home() {
             }
           </Collapsable>
 
-          <Collapsable title="Run Program">
-            <Prompt label="Program" update={() => console.log("sdf")} isText />
+          <Collapsable title="Codebase">
+            <div className="flex flex-row gap-6">
+              <Prompt label="Program" update={setProgram} isText />
+              <div className="flex items-center">
+                <Button text="Parse Program" f={async () => { setPaths(await readProgram(program)); setPathSelect(-1) } } />
+              </div>
+            </div>
           </Collapsable>
           
         </div>

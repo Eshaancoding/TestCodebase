@@ -8,17 +8,11 @@ import { useAtom } from "jotai";
 import { def_kp, def_lookhead_dist, def_max_speed, pathsAtom, pathSelectAtom } from "../var";
 import Button from "./button";
 
+// MAKE SURE YOU CHANGE TILETOPXL ON READPROGRAM.TSX
 export function pxlToTiles (x:number, y:number) {
   return {
     x: (x - 25) * 6 / 725,
     y: 6 - (y - 25.75) * 6 / 725
-  }
-}
-
-export function tileToPxl (x:number, y:number) {
-  return {
-    x: (x * 725 / 6) + 25,
-    y: ((6 - y) * 725 / 6) + 25.75
   }
 }
 
@@ -42,6 +36,7 @@ export default function Map (props: { imageUrl: string }) {
   useEffect(() => {
     setCurrentHover(-1) // any update in paths will deselect everything
     setIsSelected(-1)
+    setIsEdit(-1)
   }, [pathSelect])
 
   const points = useMemo(() => {

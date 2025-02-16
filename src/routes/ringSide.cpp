@@ -8,62 +8,25 @@
 
 //ringside rush
 void Routes::ringSide () {
-    /*    
-
-    OdomArc::setPos(0_in, 0_in, 0_deg); // set our default/initial position
-    bool is_blue = (eff.isBlue).load();
-    //bool is_blue = false;
-
+    OdomArc::setPos(0_in, 0_in, 1_deg);
     eff.toggleBoinker();
-    eff.toggleIntakeState(INTAKE);
-    drive.goPathDepr({ // turn towards 4 stack ring
-        PathDepr({0_tile,0_tile}),
-        PathDepr({0_tile, 1.15_tile}),
-        PathDepr({is_blue ? 0.33_tile : -0.33_tile, 1.69_tile})
-    }, 5_in,5_in); 
-    pros::delay(600);
-    eff.toggleIntakeState(INACTIVE);    
-    
-    // drive.faceToPoint({1.5_tile,1_tile},true); // face mogo
-    //OdomArc::setPos(0_tile, 0_tile, -45_deg);
-    drive.setToleranceParams(std::nullopt, 3_in); // cjange d tolerance to 1_in
-    drive.goBackward(1.53_tile, {{0, 0.9}}); // go back towards mogo og .7
-    drive.resetToleranceParams(); // go back to 0.5_in. 
-    eff.toggleBoinker();
-    eff.toggleClamp(); // clmap mogo
+    drive.move({
+        DrivePoint({0_tile, 0_tile}, 0.3_tile, 0.2_tps, 20.32, nullopt),
+        DrivePoint({0_tile, 3_tile}, 0.3_tile, 0.5_tps, 20.32, nullopt),
+        DrivePoint({1_tile, 3_tile}, 0.3_tile, 0.3_tps, 20.32, nullopt),
+    });
+    drive.turnRight(72_deg);
 
-    eff.toggleIntakeState(INTAKE); // intake
-    drive.goPathDepr({
-        PathDepr({0_tile,0_tile}),
-        PathDepr({is_blue ? 0.5_tile : -0.5_tile,0.4_tile}),
-        PathDepr({is_blue ? 1.5_tile : -1.5_tile, 0.7_tile})
-    }, 5_in, 5_in);
+    auto x = [](){ eff.setIntake(); };
 
-    drive.setToleranceParams(1_s);
-    is_blue ? drive.turnRight(90_deg) : drive.turnLeft(90_deg); // turn towards rings DO PP HERE
+    eff.toggleClamp();
+    pros::delay(500);
     drive.resetToleranceParams();
-    drive.goForward(1.58_tile);
-    is_blue ? drive.turnRight(135_deg) : drive.turnLeft(135_deg);
-
-    */
-
-    // eff.arm_state = ArmState::PID_ARM;
-    // eff.currentState = State::hasDonut;
-
-    // drive.setToleranceParams(std::nullopt, 2_in); // no changes to time tolerance, but distance tolerance is set to 1_in
-    // drive.goForward(1.78_tile, {{0, 0.6}}); // go towards ladder, make this slower 
-    // drive.resetToleranceParams();
-
-    // eff.raiseArm();
-    // pros::delay(500);
-    // eff.stopArm();
-    
-    // drive.goForward(1.5_tile); // intake both rings
-    // drive.turnRight(90_deg);
-    // drive.goForward(0.75_tile);
-    // //drive.faceToPoint({0_tile,-2_tile}, true); // turn towards ladder
-    // drive.turnRight(160_deg);
-    // drive.goForward(2.5_tile); // touch ladder
-    // eff.toggleClamp();
-   
+    drive.turnLeft(90_deg);
+    drive.move({
+        DrivePoint({2_tile, 3_tile}, 0.3_tile, 0.2_tps, 20.32, nullopt),
+        DrivePoint({4_tile, 3_tile}, 0.3_tile, 0.2_tps, 20.32, nullopt),
+        DrivePoint({4_tile, 4_tile}, 0.3_tile, 0.6_tps, 30.32, x),
+        DrivePoint({5_tile, 4_tile}, 0.3_tile, 0.2_tps, 20.32, nullopt),
+    });
 }
