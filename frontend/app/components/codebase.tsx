@@ -5,8 +5,8 @@ import { useAtom } from "jotai";
 import { pathsAtom, pathSelectAtom } from "../var";
 import writeProgram from "../backend/writeProgram";
 import readProgram from "../backend/readProgram";
-import { isRunning as ProgRunning, returnText, startProgram, stopProgram } from "../backend/runProgram";
-
+import { isRunning as ProgRunning, returnText, startProgram, stopProgram } from "../backend/Program";
+import getPrograms from "../backend/getPrograms";
 
 export default function Codebase () {
     const [program, setProgram] = useState("")
@@ -15,17 +15,26 @@ export default function Codebase () {
     const [out, setOut] = useState("")
     const [isRun, setIsRunning] = useState(false)
     const [currentInterval, setCurrentInterval] = useState(undefined as NodeJS.Timeout | undefined)
+    const [availableFiles, setAvailableFiles] = useState([] as string[])
+    
+    useEffect(() => {
+        async function a () {
+            setAvailableFiles(await getPrograms())
+        }
+        a()
+    }, [])
     
     async function run () {
+        if (program.length == 0) return
+        setOut("")
         setIsRunning(true)
         writeProgram(program, paths) 
         startProgram()
 
         const id = setInterval(async () => {
-            setOut(await returnText())
-
             let prog_run = await ProgRunning()
-            if (!prog_run) await stop()
+            if (!prog_run) { await stop() }
+            else { setOut(await returnText()) }
         }, 200)
         setCurrentInterval(id)
     }
@@ -38,18 +47,40 @@ export default function Codebase () {
     }
 
     useEffect(() => {
-    return () => {
-      if (currentInterval != undefined) {
-        clearInterval(currentInterval);
-      }
-    };
-  }, [currentInterval]);
+        return () => {
+            if (currentInterval != undefined) {
+                clearInterval(currentInterval);
+            }
+        };
+    }, [currentInterval]);
+
+    async function setP (file:string) {
+        if (program == file) {
+            setProgram("")
+        }
+        else {
+            setProgram(file)
+            setPaths(await readProgram(file))
+        }
+    }
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="flex flex-row gap-6">
-                <Prompt label="Program" update={setProgram} isText />
+            <p>Select a program:</p>
+            <div className="grid grid-cols-3 gap-6 mb-4">
+                {availableFiles.map((file:string, index:number) => {
+                    return (
+                        <button 
+                            key={index} 
+                            onClick={() => setP(file)} 
+                            className={`p-2 rounded-xl text-center ${program == file ? 'bg-neutral-600' : 'bg-neutral-800'}`}
+                        >
+                            {file}
+                        </button>
+                    )
+                })}
             </div>
+            <p className="w-full text-center">Commands:</p>
             <div className="flex justify-center gap-4" >
                 {!isRun ?
                     <Button text="Run" class="w-[100px] bg-blue-500" f={run} />
@@ -57,16 +88,21 @@ export default function Codebase () {
                     <Button text="Stop" class="w-[100px] bg-red-500" f={stop} />
                 }
                 <Button text="Save" class="w-[100px]" f={() => writeProgram(program, paths)} />
-                <Button text="Parse" class="w-[100px]" f={async () => { setPaths(await readProgram(program)); setPathSelect(-1) } } />
             </div>
-            <div className="w-full bg-neutral-800 p-4 rounded-[15px] flex flex-col">
-                <p className="font-bold text-[20px]">Terminal Output:</p>
-                {out.split("\n").map((value:string, index:number) => {
-                    return ( 
-                        <p key={index} className="text-[14px]">{value}</p>
-                    )
-                })}
-            </div>
+            {(isRun || out.length > 0) && 
+                <div className="w-full bg-neutral-800 p-4 rounded-[15px] flex flex-col gap-1">
+                    <p className="font-bold text-[20px]">Terminal Output:</p>
+                    {out.length > 0 ?
+                        out.split("\n").map((value:string, index:number) => {
+                            return ( 
+                                <p key={index} className="text-[14px]">{value}</p>
+                            )
+                        })
+                    :
+                        <p>Running...</p>
+                    }
+                </div>
+            }
         </div>
     )    
 }

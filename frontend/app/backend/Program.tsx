@@ -8,6 +8,7 @@ let isRun = false
 
 export async function startProgram () {
     if (!isRun) {
+        t = ""
         process = spawn("pros", ["mut"]);
         isRun = true
         process.stdout.on("data", (data) => {
@@ -35,7 +36,7 @@ export async function isRunning () {
 
 export async function stopProgram () {
     console.log("stopped program")
-    if (isRun) {
+    if (isRun && process != undefined) {
         process?.kill("SIGKILL")
         process?.disconnect()
     }

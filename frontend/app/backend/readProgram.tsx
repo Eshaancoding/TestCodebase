@@ -64,13 +64,13 @@ function parseTurn (line:string) {
     }
 }
 
-export default async function readProgram (prog:string) {
+export default async function readProgram (program:string) {
     const codebaseDir = path.join(process.cwd(), ".."); // Change filename
     let result = []    
     let lambdaDict : {[key: string]: string} = {} 
 
     // parse moveParams
-    const moveParamsFile = path.join(codebaseDir, "src", "Routes", prog + ".cpp")
+    const moveParamsFile = path.join(codebaseDir, "src", "Routes", program + ".cpp")
     const fileContent = fs.readFileSync(moveParamsFile, "utf-8").toString().trim()
         
     let func = fileContent.split("() {")[1]
@@ -81,6 +81,7 @@ export default async function readProgram (prog:string) {
         const line = code[i].trim()
         
         if (line.length <= 1) continue; // skip parsing end of lambda functions
+        else if (line.slice(0,2) === "//") continue; // skip if comment
         else if (line.includes("setPos")) continue; // skip setPos statements
         else if (line.includes("drive.move")) result.push(parseMove(line, lambdaDict));
         else if (line.includes("drive.turn")) result.push(parseTurn(line));
