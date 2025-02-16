@@ -69,5 +69,4 @@ export default async function writeProgram (prog:string, paths:any[]) {
     fs.writeFileSync(moveParamsFile, totalFile, "utf-8");
 
     console.log(totalFile)
-    
 }

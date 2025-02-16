@@ -11,6 +11,7 @@ import getDefValues from "./backend/getDefValues";
 import { useEffect, useState } from "react";
 import readProgram from "./backend/readProgram";
 import writeProgram from "./backend/writeProgram";
+import Codebase from "./components/codebase";
 
 export default function Home() {
   // yes I am ignoring the entire point of typescript but... I'm in a hurry to complete this
@@ -33,7 +34,6 @@ export default function Home() {
 
   // program
   const [parsed, setParsed] = useState(false)
-  const [program, setProgram] = useState("")
 
   useEffect(() => { 
     async function a () {
@@ -292,15 +292,7 @@ export default function Home() {
           </Collapsable>
 
           <Collapsable title="Codebase">
-            <div className="flex flex-row gap-6">
-              <Prompt label="Program" update={setProgram} isText />
-              <div className="flex items-center">
-                <Button text="Parse Program" f={async () => { setPaths(await readProgram(program)); setPathSelect(-1) } } />
-              </div>
-              <div className="flex items-center">
-                <Button text="Save Program" f={() => writeProgram(program, paths)} />
-              </div>
-            </div>
+            <Codebase /> 
           </Collapsable>
           
         </div>
