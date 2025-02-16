@@ -14,7 +14,7 @@ function r (x:number) {
     return Math.round(x*10000)/10000
 }
 
-export default async function writeProgram (prog:string, paths:any[]) {
+export default async function writeProgram (prog:string, paths:any[], initAngle:number) {
     let resultCode = ""
     const codebaseDir = path.join(process.cwd(), ".."); // Change filename
     const moveParamsFile = path.join(codebaseDir, "src", "Routes", prog + ".cpp")
@@ -22,6 +22,19 @@ export default async function writeProgram (prog:string, paths:any[]) {
 
     let lambdaCounter = 1;
     let preFile = fileContent.split("() {")[0]
+    
+    // fill in odom arc first
+    let xPos = -1
+    let yPos = -1
+    for (let i = 0; i < paths.length; i++) {
+        if (paths[i].type == "path") {
+            xPos = paths[i]["points"][0].x
+            yPos = paths[i]["points"][0].y
+            break
+        }
+    }
+    
+    resultCode += `\n\tOdomArc::setPos(${r(pxlToTiles(xPos, yPos).x)}_tile, ${r(pxlToTiles(xPos, yPos).y)}_tile, ${initAngle}_deg);\n\n`;
     
     for (var p of paths) {
         if (p["type"] == "turn") {

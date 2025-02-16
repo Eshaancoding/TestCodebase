@@ -17,5 +17,4 @@ export const max_ang_acc = atom(400)
 export const kp_angle = atom(4.62)
 export const ang_tolerance = atom(0.1)
 
-export const initial_angle = atom(90) // in degree
 export const is_skills = atom(false);

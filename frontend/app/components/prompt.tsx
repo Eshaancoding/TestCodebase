@@ -18,7 +18,13 @@ export default function Prompt (props: { label: string, unit?: string, placehold
         <div className="grid grid-col-3 gap-2 items-center my-6 justify-between">
             <p className="text-[18px]">{props.label}:</p>
             <div className="flex gap-2 items-center">
-                <input value={props.value} onChange={(e) => onCh(e.target.value)} placeholder={props.placeholder} className="outline-none rounded-[7px] bg-neutral-800 p-2 rounded-md w-[150px]" type={props.isText == true ? "text" : "number"} /> 
+                <input 
+                    value={props.value} 
+                    onChange={(e) => onCh(e.target.value)} 
+                    placeholder={props.placeholder} 
+                    className="outline-none rounded-[7px] bg-neutral-800 p-2 w-[150px]" 
+                    type={props.isText == true ? "text" : "number"} 
+                /> 
                 <p>{props.unit}</p> 
             </div> 
         </div> 

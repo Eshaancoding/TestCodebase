@@ -64,8 +64,16 @@ function parseTurn (line:string) {
     }
 }
 
+// OdomArc::setPos(0_tile, 2_tile, 90_deg);
+function parseSetPos (line:string) {
+    // get last param for init angle
+    let lenArr = line.split(");")[0].split(",")
+    return parseFloat(lenArr[lenArr.length - 1])
+}
+
 export default async function readProgram (program:string) {
     const codebaseDir = path.join(process.cwd(), ".."); // Change filename
+    let initAngle = -1
     let result = []    
     let lambdaDict : {[key: string]: string} = {} 
 
@@ -82,7 +90,7 @@ export default async function readProgram (program:string) {
         
         if (line.length <= 1) continue; // skip parsing end of lambda functions
         else if (line.slice(0,2) === "//") continue; // skip if comment
-        else if (line.includes("setPos")) continue; // skip setPos statements
+        else if (line.includes("setPos")) initAngle = parseSetPos(line);
         else if (line.includes("drive.move")) result.push(parseMove(line, lambdaDict));
         else if (line.includes("drive.turn")) result.push(parseTurn(line));
         else if (line.includes("[](){")) {
@@ -97,5 +105,5 @@ export default async function readProgram (program:string) {
         }
     }
 
-    return result 
+    return {result, initAngle}
 }

@@ -18,6 +18,8 @@ export default function Codebase () {
     const [availableFiles, setAvailableFiles] = useState([] as string[])
     const [, setIsSkills] = useAtom(is_skills)
     
+    const [initAngle, setInitAngle] = useState(90)
+    
     useEffect(() => {
         async function a () {
             setAvailableFiles(await getPrograms())
@@ -29,7 +31,7 @@ export default function Codebase () {
         if (program.length == 0) return
         setOut("")
         setIsRunning(true)
-        writeProgram(program, paths) 
+        writeProgram(program, paths, initAngle) 
         startProgram()
 
         const id = setInterval(async () => {
@@ -68,12 +70,15 @@ export default function Codebase () {
             }
             
             setProgram(file)
-            setPaths(await readProgram(file))
+            let d = await readProgram(file)
+            setPaths(d.result)
+            setInitAngle(d.initAngle) 
         }
     }
 
     return (
         <div className="flex flex-col gap-4">
+            <Prompt label="Initial Angle" unit="deg" value={initAngle} update={setInitAngle} />
             <p>Select a program:</p>
             <div className="grid grid-cols-3 gap-6 mb-4">
                 {availableFiles.map((file:string, index:number) => {
@@ -95,7 +100,7 @@ export default function Codebase () {
                 :
                     <Button text="Stop" class="w-[100px] bg-red-500" f={stop} />
                 }
-                <Button text="Save" class="w-[100px]" f={() => writeProgram(program, paths)} />
+                <Button text="Save" class="w-[100px]" f={() => writeProgram(program, paths, initAngle)} />
             </div>
             {(isRun || out.length > 0) && 
                 <div className="w-full bg-neutral-800 p-4 rounded-[15px] flex flex-col gap-1">

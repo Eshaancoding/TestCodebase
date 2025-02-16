@@ -8,6 +8,8 @@
 
 //ringside rush
 void Routes::ringSide () {
+	OdomArc::setPos(0.7034_tile, 4.9593_tile, 90_deg);
+
 
 	drive.move({
 		DrivePoint({0.7034_tile, 4.9593_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),

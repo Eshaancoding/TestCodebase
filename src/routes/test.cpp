@@ -8,6 +8,6 @@
 
 //ringside rush
 void Routes::test () {
-
+    OdomArc::setPos(0_tile, 2_tile, 90_deg);
 
 }

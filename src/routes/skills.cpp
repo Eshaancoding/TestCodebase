@@ -161,6 +161,8 @@ void ComplexLilRoute (bool reverse = false) {
 }
 
 void Routes::skills () {
+	OdomArc::setPos(0.1738_tile, 2.9979_tile, 72_deg);
+
 
 	drive.move({
 		DrivePoint({0.1738_tile, 2.9979_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
