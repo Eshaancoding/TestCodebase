@@ -36,7 +36,7 @@ function parseMove (line:string, lambdaDict: {[key:string]: string}) {
             maxSpeed: parseFloat(speed.split("_")[0]),
             callback: cb == "nullopt" ? "" : lambdaDict[cb],
             kp: parseFloat(kp),
-            lookahead_dist: parseFloat(lhd.split("_")[0])
+            lookaheadDist: parseFloat(lhd.split("_")[0])
         })
     }
     return {
@@ -66,7 +66,6 @@ function parseTurn (line:string) {
 
 export default async function readProgram (prog:string) {
     const codebaseDir = path.join(process.cwd(), ".."); // Change filename
-
     let result = []    
     let lambdaDict : {[key: string]: string} = {} 
 

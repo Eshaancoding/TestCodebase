@@ -9,6 +9,7 @@ import { def_kp, def_lookhead_dist, def_max_speed, pathsAtom, pathSelectAtom } f
 import Button from "./button";
 
 // MAKE SURE YOU CHANGE TILETOPXL ON READPROGRAM.TSX
+// MAKE SURE YOU CHANGE PXLTOTILE ON WRITEPROGRAM.TSX
 export function pxlToTiles (x:number, y:number) {
   return {
     x: (x - 25) * 6 / 725,
@@ -65,7 +66,7 @@ export default function Map (props: { imageUrl: string }) {
     }
 
     // add point
-    if (pathSelect != -1 && paths[pathSelect]["type"] == "path") {
+    if (pathSelect != -1 && paths[pathSelect]["type"] == "path" && edit == -1) {
       let points = paths[pathSelect]["points"].slice()
       points = [...points, {
         x: x, 

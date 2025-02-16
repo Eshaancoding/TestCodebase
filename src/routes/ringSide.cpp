@@ -8,25 +8,24 @@
 
 //ringside rush
 void Routes::ringSide () {
-    OdomArc::setPos(0_in, 0_in, 1_deg);
-    eff.toggleBoinker();
-    drive.move({
-        DrivePoint({0_tile, 0_tile}, 0.3_tile, 0.2_tps, 20.32, nullopt),
-        DrivePoint({0_tile, 3_tile}, 0.3_tile, 0.5_tps, 20.32, nullopt),
-        DrivePoint({1_tile, 3_tile}, 0.3_tile, 0.3_tps, 20.32, nullopt),
-    });
-    drive.turnRight(72_deg);
+	auto lambda1 = [](){ eff.setIntake(); };
+	auto lambda2 = [](){ eff.setLog(); };
 
-    auto x = [](){ eff.setIntake(); };
+	drive.move({
+		DrivePoint({1.848_tile, 4.9657_tile}, 0.3_tile, 2_tps, 20.42, nullopt),
+		DrivePoint({5.0673_tile, 4.6926_tile}, 0.3_tile, 2.6_tps, 20.42, lambda1),
+		DrivePoint({4.7859_tile, 2.483_tile}, 0.3_tile, 2.3_tps, 20.42, nullopt),
+		DrivePoint({2.7583_tile, 0.9768_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.9707_tile, 1.9368_tile}, 0.3_tile, 2.5_tps, 20.42, lambda2),
+		DrivePoint({4.2397_tile, 1.192_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({4.8788_tile, 1.523_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	});
 
-    eff.toggleClamp();
-    pros::delay(500);
-    drive.resetToleranceParams();
-    drive.turnLeft(90_deg);
-    drive.move({
-        DrivePoint({2_tile, 3_tile}, 0.3_tile, 0.2_tps, 20.32, nullopt),
-        DrivePoint({4_tile, 3_tile}, 0.3_tile, 0.2_tps, 20.32, nullopt),
-        DrivePoint({4_tile, 4_tile}, 0.3_tile, 0.6_tps, 30.32, x),
-        DrivePoint({5_tile, 4_tile}, 0.3_tile, 0.2_tps, 20.32, nullopt),
-    });
+	pros::delay(500);
+
+	drive.turnLeft(75_deg);
+
+	pros::delay(500);
+
+
 }

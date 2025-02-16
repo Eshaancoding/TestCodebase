@@ -10,6 +10,7 @@ import PathInfo from "./components/PathInfo";
 import getDefValues from "./backend/getDefValues";
 import { useEffect, useState } from "react";
 import readProgram from "./backend/readProgram";
+import writeProgram from "./backend/writeProgram";
 
 export default function Home() {
   // yes I am ignoring the entire point of typescript but... I'm in a hurry to complete this
@@ -95,7 +96,7 @@ export default function Home() {
   function addCode () {
     setPaths([...paths, {
       "type": "code",
-      "code": "pros::delay(500)"
+      "code": "pros::delay(500);"
     }])
   }
   
@@ -295,6 +296,9 @@ export default function Home() {
               <Prompt label="Program" update={setProgram} isText />
               <div className="flex items-center">
                 <Button text="Parse Program" f={async () => { setPaths(await readProgram(program)); setPathSelect(-1) } } />
+              </div>
+              <div className="flex items-center">
+                <Button text="Save Program" f={() => writeProgram(program, paths)} />
               </div>
             </div>
           </Collapsable>
