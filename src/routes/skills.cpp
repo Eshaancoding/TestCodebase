@@ -161,16 +161,143 @@ void ComplexLilRoute (bool reverse = false) {
 }
 
 void Routes::skills () {
-	OdomArc::setPos(0.1738_tile, 2.9979_tile, 72_deg);
+
+	OdomArc::setPos(0.1738_tile, 2.9979_tile, 90_deg);
+
+	auto lambda1 = [](){ eff.setIntake(IntakeState::INTAKE); };
+
+	drive.move({
+		DrivePoint({0.1738_tile, 2.9979_tile}, 0.3_tile, 2.5_tps, 20.42, lambda1),
+		DrivePoint({0.451_tile, 2.9648_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.6621_tile, 2.8903_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.8441_tile, 2.7662_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.1807_tile, 1.8145_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	});
+
+	eff.setIntake(IntakeState::INACTIVE);
+
+	drive.turnLeft(45_deg);
 
 
 	drive.move({
-		DrivePoint({0.1738_tile, 2.9979_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({0.4221_tile, 2.9897_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({0.6621_tile, 2.8903_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({0.8441_tile, 2.7662_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({2.251_tile, 1.7483_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.1807_tile, 1.8145_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.7324_tile, 1.9634_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
 	});
+
+	auto lambda2 = [](){ eff.setIntake(IntakeState::INTAKE); };
+
+	drive.move({
+		DrivePoint({0.7324_tile, 1.9634_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({1.7669_tile, 1.0531_tile}, 0.3_tile, 2.5_tps, 20.42, lambda2),
+		DrivePoint({2.0979_tile, 0.7552_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.28_tile, 0.5731_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.4538_tile, 0.4076_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.6772_tile, 0.3745_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({3.2152_tile, 0.3662_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	});
+
+	drive.turnLeft(170_deg);
+
+
+	drive.move({
+		DrivePoint({3.2069_tile, 0.3662_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({3_tile, 0.6393_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.6855_tile, 0.8959_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.28_tile, 0.9124_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.1283_tile, 0.9455_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	});
+
+
+	drive.move({
+		DrivePoint({0.1283_tile, 0.9455_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.7655_tile, 0.9538_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.931_tile, 1.2103_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.9228_tile, 1.6324_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	});
+
+
+	drive.move({
+		DrivePoint({0.9228_tile, 1.6324_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.8979_tile, 0.1759_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	});
+
+	drive.turnLeft(148_deg);
+
+	auto lambda3 = [](){ eff.setIntake(IntakeState::INACTIVE); };
+
+	drive.move({
+		DrivePoint({0.8979_tile, 0.1759_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({-0.0041_tile, 0.0352_tile}, 0.3_tile, 2.5_tps, 20.42, lambda3),
+	});
+
+	eff.toggleClamp();
+
+	// auto lambda4 = [](){ eff.setIntake(IntakeState::INTAKE); };
+	// auto lambda5 = [](){ eff.setIntake(IntakeState::INACTIVE); };
+
+	// drive.move({
+	// 	DrivePoint({-0.0041_tile, 0.0352_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({1.3862_tile, 3.4283_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({1.7669_tile, 3.5855_tile}, 0.3_tile, 2.5_tps, 20.42, lambda4),
+	// 	DrivePoint({1.8497_tile, 3.7097_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({1.9986_tile, 4.0159_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({1.9572_tile, 4.4214_tile}, 0.3_tile, 2.5_tps, 20.42, lambda5),
+	// });
+
+	// drive.turnRight(45_deg);
+
+
+	// drive.move({
+	// 	DrivePoint({1.9572_tile, 4.4214_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({0.8317_tile, 4.049_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// });
+
+	// eff.toggleClamp();
+
+	// auto lambda6 = [](){ eff.setIntake(IntakeState::INTAKE); };
+
+	// drive.move({
+	// 	DrivePoint({0.8317_tile, 4.049_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({1.6924_tile, 4.8766_tile}, 0.3_tile, 2.5_tps, 20.42, lambda6),
+	// 	DrivePoint({2.4207_tile, 5.6048_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({2.611_tile, 5.671_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({3.1738_tile, 5.6545_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// });
+
+	// drive.turnLeft(166_deg);
+
+
+	// drive.move({
+	// 	DrivePoint({3.1738_tile, 5.6545_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({2.9669_tile, 5.34_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({2.6772_tile, 5.1414_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({2.189_tile, 5.0917_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({0.1117_tile, 5.0834_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// });
+
+
+	// drive.move({
+	// 	DrivePoint({0.1117_tile, 5.0834_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({0.5669_tile, 4.9097_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({0.8234_tile, 4.7028_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({0.8979_tile, 4.2228_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// });
+
+
+	// drive.move({
+	// 	DrivePoint({0.8979_tile, 4.2228_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({0.9145_tile, 5.8945_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// });
+
+	// drive.turnRight(60_deg);
+
+
+	// drive.move({
+	// 	DrivePoint({0.9145_tile, 5.8945_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// 	DrivePoint({0.029_tile, 5.9855_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	// });
+
+	// eff.toggleClamp();
 
 
 }

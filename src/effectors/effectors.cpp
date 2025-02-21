@@ -21,6 +21,7 @@ void Effectors::toggleIntakeState (IntakeState ia, bool isConveyor) {
     // outtaking, and we press the outtake button, disable
     // intaking, and we press the intake button, disable
     // disable, and press button,sdfsdfsdf then it won't satisfy this condition
+    
     if (this->intakeActive == ia) {
         this->intakeActive = IntakeState::INACTIVE;
     } else if(ia == IntakeState::SLOW){
@@ -73,6 +74,7 @@ void Effectors::intake () {
             }
         } else if (state == IntakeState::OUTTAKE) {
             intakeMotor.move_velocity(-600);
+            //intakeMotor.get_position();
         } else if (state == IntakeState::INACTIVE) {
             intakeMotor.move_velocity(0);
         } else if (state == IntakeState::SLOW){
@@ -122,7 +124,6 @@ void Effectors::toggleBoinker () {
     boinkerPiston.set_value(boinkerActive);
 }
 
-
 // fancy arm things
 // press button -> arm turns a lil bit so conveyor can slide donut into it -> press button again -> 
 // arm slams almost 180 to get donut onto wall stake
@@ -158,9 +159,19 @@ void Effectors::stepArm () {
         // Console::printBrain(5, "Error: %f", error*180/3.14159);
         // Console::printBrain(6, "Rot sensor: %f", (double)-rotationSensor.get_angle() / 100);
         // Console::printBrain(7, "angle: %f", angle);
+
+        // -- double threshold = 0;
         if (abs(error) > (1.5_deg).convert(okapi::radian)) {
+            // TEST CODE BESHAAN CHECK
+            // -- double prevPos = armRight.get_position();
+
             armRight.move_velocity(p * error); // RUN THE ARM of error is more than tolerance
             // Console::printBrain(9, "MOVING ARM VIA PID");
+
+            // -- if (armRight.get_position() - threshold <= prevPos){
+            //     armRight.move_velocity(-100); // need delay or nah?
+            //     arm_state = ArmState::IDLE_ARM;
+            // -- }
         } else {
             arm_state = ArmState::IDLE_ARM;
             // Console::printBrain(9, "GOING BACK TO IDLE BECAUSE OF ANGLE TOLERANCE");

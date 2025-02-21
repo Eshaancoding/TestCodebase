@@ -26,3 +26,4 @@ QAngle LineAngle :: area (QTime t) {
 
     return ((slope / 2) * (t_sq - t1_sq) + intercept * (t.convert(second) - t1.convert(second))) * 1_deg;
 }
+

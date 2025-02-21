@@ -86,7 +86,7 @@ export default function Paths() {
             if (ang < 0) {
                 d[idx]["direction"] = d[idx]["direction"] == "left" ? "right" : "left"
             }
-            d[idx]["angle"] = Math.abs(ang) % 180
+            d[idx]["angle"] = ((ang != 180) ? (Math.abs(ang) % 180) : 180)
             setPaths(d)
         } catch (e: any) {
         }

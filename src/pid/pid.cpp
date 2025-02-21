@@ -8,6 +8,7 @@ void PID :: reset () {
     errorSum = 0;
 }
 
+
 double PID :: step (double error) {
     // increase error sum if it doesn't go over max error sum threshold
     if (std::abs(error) > minErrThreshold) errorSum += error; 
