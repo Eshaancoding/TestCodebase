@@ -69,7 +69,7 @@ void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     
-    eff.seeColor = false;
+    // eff.seeColor = false;
 
     Routes::test();
     // drive.turnLeft(180_deg);
@@ -110,7 +110,7 @@ void opcontrol() {
     // Routes::mogoSideMatchBlue();
     // return;
 
-    eff.seeColor = false;
+    // eff.seeColor = false;
 
     bool isShooting = false;    
     bool isPTOEnabled = false;

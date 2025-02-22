@@ -13,8 +13,8 @@ pros::Motor Effectors::intakeMotor (3, MOTOR_GEAR_BLUE);
 pros::Optical Effectors::colorSensor (9);
 std::atomic<IntakeState> Effectors::intakeActive = IntakeState::INACTIVE;
 Color Effectors::colorState = Color::noColor;
-std::atomic<bool> Effectors::isBlue = false; // by default we assume that we are blue
-std::atomic<bool> Effectors::seeColor = false; // yes color sensor code
+std::atomic<bool> Effectors::isBlue = true; // by default we assume that we are blue
+std::atomic<bool> Effectors::seeColor = true; // yes color sensor code
 
 // INTAKE
 void Effectors::toggleIntakeState (IntakeState ia, bool isConveyor) {
@@ -45,7 +45,7 @@ void Effectors::intake () {
         double blue = colorSensor.get_rgb().blue;
         double red = colorSensor.get_rgb().red;
         double green = colorSensor.get_rgb().green;
-        // Console::printBrain(0, hue, "hue");
+        Console::printBrain(0, hue, "hue");
         // Console::printBrain(1, red, "red");
         // Console::printBrain(2, green, "green");
         // Console::printBrain(3, blue, "blue");
@@ -54,19 +54,21 @@ void Effectors::intake () {
             intakeMotor.move_velocity(600); // fix to 600
 
         } else if (see_color && state == IntakeState::INTAKE){
-            if (is_blue && hue < 10) { 
-                pros::delay(firstDelay);
+            if (is_blue && hue < 40) { 
+                // pros::delay(firstDelay);
                 intakeMotor.move_velocity(0);
-                pros::delay(secondDelay);
-                intakeMotor.move_velocity(600);
+                state = IntakeState::INACTIVE;
+                // pros::delay(secondDelay);
+                // intakeMotor.move_velocity(600);
             }
             
             // First condition: we on blue side; hue > 120 means detech blue
-            else if (!is_blue && hue > 120) {
-                pros::delay(firstDelay);
+            else if (!is_blue && hue > 130) {
+                // pros::delay(firstDelay);
                 intakeMotor.move_velocity(0);
-                pros::delay(secondDelay);
-                intakeMotor.move_velocity(600);
+                state = IntakeState::INACTIVE;
+                // pros::delay(secondDelay);
+                // intakeMotor.move_velocity(600);
             } 
             
             else {
