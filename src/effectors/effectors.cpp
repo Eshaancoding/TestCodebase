@@ -34,7 +34,7 @@ void Effectors::toggleIntakeState (IntakeState ia, bool isConveyor) {
 //colorState = Color::noColor;
 
 void Effectors::intake () { 
-    const int firstDelay = 10;    
+    const int firstDelay = 20;    
     const int secondDelay = 200;    
 
     while (true) {
@@ -42,9 +42,6 @@ void Effectors::intake () {
         const bool is_blue = isBlue.load(); // ===== By default: false ======
         const bool see_color = seeColor.load(); // deafult true
         double hue = colorSensor.get_hue();
-        double blue = colorSensor.get_rgb().blue;
-        double red = colorSensor.get_rgb().red;
-        double green = colorSensor.get_rgb().green;
         Console::printBrain(0, hue, "hue");
         // Console::printBrain(1, red, "red");
         // Console::printBrain(2, green, "green");
@@ -54,21 +51,20 @@ void Effectors::intake () {
             intakeMotor.move_velocity(600); // fix to 600
 
         } else if (see_color && state == IntakeState::INTAKE){
-            if (is_blue && hue < 40) { 
-                // pros::delay(firstDelay);
+            if (is_blue && hue < 25) { 
+                pros::delay(firstDelay);
                 intakeMotor.move_velocity(0);
                 state = IntakeState::INACTIVE;
-                // pros::delay(secondDelay);
-                // intakeMotor.move_velocity(600);
+                pros::delay(secondDelay);
+                intakeMotor.move_velocity(600);
             }
             
             // First condition: we on blue side; hue > 120 means detech blue
             else if (!is_blue && hue > 130) {
-                // pros::delay(firstDelay);
+                pros::delay(firstDelay);
                 intakeMotor.move_velocity(0);
-                state = IntakeState::INACTIVE;
-                // pros::delay(secondDelay);
-                // intakeMotor.move_velocity(600);
+                pros::delay(secondDelay);
+                intakeMotor.move_velocity(600);
             } 
             
             else {
@@ -143,42 +139,26 @@ void Effectors::changeState () {
 void Effectors::stepArm () {
     if (arm_state == ArmState::PID_ARM) {
         // there's no while true loop; ALL OF THESE PARAMS TUNING
-        const double loadingAngle = 16; 
-        const double dumpAngle = 135; //135
-        const double idleAngle = 1.5;
-        const double initRotSensor = 0;
+        const double loadingAngle = 115; 
+        const double dumpAngle = 250; //135
+        const double idleAngle = 93;
         // one button for motor up one button for motor down
 
         double targetAngle = this->currentState == State::isRaising ? loadingAngle : 
                             this->currentState == State::hasDonut ? dumpAngle :
                             idleAngle; // if idle
  
-        double angle = ((double)-rotationSensor.get_angle() / 100) + 296;
+        double angle = (double)rotationSensor.get_angle() / 100.0;
 
         double error = (angle - targetAngle)*3.1415926/180; // convert to radians
-        double p = -35; //-25
-        
-        // Console::printBrain(5, "Error: %f", error*180/3.14159);
-        // Console::printBrain(6, "Rot sensor: %f", (double)-rotationSensor.get_angle() / 100);
-        // Console::printBrain(7, "angle: %f", angle);
+        double p = -40; //-25
+        Console::printBrain(1, "Rot sensor: %f", angle);
 
-        // -- double threshold = 0;
         if (abs(error) > (1.5_deg).convert(okapi::radian)) {
-            // TEST CODE BESHAAN CHECK
-            // -- double prevPos = armRight.get_position();
-
             armRight.move_velocity(p * error); // RUN THE ARM of error is more than tolerance
-            // Console::printBrain(9, "MOVING ARM VIA PID");
-
-            // -- if (armRight.get_position() - threshold <= prevPos){
-            //     armRight.move_velocity(-100); // need delay or nah?
-            //     arm_state = ArmState::IDLE_ARM;
-            // -- }
         } else {
             arm_state = ArmState::IDLE_ARM;
-            // Console::printBrain(9, "GOING BACK TO IDLE BECAUSE OF ANGLE TOLERANCE");
         }
-        // Console::printBrain(8, "power: %f", p * error);
     }
     else if (arm_state == ArmState::Raising_ARM) {
         armRight.move_velocity(-300);

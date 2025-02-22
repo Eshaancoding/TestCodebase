@@ -66,12 +66,12 @@ public:
     Effectors () : 
         // for motor group: BACK LEFT 11, bottom left motor 13 top left motor 14
         //armLeft(6, pros::E_MOTOR_GEAR_200),
-        armRight(22, pros::E_MOTOR_GEAR_100),
+        armRight(11, pros::E_MOTOR_GEAR_100),
         conveyorMotor(20), // intake 20
         clampPiston('B'),
         boinkerPiston('A'),
         limitSwitch('H'),
-        rotationSensor(9), // imu 9
+        rotationSensor(16), // imu 9
         isClamped(false),
         previous_limit(false),
         first_click(false),
