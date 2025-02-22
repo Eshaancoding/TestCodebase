@@ -22,8 +22,8 @@ namespace OdomArc {
     std::atomic<okapi::QLength> distTravelled = 0_ft; 
     std::atomic<bool> calibrating;
 
-    pros::Rotation vert_track_wheel (16);  //16, og 8
-    pros::Rotation strafe_track_wheel (12); //8, og 14
+    pros::Rotation vert_track_wheel (13);  // vert 13
+    pros::Rotation strafe_track_wheel (14); // strafe 
 
     okapi::IMU imu (7, okapi::IMUAxes::z); // imu
 
