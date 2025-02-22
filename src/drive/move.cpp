@@ -121,8 +121,8 @@ void Drive::move (
 
         // angle motor vel
         QSpeed target_vel = mt_profile.vel(elapsed);
-        // double ang_motor_vel = ROBOT_WIDTH.convert(okapi::inch) * sin(angle_err.convert(radian)) / lookahead_dist.convert(okapi::inch) * fw_motor_vel;
-        double ang_motor_vel = angle_err.convert(okapi::degree) * KP_ANG + KI_ANG; // TODO: Make sure you add this within point effectors
+        double ang_motor_vel = ROBOT_WIDTH.convert(okapi::inch) * sin(angle_err.convert(radian)) / lookahead_dist.convert(okapi::inch) * fw_motor_vel * KA_MOVE;
+        // double ang_motor_vel = angle_err.convert(okapi::degree) * KP_ANG; // TODO: Make sure you add this within point effectors
         
         // ============= Debug ============= 
         if (true) {
