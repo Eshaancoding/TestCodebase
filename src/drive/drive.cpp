@@ -54,7 +54,7 @@ void Drive::turnRight (
     optional<QAngle> end_tolerance
 ) {
     okapi::OdomState startingPos = OdomArc::getPos();
-    Point absolute = Math::findPointOffset({startingPos.x, startingPos.y, startingPos.theta + ang}, 20_tile);
+    Point absolute = Math::findPointOffset({startingPos.x, startingPos.y, startingPos.theta + ang - (1e-5_deg)}, 20_tile);
 
     faceToPoint(
         absolute,

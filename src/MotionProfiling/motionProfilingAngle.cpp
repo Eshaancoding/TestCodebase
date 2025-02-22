@@ -74,8 +74,8 @@ Point MotionProfilingAngle :: target_point (QTime t) {
     }
 
     Point p = {
-        this->currentPos.x + 10_tile * cos(this->currentPos.theta + out),
-        this->currentPos.y + 10_tile * sin(this->currentPos.theta + out)
+        this->currentPos.x + 10_tile * sin(this->currentPos.theta + out),
+        this->currentPos.y + 10_tile * cos(this->currentPos.theta + out)
     };
 
     return p;

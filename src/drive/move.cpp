@@ -121,18 +121,19 @@ void Drive::move (
 
         // angle motor vel
         QSpeed target_vel = mt_profile.vel(elapsed);
-        double ang_motor_vel = ROBOT_WIDTH.convert(okapi::foot) * sin(angle_err.convert(radian)) / lookahead_dist.convert(okapi::foot) * target_vel.convert(fps);
+        // double ang_motor_vel = ROBOT_WIDTH.convert(okapi::inch) * sin(angle_err.convert(radian)) / lookahead_dist.convert(okapi::inch) * fw_motor_vel;
+        double ang_motor_vel = angle_err.convert(okapi::degree) * KP_ANG + KI_ANG; // TODO: Make sure you add this within point effectors
         
         // ============= Debug ============= 
         if (true) {
-            printf("* Total dist travelled: %f *\n", total_dist_travelled.convert(tile));
-            printf("* MT dist target: %f *\n", mt_profile.dist(elapsed).convert(tile));
+            // printf("* Total dist travelled: %f *\n", total_dist_travelled.convert(tile));
+            // printf("* MT dist target: %f *\n", mt_profile.dist(elapsed).convert(tile));
             // printf("* Error: %f *\n", (mt_profile.dist(elapsed) - total_dist_travelled).convert(inch));
-            printf("* FW motor vel [0-1]: %f *\n", fw_motor_vel/600);
+            // printf("* FW motor vel [0-1]: %f *\n", fw_motor_vel/600);
             // printf("* Target vel: %f *\n", mt_profile.vel(elapsed).convert(tps));
-            // printf("* angle err: %f *\n", angle_err.convert(degree));
-            // printf("* ANG motor vel: %f *\n", ang_motor_vel);
-            printf("********************\n");
+            printf("* angle err: %f *\n", angle_err.convert(degree));
+            printf("* ANG motor vel: %f *\n", ang_motor_vel);
+            // printf("********************\n");
         }
         
         // ============= Move Robot ============= 

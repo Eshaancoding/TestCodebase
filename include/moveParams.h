@@ -3,7 +3,7 @@
 // note that deprecated (moveDepr.cpp) lookahead dist is defined in it's own file.
 
 // for forward/backward
-#define LOOKAHEAD_DIST   0.3_tile         // lookahead distance that determines angle control
+#define LOOKAHEAD_DIST   0.6_tile         // lookahead distance that determines angle control
 #define MAX_SPEED        2.5_tps      // tile per second
 #define MAX_ACCEL        12_tps2       // tile per second squared
 #define KP               20.42        // FROM 0 - 600: P parameter between odom distance and target distance from motion profiling
@@ -12,9 +12,10 @@
 #define POINT_TOLERANCE  3_in         // Tolerance to set lookahead distance, kp, and callback function as movement occurs
 
 // for turning movement
-#define MAX_ANG_SPEED   205_dps         // degree per second
-#define MAX_ANG_ACCEL   400_dps2        // degree per second squared  
-#define KP_ANG          4.62         // P parameter between current angle and target angle from motion profiling
+#define MAX_ANG_SPEED   135_dps         // degree per second
+#define MAX_ANG_ACCEL   750_dps2        // degree per second squared  
+#define KP_ANG          3.72         // P parameter between current angle and target angle from motion profiling
+#define KI_ANG          7.32
 #define ANG_TOLERANCE   0.1_deg         // angle tolerance before quitting tolerance
 
 // the timeout we have before stopping while loop; adds this value with the estimated amount of time to finish movement.

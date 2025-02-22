@@ -1,15 +1,24 @@
 "use client";
 
+import { useState } from "react";
+
 // add tooltip later
 export default function Prompt (props: { label: string, unit?: string, placeholder?: string, update: (inp:any) => void, isText?: boolean, value?: any }) {
+    let [displayVal, setDisplayVal] = useState(props.value)
+    
     function onCh (v:any) {
+        setDisplayVal(v) // 
+        
         if (props.isText) {
             props.update(v)
         } else {
             try {
-                props.update(parseFloat(v))
+                let x = parseFloat(v)
+                if (x != undefined && x != null) {
+                    props.update(x)
+                }
             } catch (error:any) {
-                props.update(0.0)
+                // do nothing
             }
         }
     }
@@ -19,7 +28,7 @@ export default function Prompt (props: { label: string, unit?: string, placehold
             <p className="text-[18px]">{props.label}:</p>
             <div className="flex gap-2 items-center">
                 <input 
-                    value={props.value} 
+                    value={displayVal} 
                     onChange={(e) => onCh(e.target.value)} 
                     placeholder={props.placeholder} 
                     className="outline-none rounded-[7px] bg-neutral-800 p-2 w-[150px]" 

@@ -8,10 +8,19 @@
 
 //ringside rush
 void Routes::test () {
-    OdomArc::setPos(0_tile, 2_tile, 90_deg);
-    // eff.setIntake(IntakeState::INTAKE);
 
-    // eff.toggleClamp();
+	OdomArc::setPos(0.9766_tile, 2.9648_tile, 0_deg);
+
+
+	drive.move({
+		DrivePoint({0.9766_tile, 2.9648_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.9683_tile, 4.1317_tile}, 0.3_tile, 1_tps, 20.42, nullopt),
+		DrivePoint({0.9766_tile, 4.5538_tile}, 0.3_tile, 1_tps, 20.42, nullopt),
+		DrivePoint({1.0841_tile, 4.769_tile}, 0.3_tile, 1_tps, 20.42, nullopt),
+		DrivePoint({1.291_tile, 4.9345_tile}, 0.3_tile, 1_tps, 20.42, nullopt),
+		DrivePoint({1.589_tile, 5.009_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.8552_tile, 5.0255_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+	});
+
 
 }
-

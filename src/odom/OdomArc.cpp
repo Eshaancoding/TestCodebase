@@ -23,9 +23,9 @@ namespace OdomArc {
     std::atomic<bool> calibrating;
 
     pros::Rotation vert_track_wheel (13);  // vert 13
-    pros::Rotation strafe_track_wheel (14); // strafe 
+    pros::Rotation strafe_track_wheel (20); // strafe 
 
-    okapi::IMU imu (7, okapi::IMUAxes::z); // imu
+    okapi::IMU imu (6, okapi::IMUAxes::z); // imu
 
 
     double prevDi = 0.0;
@@ -102,7 +102,7 @@ namespace OdomArc {
             double xarc_b = rBack * (1 - cos(Dang));
             double yarc_b = rBack * sin(Dang);
 
-            if (false) { // set true to debug
+            if (true) { // set true to debug
                 Console::printBrain(4, "x: %f y: %f ang: %f",(float)xPos.load().convert(okapi::tile), (float)yPos.load().convert(okapi::tile), ang * 180/PI);
                 Console::printBrain(5, "Vert Tracking wheel front: %f", (float)vert_track_wheel.get_position());
                 Console::printBrain(6, "Vert Tracking wheel back: %f", (float)strafe_track_wheel.get_position());
