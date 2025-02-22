@@ -34,23 +34,42 @@ void Effectors::toggleIntakeState (IntakeState ia, bool isConveyor) {
 //colorState = Color::noColor;
 
 void Effectors::intake () { 
-    const int firstDelay = 20;    
-    const int secondDelay = 200;    
+    const int firstDelay = 0;    
+    const int secondDelay = 200;
 
+
+    double currentPosition = intakeMotor.get_position(); 
+    double prevPosition = currentPosition; 
     while (true) {
         IntakeState state = intakeActive.load();
         const bool is_blue = isBlue.load(); // ===== By default: false ======
         const bool see_color = seeColor.load(); // deafult true
         double hue = colorSensor.get_hue();
         Console::printBrain(0, hue, "hue");
+
+
         // Console::printBrain(1, red, "red");
         // Console::printBrain(2, green, "green");
         // Console::printBrain(3, blue, "blue");
         
         if (!see_color && state == IntakeState::INTAKE) {
             intakeMotor.move_velocity(600); // fix to 600
+            // check for resist
+            pros::delay(10);
 
-        } else if (see_color && state == IntakeState::INTAKE){
+            currentPosition = intakeMotor.get_position();
+
+            double vel = currentPosition - prevPosition;
+            if (vel < 300) {
+                intakeMotor.move_velocity(-80);
+                pros::delay(250);
+                intakeMotor.move_velocity(0);
+            }
+
+            prevPosition = currentPosition;
+            
+        } 
+        else if (see_color && state == IntakeState::INTAKE){
             if (is_blue && hue < 25) { 
                 pros::delay(firstDelay);
                 intakeMotor.move_velocity(0);
@@ -139,9 +158,9 @@ void Effectors::changeState () {
 void Effectors::stepArm () {
     if (arm_state == ArmState::PID_ARM) {
         // there's no while true loop; ALL OF THESE PARAMS TUNING
-        const double loadingAngle = 115; 
+        const double loadingAngle = 117; // og 115
         const double dumpAngle = 250; //135
-        const double idleAngle = 93;
+        const double idleAngle = 100;
         // one button for motor up one button for motor down
 
         double targetAngle = this->currentState == State::isRaising ? loadingAngle : 
@@ -159,6 +178,9 @@ void Effectors::stepArm () {
         } else {
             arm_state = ArmState::IDLE_ARM;
         }
+
+
+
     }
     else if (arm_state == ArmState::Raising_ARM) {
         armRight.move_velocity(-300);

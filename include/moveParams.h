@@ -8,7 +8,7 @@
 #define MAX_ACCEL        12_tps2       // tile per second squared
 #define KP               20.42        // FROM 0 - 600: P parameter between odom distance and target distance from motion profiling
 #define KI               3.24         // minimum robot power send to actually set movement to robot; MAKE SURE BATTERY IS 100%
-#define KA_MOVE          1.00         // parameter to tune the turning during movement
+#define KA_MOVE          0.50         // parameter to tune the turning during movement
 #define END_TOLERANCE    0.05_in      // Tolerance of distance traveled before end of movement
 #define POINT_TOLERANCE  3_in         // Tolerance to set lookahead distance, kp, and callback function as movement occurs
 

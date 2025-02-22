@@ -71,7 +71,7 @@ void autonomous() {
     
     // eff.seeColor = false;
 
-    Routes::test();
+    Routes::skills();
     // drive.turnLeft(180_deg);
 
     // drive.move(

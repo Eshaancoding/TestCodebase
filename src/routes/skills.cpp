@@ -7,252 +7,111 @@
 #include "odom/OdomArc.h"
 #include <optional>
 
-void lilRoute (bool reverse = false) {
-    /*
-    drive.setToleranceParams(1.0_s,std::nullopt, std::nullopt, std::nullopt);
-    drive.faceToPoint({3_tile, 0_in}, true); // face clamp
-    drive.setToleranceParams( 1.3_s,std::nullopt, std::nullopt, std::nullopt);
-    drive.goBackward(1.65_tile);
-    drive.resetToleranceParams();
-
-    eff.toggleClamp(); //clamp on
-    eff.setIntake(IntakeState::INTAKE);
-
-    // initial sweep of rings
-    drive.goPathDepr({
-        PathDepr({0_in, 0_in}),
-        PathDepr({0.75_tile, (reverse ? -1 : 1) * -0.5_tile}),
-        PathDepr({2.35_tile, (reverse ? -1 : 1) * -1.62_tile}) // 2.3
-    }, 5_in, 5_in);
-
-    pros::delay(500);
-
-    drive.goBackward(0.24_tile);
-
-    drive.setToleranceParams(1.5_s);
-    drive.faceToPoint({-1_tile, (reverse ? -1 : 1) * 0.5_tile}, true);
-    drive.resetToleranceParams();
-
-    // drive to that path to just sweep in multiple mogos while intaking
-    drive.goPathDepr({ // second sweep near corner grabs 2 rings
-        PathDepr({0_in, 0_in}),
-        PathDepr({-1_tile, (reverse ? -1 : 1) * 0.25_tile}),
-        PathDepr({-2.4_tile, (reverse ? -1 : 1) * 0.22_tile})
-    }, 5_in, 5_in, false, 3_s);
-
-    pros::delay(500);
-
-    // go back just a little bit away from wall
-    drive.moveArcade(-0.2, 0);
-    reverse ? pros::delay(130) : pros::delay(130);
-    drive.moveArcade(0, 0);
-
-    // face to last ring
-    drive.setToleranceParams(1.5_s); // MAKE THIS FASTER
-    drive.faceToPoint({50_tile, (reverse ? -1 : 1) * -64_tile}, true, {{0, 0.8}}); // go a little bit slower to not move to much. 
-    drive.resetToleranceParams();
-
-    // go forward to last ring
-    drive.goForward(0.7_tile);
-
-    // face to mogo dump (clamp facing corner)
-    drive.setToleranceParams(1.5_s);
-    drive.faceToPoint({20_tile, (reverse ? -1 : 1) * 5_tile}, true);
-    drive.resetToleranceParams();
-
-    // mogo dump (back into corner)
-    drive.moveArcade(-0.5, 0);
-    pros::delay(500);
-    drive.moveArcade(0, 0);
-
-    eff.toggleClamp(); //drop mogo in corner
-    eff.setIntake(IntakeState::INACTIVE);
-
-    */
-}
-
-// complex lil route is basically the route but we are doing wall stakes :D
-void ComplexLilRoute (bool reverse = false) {
-    /*
-    drive.setToleranceParams(1.0_s,std::nullopt, std::nullopt, std::nullopt);
-    drive.faceToPoint({3_tile, 0_in}, true);
-    drive.setToleranceParams( 1.3_s,std::nullopt, std::nullopt, std::nullopt);
-    drive.goBackward(1.2_tile);
-    drive.resetToleranceParams();
-
-    eff.toggleClamp(); //clamp on
-    eff.setIntake(IntakeState::INTAKE);
-
-    // ================= this is being changed ============ 
-    drive.faceToPoint({3_tile, -1_tile}, true);
-    drive.goForward(3.162_tile);
-    pros::delay(500);
-
-    drive.faceToPoint({20_tile, 0_tile}, true);
-    drive.goBackward(0.75_tile);
-    drive.turnRight(90_deg);
-    
-    // ready arm
-    while (true) {
-        eff.arm_state = ArmState::PID_ARM;
-        eff.currentState = State::isRaising;
-        eff.stepArm();
-        if (eff.arm_state == ArmState::IDLE_ARM) {
-            break;
-        }
-        pros::delay(50);
-    }
-    
-    drive.goForward(0.5_tile);
-    pros::delay(750);
-    eff.setIntake(IntakeState::INACTIVE);
-
-    // dump then reset
-    eff.armRight.move_voltage(12000);
-    pros::delay(500);
-    eff.armRight.move_voltage(0);
-    pros::delay(500);
-    eff.armRight.move_voltage(-8000);
-    pros::delay(500);
-    eff.armRight.move_voltage(0);
-
-    // drive.goBackward(0.24_tile);
-
-    // drive.setToleranceParams(1.5_s);
-    // drive.faceToPoint({-1_tile, (reverse ? -1 : 1) * 0.5_tile}, true);
-    // drive.resetToleranceParams();
-
-    // // drive to that path to just sweep in multiple mogos while intaking
-    // drive.goPath({
-    //     Path({0_in, 0_in}),
-    //     Path({-1_tile, (reverse ? -1 : 1) * 0.22_tile}),
-    //     Path({-2.4_tile, (reverse ? -1 : 1) * 0.22_tile})
-    // }, 5_in, 5_in, false, 3_s);
-
-    // pros::delay(500);
-
-    // // go back just a little bit
-    // drive.moveArcade(-0.2, 0);
-    // pros::delay(300);
-    // drive.moveArcade(0, 0);
-
-    // // face to last ring
-    // drive.setToleranceParams(1.5_s);
-    // drive.faceToPoint({50_tile, (reverse ? -1 : 1) * -70_tile}, true, {{0, 0.8}}); // go a little bit slower to not move to much. 
-    // drive.resetToleranceParams();
-
-    // // go forward to last ring
-    // drive.goForward(0.7_tile);
-
-    // // face to mogo dump
-    // drive.setToleranceParams(1.5_s);
-    // drive.faceToPoint({20_tile, (reverse ? -1 : 1) * 5_tile}, true);
-    // drive.resetToleranceParams();
-
-    // // mogo dump
-    // drive.moveArcade(-0.5, 0);
-    // pros::delay(500);
-    // drive.moveArcade(0, 0);
-
-    // eff.toggleClamp(); //clamp off
-    // eff.setIntake(IntakeState::INACTIVE);
-
-    */
-}
-
 void Routes::skills () {
 
 	OdomArc::setPos(0.1738_tile, 2.9979_tile, 90_deg);
 
 	eff.setIntake(IntakeState::INTAKE);
 
+    pros::delay(1000);
+
 	auto lambda1 = [](){ eff.setIntake(IntakeState::INTAKE); };
+	auto lambda2 = [](){ eff.setIntake(IntakeState::INACTIVE); };
 
 	drive.move({
-		DrivePoint({0.1738_tile, 2.9979_tile}, 0.3_tile, 2.5_tps, 20.42, lambda1),
-		DrivePoint({0.451_tile, 2.9648_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({0.6621_tile, 2.8903_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({0.8441_tile, 2.7662_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({2.1807_tile, 1.8145_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.1738_tile, 2.9979_tile}, 0.3_tile, 1.5_tps, 20.42, lambda1),
+		DrivePoint({0.451_tile, 2.9648_tile}, 0.3_tile, 1.5_tps, 20.42, nullopt),
+		DrivePoint({0.6621_tile, 2.8903_tile}, 0.3_tile, 1.5_tps, 20.42, nullopt),
+		DrivePoint({0.8441_tile, 2.7662_tile}, 0.3_tile, 1.5_tps, 20.42, nullopt),
+		DrivePoint({2.2966_tile, 1.7152_tile}, 0.3_tile, 1.5_tps, 20.42, lambda2),
 	});
 
 	eff.setIntake(IntakeState::INACTIVE);
 
-	drive.turnLeft(45_deg);
+
+	drive.move({
+		DrivePoint({2.2966_tile, 1.7152_tile}, 0.3_tile, 1.5_tps, 20.42, nullopt),
+		DrivePoint({1.9738_tile, 1.9552_tile}, 0.3_tile, 1.5_tps, 20.42, nullopt),
+	});
+
+	drive.turnLeft(30_deg);
 
 
 	drive.move({
-		DrivePoint({2.1807_tile, 1.8145_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({0.7324_tile, 1.9634_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({1.9738_tile, 1.9552_tile}, 0.3_tile, 1.5_tps, 20.42, nullopt),
+		DrivePoint({0.5752_tile, 1.9717_tile}, 0.3_tile, 1.5_tps, 20.42, nullopt),
 	});
 
 	eff.toggleClamp();
 
-	auto lambda2 = [](){ eff.setIntake(IntakeState::INTAKE); };
+    /*
+
+	eff.setIntake(IntakeState::INTAKE);
+
 
 	drive.move({
-		DrivePoint({0.7324_tile, 1.9634_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({1.7669_tile, 1.0531_tile}, 0.3_tile, 2.5_tps, 20.42, lambda2),
-		DrivePoint({2.0979_tile, 0.7552_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({2.28_tile, 0.5731_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({2.4538_tile, 0.4076_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({2.6772_tile, 0.3745_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({3.2152_tile, 0.3662_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.5752_tile, 1.9717_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.371_tile, 0.5814_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.5697_tile, 0.4821_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.7683_tile, 0.4076_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({3_tile, 0.3828_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({3.1821_tile, 0.3745_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
 	});
 
-	drive.turnLeft(170_deg);
-
 
 	drive.move({
-		DrivePoint({3.2069_tile, 0.3662_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({3_tile, 0.6393_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({2.6855_tile, 0.8959_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({2.28_tile, 0.9124_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({0.1283_tile, 0.9455_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({3.1821_tile, 0.3745_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.851_tile, 0.7055_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.5034_tile, 0.8959_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.1972_tile, 0.929_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({1.7669_tile, 0.9207_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.0952_tile, 0.9207_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
 	});
 
 	drive.turnLeft(45_deg);
 
 
 	drive.move({
-		DrivePoint({0.1283_tile, 0.9455_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({0.9145_tile, 1.6159_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.0952_tile, 0.9207_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.9145_tile, 1.7648_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
 	});
 
-	drive.turnRight(45_deg);
+	drive.turnLeft(45_deg);
 
 
 	drive.move({
-		DrivePoint({0.9228_tile, 1.6324_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({0.8979_tile, 0.1759_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.9145_tile, 1.7648_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.8897_tile, 0.1924_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
 	});
 
-	drive.turnLeft(148_deg);
+	drive.turnLeft(160_deg);
+
+
+	drive.move({
+		DrivePoint({0.8897_tile, 0.1924_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.0207_tile, 0.0352_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+	});
+
+	drive.turnLeft(30_deg);
+
+	eff.toggleClamp();
 
 	auto lambda3 = [](){ eff.setIntake(IntakeState::INACTIVE); };
 
 	drive.move({
-		DrivePoint({0.8979_tile, 0.1759_tile}, 0.3_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({-0.0041_tile, 0.0352_tile}, 0.3_tile, 2.5_tps, 20.42, lambda3),
+		DrivePoint({0.0207_tile, 0.0352_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({1.6097_tile, 3.6352_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({1.8_tile, 3.7593_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({1.9159_tile, 3.9083_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({1.9572_tile, 4.289_tile}, 0.6_tile, 2.5_tps, 20.42, lambda3),
 	});
 
-	eff.toggleClamp();
-
-	auto lambda4 = [](){ eff.setIntake(IntakeState::INACTIVE); };
-
-	drive.move({
-		DrivePoint({-0.0041_tile, 0.0352_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({1.2952_tile, 3.1634_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({1.4938_tile, 3.6683_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({1.7007_tile, 3.9083_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({1.9324_tile, 4.049_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({2.2883_tile, 4.0655_tile}, 0.6_tile, 2.5_tps, 20.42, lambda4),
-	});
+	drive.turnLeft(90_deg);
 
 
 	drive.move({
-		DrivePoint({2.2883_tile, 4.0655_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({0.8234_tile, 4.049_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({1.9572_tile, 4.289_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.6_tile, 4.0324_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
 	});
 
 	eff.toggleClamp();
@@ -261,51 +120,48 @@ void Routes::skills () {
 
 
 	drive.move({
-		DrivePoint({0.8234_tile, 4.049_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({1.469_tile, 4.6614_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({2.2469_tile, 5.4393_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({2.6607_tile, 5.6214_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({3.0745_tile, 5.6214_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({3.2979_tile, 5.6297_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.6_tile, 4.0324_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.189_tile, 5.2903_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.3545_tile, 5.4972_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.6193_tile, 5.5966_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.9834_tile, 5.6379_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({3.2979_tile, 5.6131_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
 	});
 
 
 	drive.move({
-		DrivePoint({3.2979_tile, 5.6297_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({3.0414_tile, 5.2821_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({2.7103_tile, 5.1579_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({2.4207_tile, 5.1331_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({2.0069_tile, 5.1083_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({0.1117_tile, 5.1166_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({3.2979_tile, 5.6131_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.9669_tile, 5.3317_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.6772_tile, 5.1497_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({2.3048_tile, 5.0834_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.1283_tile, 5.1083_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
 	});
 
 	drive.turnRight(45_deg);
 
 
 	drive.move({
-		DrivePoint({0.1117_tile, 5.1166_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({0.9145_tile, 4.5372_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.1283_tile, 5.1083_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.8897_tile, 4.4959_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
 	});
 
-	drive.turnLeft(45_deg);
+	drive.turnRight(45_deg);
 
 
 	drive.move({
-		DrivePoint({0.9145_tile, 4.5372_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({0.9062_tile, 5.8283_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.8897_tile, 4.4959_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.9145_tile, 5.8945_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
 	});
 
-	drive.turnRight(35_deg);
+	drive.turnRight(150_deg);
 
 
 	drive.move({
-		DrivePoint({0.9062_tile, 5.8283_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
-		DrivePoint({0.0207_tile, 6.0021_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.9145_tile, 5.8945_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
+		DrivePoint({0.0124_tile, 5.9772_tile}, 0.6_tile, 2.5_tps, 20.42, nullopt),
 	});
 
-	eff.toggleClamp();
-
-	eff.setIntake(IntakeState::INACTIVE);
+	*/;
 
 
 }
