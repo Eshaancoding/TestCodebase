@@ -158,34 +158,51 @@ void Routes::skills () {
     OdomArc::setPos(0_in, 0_in, 45_deg);
 
     eff.arm_state = ArmState::Raising_ARM;
-    pros::delay(100);
-    eff.currentState = State::IDLE;
+    pros::delay(1000);
+    eff.currentState = State::IDLE; // drop ring on alliance stake
     eff.arm_state = ArmState::PID_ARM;
 
     drive.goBackward(0.5_tile);
-
-    eff.toggleClamp();
-    drive.turnRight(130_deg);
+    eff.toggleClamp(); // grab clamp
+    
+    drive.turnRight(130_deg); // face first ring (near ladder)
     eff.setIntake(IntakeState::INTAKE);
-    drive.goForward(1.2_tile);
+    drive.goForward(1_tile); // grab ring
 
     drive.turnRight(90_deg);
+    drive.goForward(1_tile); // grab other ring
 
-    drive.goForward(1_tile);
     drive.turnLeft(90_deg); // 90 deg left turn
     
-    eff.changeState();
-    drive.goForward(1_tile);
-    eff.setIntake(IntakeState::INACTIVE);
+    eff.changeState(); // raise to loading
+    drive.goForward(1_tile); 
+    drive.turnRight(90_deg); // face wall ring
+    drive.goForward(0.25_tile); 
+    eff.setIntake(IntakeState::INACTIVE); // grab wall ring
 
-    drive.turnRight(90_deg);
-    drive.goForward(0.25_tile);
     eff.changeState();
     pros::delay(500);
     eff.changeState();
+    pros::delay(500); // dump ring and back to idle
 
-    drive.goBackward(0.25_tile);
+    drive.goBackward(0.25_tile); // back away
 
+    // after you get wall stake
+    // drive.turnLeft(120_deg);
+    // drive.goForward(1.71_tile);
+    // drive.turnLeft(150_deg);
+    // eff.setIntake(IntakeState::INTAKE);
+    // drive.goForward(4_tile);
+    // drive.goBackward(0.3_tile);
+
+    // drive.turnLeft(45_deg);
+    // drive.goBackward(0.8_tile);
+    // drive.turnLeft(45_deg);
+    // drive.goForward(1.1_tile);
+    // drive.turnLeft(90_deg);
+    // drive.goBackward(1.1_tile);
+
+    // after you dropped mogo in corner
 
 
 

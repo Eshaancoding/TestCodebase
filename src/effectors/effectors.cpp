@@ -173,10 +173,10 @@ void Effectors::stepArm () {
             }
         }
         else if (arm_state == ArmState::Raising_ARM) {
-            armRight.move_velocity(300);
+            armRight.move_velocity(100);
         }
         else if (arm_state == ArmState::Lowering_ARM) {
-            armRight.move_velocity(-300);
+            armRight.move_velocity(-100);
         }
         else if (arm_state == ArmState::IDLE_ARM) {
             armRight.move_velocity(0);
