@@ -4,10 +4,10 @@
 // distance (forward/backward)
 #define Distance_P           0.058
 #define Distance_I           0
-#define Distance_D           0.032
+#define Distance_D           0.025
 #define Distance_MAXPOWER    0.8
 #define Distance_MINPOWER    0
-#define Distance_FACTOR      0.9
+#define Distance_FACTOR      0.4
 #define Distance_SLEW        1 // <=========== really important (suggestion: upped alr)
 #define Distance_MINERRDISI  2.5  // min error to disable I, NOT NEEDED IF I = 0 
 

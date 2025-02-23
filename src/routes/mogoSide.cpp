@@ -10,16 +10,15 @@
 
 void Routes::mogoSide () {
 
-    //bool is_blue = (eff.isBlue).load();
-    bool is_blue = false;
+    bool is_blue = (eff.isBlue).load();
 
     // eff.toggleMogoMech();
     //eff.toggleBoinker();
     
 
     if (is_blue){
-        OdomArc::setPos(0_in, 0_in, -88_deg); // set our default/initial position
-        drive.goForward(1.7_tile);
+        OdomArc::setPos(0_in, 0_in, -90_deg); // set our default/initial position
+        //drive.goForward(1.7_tile);
     
     } else{
         OdomArc::setPos(0_in, 0_in, -90_deg); // set our default/initial position
@@ -31,16 +30,18 @@ void Routes::mogoSide () {
     };
 
     
-
-    drive.goBackward(1.4_tile), {eff.toggleClamp()};
-    //eff.toggleClamp();
-    drive.turnLeft(90_deg);
+    // drive.setToleranceParams(nullopt, 2_in, nullopt, nullopt);
+    drive.setToleranceParams(6_s);
+    drive.goBackward(2.25_tile);
+    eff.toggleClamp();
+    is_blue ? drive.turnRight(90_deg) : drive.turnLeft(90_deg);
     eff.setIntake(IntakeState::INTAKE);
 
-    drive.goForward(1.1_tile);
+    drive.goForward(1.8_tile);
+    pros::delay(700);
     drive.turnLeft(180_deg);
     eff.toggleClamp();
-    drive.goForward(1.8_tile);
+    drive.goForward(2.4_tile); // this is too much rn
 
 
  // get ready

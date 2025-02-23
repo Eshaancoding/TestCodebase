@@ -63,9 +63,11 @@ void Drive::move (
         // determine which percent change (used for callback map and factor map to use; by default uses distance
         double percentChange;
         if (distanceActivated) 
-            percentChange = abs(distErr.convert(inch)-origDistErr.convert(inch))/(abs(origDistErr.convert(inch)));
+            percentChange = abs(Math::distance(OdomArc::getPos(), targetPos).convert(inch)-origDistErr.convert(inch))/(abs(origDistErr.convert(inch)));
         else                   
             percentChange = abs(angleErr.convert(radian)-origAngleErr.convert(radian))/(abs(origAngleErr.convert(radian)));
+
+        printf("Percentage change: %f\n", percentChange);
 
         // go through factor map; commented because you have weird code for factors
         for (auto itr = factorMap.begin(); itr != factorMap.end(); itr++) {
@@ -88,13 +90,15 @@ void Drive::move (
 
         // go through callback map
         for (auto itr = callbackMap.begin(); itr != callbackMap.end(); itr++) {
-            if (itr->first < percentChange && percentChange <= 1) {
+            if (itr->first <= percentChange && percentChange <= 1) {
                 itr->second();
+                
+                printf("called func\n");
 
                 if (ODOM_DEBUG)
                     Console::printBrain(4, "Running function at %.3f", percentChange);
 
-                callbackMap.erase(itr);
+                //callbackMap.erase(itr);
                 break;
             }
         }

@@ -80,7 +80,7 @@ void autonomous() {
     //drive.goForward(1_tile);
 
     //Routes::skills();
-    Routes::mogoSide();
+    //Routes::mogoSide();
     // eff.toggleBoinker();
     //Routes::ringSide();
     
@@ -89,27 +89,30 @@ void autonomous() {
    
 //Routes::skills();
 
-    // auto state = waitForValidState();
+    //eff.isBlue = false;
+    //Routes::mogoSide();
 
-    // if (state.status == AutonSelector::SKILL) {
-    //     Routes::skills();
-    //     //Console::printBrain(1,"Distance: ",leftMotorGroup.getPosition())
-    // }
-    // else {
-    //     if (state.offDefState == AutonSelector::BLUE) {
-    //         eff.isBlue = true;
-    //     } 
-    //     else if (state.offDefState == AutonSelector::RED) {
-    //         eff.isBlue = false;
-    //     } 
+    auto state = waitForValidState();
 
-    //     if (state.elimQualState == AutonSelector::QUAL) {
-    //         Routes::ringSide(); 
-    //     } 
-    //     else if (state.elimQualState == AutonSelector::ELIM) {
-    //         Routes::mogoSide();
-    //     }
-    // }
+    if (state.status == AutonSelector::SKILL) {
+        Routes::skills();
+        //Console::printBrain(1,"Distance: ",leftMotorGroup.getPosition())
+    }
+    else {
+        if (state.offDefState == AutonSelector::BLUE) {
+            eff.isBlue = true;
+        } 
+        else if (state.offDefState == AutonSelector::RED) {
+            eff.isBlue = false;
+        } 
+
+        if (state.elimQualState == AutonSelector::QUAL) {
+            Routes::ringSide(); 
+        } 
+        else if (state.elimQualState == AutonSelector::ELIM) {
+            Routes::mogoSide();
+        }
+    }
 };
 
 // you disabled the factor map thing
