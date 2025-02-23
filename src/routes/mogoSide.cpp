@@ -13,8 +13,8 @@ void Routes::mogoSide () {
     bool is_blue = (eff.isBlue).load();
     //bool is_blue = false;
 
-    eff.toggleMogoMech();
-    eff.toggleBoinker(); // get ready
+    eff.toggleBoinker();
+    
 
     if (is_blue){
         OdomArc::setPos(0_in, 0_in, -88_deg); // set our default/initial position
@@ -29,11 +29,16 @@ void Routes::mogoSide () {
         }, 5_in, 5_in);
     };
 
+ // get ready
+    eff.toggleMogoMech();
+
     drive.setToleranceParams(0.5_s, 4_in);
     is_blue ? drive.goBackward(0.4_tile) : drive.goBackward(0.3_tile);
     drive.resetToleranceParams();
+    
     eff.toggleMogoMech(); // let go
     eff.toggleBoinker(); // let go
+
 
     drive.setToleranceParams(0.75_s);
     drive.turnLeft(170_deg);
@@ -49,7 +54,7 @@ void Routes::mogoSide () {
     drive.resetToleranceParams();
 
     drive.goForward(is_blue ? 0.7_tile : 1.4_tile);
-    is_blue ? pros::delay(150) : pros::delay(200);
+    is_blue ? pros::delay(150) : pros::delay(150);
     eff.setIntake(IntakeState::INACTIVE);
     is_blue ? eff.toggleClamp() : drive.goBackward(0.4_tile); // unclamp
     pros::delay(400);
@@ -75,11 +80,9 @@ void Routes::mogoSide () {
     // if qual touh ladder
     if (!is_blue){
         drive.turnLeft(170_deg);
-        eff.toggleClamp();
         drive.goForward(0.7_tile);
     }
     eff.setIntake(IntakeState::INACTIVE);
-    is_blue ? eff.toggleClamp() : pros::delay(0);
 
 
     //eff.toggleBoinker();

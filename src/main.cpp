@@ -81,33 +81,34 @@ void autonomous() {
 
     //Routes::skills();
     //Routes::mogoSide();
+    eff.toggleBoinker();
     
-
+ 
     //eff.arm_state = ArmState::PID_ARM;
    
 //Routes::skills();
 
-    auto state = waitForValidState();
+    // auto state = waitForValidState();
 
-    if (state.status == AutonSelector::SKILL) {
-        Routes::skills();
-        //Console::printBrain(1,"Distance: ",leftMotorGroup.getPosition())
-    }
-    else {
-        if (state.offDefState == AutonSelector::BLUE) {
-            eff.isBlue = true;
-        } 
-        else if (state.offDefState == AutonSelector::RED) {
-            eff.isBlue = false;
-        } 
+    // if (state.status == AutonSelector::SKILL) {
+    //     Routes::skills();
+    //     //Console::printBrain(1,"Distance: ",leftMotorGroup.getPosition())
+    // }
+    // else {
+    //     if (state.offDefState == AutonSelector::BLUE) {
+    //         eff.isBlue = true;
+    //     } 
+    //     else if (state.offDefState == AutonSelector::RED) {
+    //         eff.isBlue = false;
+    //     } 
 
-        if (state.elimQualState == AutonSelector::QUAL) {
-            Routes::ringSide(); 
-        } 
-        else if (state.elimQualState == AutonSelector::ELIM) {
-            Routes::mogoSide();
-        }
-    }
+    //     if (state.elimQualState == AutonSelector::QUAL) {
+    //         Routes::ringSide(); 
+    //     } 
+    //     else if (state.elimQualState == AutonSelector::ELIM) {
+    //         Routes::mogoSide();
+    //     }
+    // }
 };
 
 // you disabled the factor map thing
