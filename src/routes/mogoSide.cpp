@@ -48,10 +48,10 @@ void Routes::mogoSide () {
     is_blue? drive.turnLeft(85_deg) : drive.turnLeft(90_deg);
     drive.resetToleranceParams();
 
-    drive.goForward(is_blue ? 0.7_tile : 1.3_tile);
-    is_blue ? pros::delay(150) : pros::delay(225);
+    drive.goForward(is_blue ? 0.7_tile : 1.4_tile);
+    is_blue ? pros::delay(150) : pros::delay(200);
     eff.setIntake(IntakeState::INACTIVE);
-    is_blue ? eff.toggleClamp() : drive.goBackward(0.3_tile); // unclamp
+    is_blue ? eff.toggleClamp() : drive.goBackward(0.4_tile); // unclamp
     pros::delay(400);
     if (is_blue){
         drive.turnRight(170_deg);
