@@ -72,11 +72,11 @@ void Routes::mogoSide () {
     eff.setIntake(IntakeState::INTAKE); // score second ring on 2nd mogo
     pros::delay(500);
 
-    // if qual
+    // if qual touh ladder
     if (!is_blue){
-    drive.turnLeft(170_deg);
-    eff.toggleClamp();
-    drive.goForward(0.7_tile);
+        drive.turnLeft(170_deg);
+        eff.toggleClamp();
+        drive.goForward(0.7_tile);
     }
     eff.setIntake(IntakeState::INACTIVE);
     is_blue ? eff.toggleClamp() : pros::delay(0);

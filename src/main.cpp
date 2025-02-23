@@ -158,7 +158,7 @@ void opcontrol() {
         //     Control::printController(0, isReverse ? "Reverse" : "Forward");
         // }
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_X)){ // change button
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_Y)){ // Y BUTTON
             eff.toggleMogoMech();
         }
 

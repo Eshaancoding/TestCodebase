@@ -10,16 +10,34 @@
 void Routes::ringSide () {
     OdomArc::setPos(0_in, 0_in, -90_deg); // set our default/initial position
     //bool is_blue = (eff.isBlue).load();
-    bool is_blue = false; 
+    bool is_blue = false;  // miiiiiiight work for red
 
     eff.toggleBoinker();
     drive.goPath({
         Path({0_tile, 0_tile}),
         Path({-1.7_tile, 0_tile}),
-        Path({-2.2_tile, -0.2_tile})
+        Path({-2.2_tile, is_blue ? -0.2_tile : 0.2_tile})
     }, 5_in, 5_in);
     
-    drive.faceToPoint({0_tile, -1_tile},true); // face mogo
+    drive.goBackward(0.3_tile);
+    eff.toggleClamp();
+    drive.turnRight(40_deg);
+    eff.toggleBoinker();
+    drive.turnRight(5_deg); // face ring
+
+    drive.goForward(1.1_tile);
+
+    drive.faceToPoint({2_tile, -3_tile}, true);
+    drive.goForward(1.9_tile);
+    eff.toggleClamp();
+    drive.turnLeft(45_deg);
+
+    drive.goBackward(1_tile);
+    eff.setIntake(IntakeState::INACTIVE);
+
+
+
+
     
     // drive.setToleranceParams(std::nullopt, 3_in); // cjange d tolerance to 1_in
     // drive.goBackward(1.53_tile, {{0, 0.9}}); // go back towards mogo og .7

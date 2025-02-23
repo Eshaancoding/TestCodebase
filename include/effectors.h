@@ -70,8 +70,8 @@ public:
         //armLeft(6, pros::E_MOTOR_GEAR_200),
         conveyorMotor(20), // intake 20
         clampPiston('B'),
-        boinkerPiston('A'), // doinker A
-        mogoMech('H'), // get right port
+        boinkerPiston('H'), // doinker H
+        mogoMech('A'), // small doinker A
         isClamped(false),
         previous_limit(false),
         first_click(false),
