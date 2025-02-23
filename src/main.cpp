@@ -72,18 +72,11 @@ void autonomous() {
     
     eff.seeColor = false;
 
-    //Routes::skills();
+    Routes::skills();
     //Routes::ringSide();
     //Routes::mogoSide();
 
-    //drive.goForward(2_tile);
-    //drive.turnLeft(180_deg);
-
-    // drive.turnRight(90_deg);
-    // AutonSelector::State state = waitForValidState(); 
-    OdomArc::setPos(0_in, 0_in, 0_deg);
-    // drive.goForward(1_tile);
-    drive.turnRight(90_deg);
+   
 //Routes::skills();
 
     // if (state.status == AutonSelector::SKILL) {

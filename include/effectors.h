@@ -102,6 +102,8 @@ public:
     void changeState();
     void stepArm();
 
+    void setState(State currState);
+
     // boinker
     void toggleBoinker ();
 

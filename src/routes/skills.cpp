@@ -155,7 +155,25 @@ void ComplexLilRoute (bool reverse = false) {
 }
 
 void Routes::skills () {
-    OdomArc::setPos(0_in, 0_in, 90_deg);
+    OdomArc::setPos(0_in, 0_in, 45_deg);
+
+    eff.raiseArm();
+    pros::delay(850);
+    eff.lowerArm();
+    drive.goBackward()
+    
+    // eff.arm_state = ArmState::PID_ARM;
+    // eff.setState(IDLE);
+
+
+
+
+
+}
+
+
+/* Old skills
+ OdomArc::setPos(0_in, 0_in, 90_deg);
     eff.setIntake(IntakeState::INTAKE); 
     pros::delay(600);
 
@@ -291,4 +309,4 @@ void Routes::skills () {
     // eff.intakeToggle(); //intake off
     // drive.faceToPoint({0_tile, 1_tile}, true);
     // drive.goForward(5_tile); //slam mogo in corner
-}
+*/

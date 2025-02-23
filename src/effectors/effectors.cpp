@@ -137,6 +137,10 @@ void Effectors::changeState () {
     }
 }
 
+void Effectors::setState (State currState) {
+   currentState = currState;
+}
+
 void Effectors::stepArm () {
     if (arm_state == ArmState::PID_ARM) {
         // there's no while true loop; ALL OF THESE PARAMS TUNING
