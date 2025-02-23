@@ -11,7 +11,7 @@
 void Routes::mogoSide () {
 
     // bool is_blue = (eff.isBlue).load();
-    bool is_blue = true;
+    bool is_blue = false;
 
     eff.toggleMogoMech();
     eff.toggleBoinker(); // get ready
@@ -45,13 +45,13 @@ void Routes::mogoSide () {
     pros::delay(500);
 
     drive.setToleranceParams(0.75_s);
-    is_blue? drive.turnLeft(85_deg) : drive.turnRight(90_deg);
+    is_blue? drive.turnLeft(85_deg) : drive.turnLeft(90_deg);
     drive.resetToleranceParams();
 
-    drive.goForward(is_blue ? 0.7_tile : 1_tile);
-    is_blue ? pros::delay(150) : pros::delay(0);
+    drive.goForward(is_blue ? 0.7_tile : 1.3_tile);
+    is_blue ? pros::delay(150) : pros::delay(225);
     eff.setIntake(IntakeState::INACTIVE);
-    is_blue ? eff.toggleClamp() : pros::delay(0); // unclamp
+    is_blue ? eff.toggleClamp() : drive.goBackward(0.3_tile); // unclamp
     pros::delay(400);
     if (is_blue){
         drive.turnRight(170_deg);
@@ -66,7 +66,7 @@ void Routes::mogoSide () {
     is_blue ? drive.turnRight(172_deg) : drive.turnLeft(45_deg);
     drive.resetToleranceParams();
     drive.setToleranceParams(std::nullopt, 4_in);
-    is_blue ? drive.goForward(0.7_tile) : drive.goBackward(1_tile);
+    is_blue ? drive.goForward(0.7_tile) : drive.goBackward(1.1_tile);
     drive.resetToleranceParams();
     is_blue ? pros::delay(0) : eff.toggleClamp();
     eff.setIntake(IntakeState::INTAKE); // score second ring on 2nd mogo
@@ -74,11 +74,12 @@ void Routes::mogoSide () {
 
     // if qual
     if (!is_blue){
-    drive.turnLeft(180_deg);
+    drive.turnLeft(170_deg);
     eff.toggleClamp();
     drive.goForward(0.7_tile);
     }
     eff.setIntake(IntakeState::INACTIVE);
+    is_blue ? eff.toggleClamp() : pros::delay(0);
 
 
     //eff.toggleBoinker();
