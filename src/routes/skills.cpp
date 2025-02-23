@@ -188,21 +188,32 @@ void Routes::skills () {
     drive.goBackward(0.25_tile); // back away
 
     // after you get wall stake
-    // drive.turnLeft(120_deg);
-    // drive.goForward(1.71_tile);
-    // drive.turnLeft(150_deg);
-    // eff.setIntake(IntakeState::INTAKE);
-    // drive.goForward(4_tile);
-    // drive.goBackward(0.3_tile);
+    drive.turnLeft(90_deg);
+    eff.setIntake(IntakeState::INTAKE);
+    drive.goForward(1_tile); // grab ring
 
-    // drive.turnLeft(45_deg);
-    // drive.goBackward(0.8_tile);
-    // drive.turnLeft(45_deg);
-    // drive.goForward(1.1_tile);
-    // drive.turnLeft(90_deg);
-    // drive.goBackward(1.1_tile);
+    drive.turnLeft(180_deg);
+    drive.goForward(4_tile);
+    drive.goBackward(0.3_tile); // grab other 2 rings
+
+
+    drive.turnLeft(90_deg);
+    drive.goPath({
+        Path({0_tile, 0_tile}),
+        Path({0_tile, -0.5_tile}),
+        Path({-0.5_tile, -1_tile})
+    }); // turn back to nice spot
+
+    drive.faceToPoint({0_tile, 3_tile}, true);
+    drive.goForward(1.2_tile);
+
+    drive.turnLeft(90_deg);
+    drive.goBackward(1.1_tile);
+    eff.toggleClamp();
+
 
     // after you dropped mogo in corner
+    
 
 
 
