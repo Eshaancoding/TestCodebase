@@ -47,7 +47,7 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    // AutonSelector::init();
+    AutonSelector::init();
 
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
     rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
@@ -80,7 +80,6 @@ void autonomous() {
     //drive.goForward(1_tile);
 
     //Routes::skills();
-    Routes::ringSide();
     //Routes::mogoSide();
     
 
@@ -88,25 +87,27 @@ void autonomous() {
    
 //Routes::skills();
 
-    // if (state.status == AutonSelector::SKILL) {
-    //     Routes::skills();
-    //     //Console::printBrain(1,"Distance: ",leftMotorGroup.getPosition())
-    // }
-    // else {
-    //     if (state.offDefState == AutonSelector::BLUE) {
-    //         eff.isBlue = true;
-    //     } 
-    //     else if (state.offDefState == AutonSelector::RED) {
-    //         eff.isBlue = false;
-    //     } 
+    auto state = waitForValidState();
 
-    //     if (state.elimQualState == AutonSelector::QUAL) {
-    //         Routes::ringSide(); 
-    //     } 
-    //     else if (state.elimQualState == AutonSelector::ELIM) {
-    //         Routes::mogoSide();
-    //     }
-    // }
+    if (state.status == AutonSelector::SKILL) {
+        Routes::skills();
+        //Console::printBrain(1,"Distance: ",leftMotorGroup.getPosition())
+    }
+    else {
+        if (state.offDefState == AutonSelector::BLUE) {
+            eff.isBlue = true;
+        } 
+        else if (state.offDefState == AutonSelector::RED) {
+            eff.isBlue = false;
+        } 
+
+        if (state.elimQualState == AutonSelector::QUAL) {
+            Routes::ringSide(); 
+        } 
+        else if (state.elimQualState == AutonSelector::ELIM) {
+            Routes::mogoSide();
+        }
+    }
 };
 
 // you disabled the factor map thing
@@ -127,6 +128,8 @@ void opcontrol() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::coast);
 
+    Control::printController(0, "Color Deactivated");
+
     while (true) {
         // ======================== Arcade ======================== 
         double heading =  Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
@@ -142,9 +145,9 @@ void opcontrol() {
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT)){
             eff.seeColor = !eff.seeColor;
             if (eff.seeColor)
-                Control::printController(0, "Color Sensor Activated");
+                Control::printController(0, "Color Activated");
             else
-                Control::printController(0, "Color Sensor Deactivated");
+                Control::printController(0, "Color Deactivated");
         }
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_RIGHT))

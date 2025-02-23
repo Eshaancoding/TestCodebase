@@ -37,7 +37,7 @@ void Effectors::toggleIntakeState (IntakeState ia, bool isConveyor) {
 //colorState = Color::noColor;
 
 void Effectors::intake () { 
-    const int firstDelay = 10;    
+    const int firstDelay = 0;    
     const int secondDelay = 200;    
 
     while (true) {
@@ -57,7 +57,7 @@ void Effectors::intake () {
             intakeMotor.move_velocity(600); // fix to 600
 
         } else if (see_color && state == IntakeState::INTAKE){
-            if (is_blue && hue < 10) { 
+            if (is_blue && hue < 25) { 
                 pros::delay(firstDelay);
                 intakeMotor.move_velocity(0);
                 pros::delay(secondDelay);
@@ -65,7 +65,7 @@ void Effectors::intake () {
             }
             
             // First condition: we on blue side; hue > 120 means detech blue
-            else if (!is_blue && hue > 120) {
+            else if (!is_blue && hue > 130) {
                 pros::delay(firstDelay);
                 intakeMotor.move_velocity(0);
                 pros::delay(secondDelay);
