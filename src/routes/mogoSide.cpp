@@ -10,8 +10,8 @@
 
 void Routes::mogoSide () {
 
-    // bool is_blue = (eff.isBlue).load();
-    bool is_blue = false;
+    bool is_blue = (eff.isBlue).load();
+    //bool is_blue = false;
 
     eff.toggleMogoMech();
     eff.toggleBoinker(); // get ready

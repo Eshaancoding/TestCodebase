@@ -80,8 +80,8 @@ void autonomous() {
     //drive.goForward(1_tile);
 
     //Routes::skills();
-    //Routes::ringSide();
-    Routes::mogoSide();
+    Routes::ringSide();
+    //Routes::mogoSide();
     
 
     //eff.arm_state = ArmState::PID_ARM;
