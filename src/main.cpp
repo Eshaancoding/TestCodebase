@@ -69,7 +69,7 @@ void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     
-    // eff.seeColor = false;
+    eff.seeColor = false;
 
     Routes::skills();
     // drive.turnLeft(180_deg);

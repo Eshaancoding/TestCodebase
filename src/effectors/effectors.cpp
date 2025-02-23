@@ -55,18 +55,20 @@ void Effectors::intake () {
         if (!see_color && state == IntakeState::INTAKE) {
             intakeMotor.move_velocity(600); // fix to 600
             // check for resist
-            pros::delay(10);
 
-            currentPosition = intakeMotor.get_position();
+            
+            // pros::delay(10);
 
-            double vel = currentPosition - prevPosition;
-            if (vel < 300) {
-                intakeMotor.move_velocity(-80);
-                pros::delay(250);
-                intakeMotor.move_velocity(0);
-            }
+            // currentPosition = intakeMotor.get_position();
 
-            prevPosition = currentPosition;
+            // double vel = currentPosition - prevPosition;
+            // if (vel < 300) {
+            //     intakeMotor.move_velocity(-80);
+            //     pros::delay(250);
+            //     intakeMotor.move_velocity(0);
+            // }
+
+            // prevPosition = currentPosition;
             
         } 
         else if (see_color && state == IntakeState::INTAKE){

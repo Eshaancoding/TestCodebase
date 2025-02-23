@@ -83,7 +83,7 @@ void Drive :: faceToPoint (
 
         // ============= Check if end program ============= 
         if (
-            (elapsed >= (mt_profile.get_total_time() + (*timeout))) ||  // timeout
+            // (elapsed >= (mt_profile.get_total_time() + (*timeout))) ||  // timeout
             (abs(Math::anglePoint(current_pos, targetPoint)) <= (*end_tolerance))                   // end tolerance
         ) {
             mainLoop = false;

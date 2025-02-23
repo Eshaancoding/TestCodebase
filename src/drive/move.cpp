@@ -123,7 +123,7 @@ void Drive::move (
         QSpeed target_vel = mt_profile.vel(elapsed);
         // double ang_motor_vel = ROBOT_WIDTH.convert(okapi::inch) * sin(angle_err.convert(radian)) / lookahead_dist.convert(okapi::inch) * fw_motor_vel;
         //double ang_motor_vel = angle_err.convert(okapi::degree) * KP_ANG * target_vel; // TODO: Make sure you add this within point effectors
-        double ang_motor_vel = 0.0;
+        //double ang_motor_vel = 0.0;
         // ============= Debug ============= 
         if (true) {
             // printf("* Total dist travelled: %f *\n", total_dist_travelled.convert(tile));
@@ -132,7 +132,7 @@ void Drive::move (
             // printf("* FW motor vel [0-1]: %f *\n", fw_motor_vel/600);
             // printf("* Target vel: %f *\n", mt_profile.vel(elapsed).convert(tps));
             printf("* angle err: %f *\n", angle_err.convert(degree));
-            printf("* ANG motor vel: %f *\n", ang_motor_vel);
+            //printf("* ANG motor vel: %f *\n", ang_motor_vel);
             // printf("********************\n");
         }
         
@@ -140,7 +140,7 @@ void Drive::move (
         // note that 600 = drive base blue
         drive.moveArcade(
             (fw_motor_vel / 600) * (is_reverse ? -1 : 1),
-            (ang_motor_vel / 600)
+            0
         );
 
         // ============= Check if end program ============= 
