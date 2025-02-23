@@ -10,10 +10,11 @@
 
 void Routes::mogoSide () {
 
-    bool is_blue = (eff.isBlue).load();
-    //bool is_blue = false;
+    //bool is_blue = (eff.isBlue).load();
+    bool is_blue = false;
 
-    eff.toggleBoinker();
+    // eff.toggleMogoMech();
+    //eff.toggleBoinker();
     
 
     if (is_blue){
@@ -22,67 +23,82 @@ void Routes::mogoSide () {
     
     } else{
         OdomArc::setPos(0_in, 0_in, -90_deg); // set our default/initial position
-        drive.goPath({
-            Path({0_tile, 0_tile}),
-            Path({-1.7_tile, 0_tile}),
-            Path({-2.2_tile, 0.2_tile})
-        }, 5_in, 5_in);
+        // drive.goPath({
+        //     Path({0_tile, 0_tile}),
+        //     Path({-1.7_tile, 0_tile}),
+        //     Path({-2.2_tile, 0.2_tile})
+        // }, 5_in, 5_in);
     };
 
- // get ready
-    eff.toggleMogoMech();
-
-    drive.setToleranceParams(0.5_s, 4_in);
-    is_blue ? drive.goBackward(0.4_tile) : drive.goBackward(0.3_tile);
-    drive.resetToleranceParams();
     
-    eff.toggleMogoMech(); // let go
-    eff.toggleBoinker(); // let go
+
+    drive.goBackward(1.4_tile), {eff.toggleClamp()};
+    //eff.toggleClamp();
+    drive.turnLeft(90_deg);
+    eff.setIntake(IntakeState::INTAKE);
+
+    drive.goForward(1.1_tile);
+    drive.turnLeft(180_deg);
+    eff.toggleClamp();
+    drive.goForward(1.8_tile);
 
 
-    drive.setToleranceParams(0.75_s);
-    drive.turnLeft(170_deg);
-    drive.resetToleranceParams();
-    drive.goBackward(0.25_tile);
-    eff.toggleClamp(); // clamp mogo
+ // get ready
 
-    eff.setIntake(IntakeState::INTAKE); // scored first ring
-    pros::delay(500);
+ // OLD
+    // eff.toggleMogoMech();
 
-    drive.setToleranceParams(0.75_s);
-    is_blue? drive.turnLeft(85_deg) : drive.turnLeft(90_deg);
-    drive.resetToleranceParams();
+    // drive.setToleranceParams(0.5_s, 4_in);
+    // is_blue ? drive.goBackward(0.4_tile) : drive.goBackward(0.3_tile);
+    // drive.resetToleranceParams();
+    
+    // eff.toggleMogoMech(); // let go
+    // //eff.toggleBoinker(); // let go
 
-    drive.goForward(is_blue ? 0.7_tile : 1.4_tile);
-    is_blue ? pros::delay(150) : pros::delay(150);
-    eff.setIntake(IntakeState::INACTIVE);
-    is_blue ? eff.toggleClamp() : drive.goBackward(0.4_tile); // unclamp
-    pros::delay(400);
-    if (is_blue){
-        drive.turnRight(170_deg);
-        drive.setToleranceParams(std::nullopt, 4_in);
-        drive.goBackward(0.7_tile);
-        drive.resetToleranceParams();
-    }
-    eff.toggleClamp(); // clamp mogo (if blue)
-    pros::delay(250);       
 
-    drive.setToleranceParams(0.75_s);
-    is_blue ? drive.turnRight(172_deg) : drive.turnLeft(45_deg);
-    drive.resetToleranceParams();
-    drive.setToleranceParams(std::nullopt, 4_in);
-    is_blue ? drive.goForward(0.7_tile) : drive.goBackward(1.1_tile);
-    drive.resetToleranceParams();
-    is_blue ? pros::delay(0) : eff.toggleClamp();
-    eff.setIntake(IntakeState::INTAKE); // score second ring on 2nd mogo
-    pros::delay(500);
+    // drive.setToleranceParams(0.75_s);
+    // drive.turnLeft(170_deg);
+    // drive.resetToleranceParams();
+    // drive.goBackward(0.25_tile);
+    // eff.toggleClamp(); // clamp mogo
 
-    // if qual touh ladder
-    if (!is_blue){
-        drive.turnLeft(170_deg);
-        drive.goForward(0.7_tile);
-    }
-    eff.setIntake(IntakeState::INACTIVE);
+    // eff.setIntake(IntakeState::INTAKE); // scored first ring
+    // pros::delay(500);
+
+    // drive.setToleranceParams(0.75_s);
+    // is_blue? drive.turnLeft(90_deg, {{0, 0.9}}) : drive.turnLeft(90_deg);
+    // drive.resetToleranceParams();
+
+    // drive.goForward(is_blue ? 0.7_tile : 1.4_tile);
+    // is_blue ? pros::delay(150) : pros::delay(125);
+    // eff.setIntake(IntakeState::INACTIVE);
+    // is_blue ? eff.toggleClamp() : drive.goBackward(0.4_tile); // unclamp
+    // pros::delay(400);
+    // if (is_blue){
+    //     drive.turnRight(170_deg, {{0, 0.9}});
+    //     drive.setToleranceParams(std::nullopt, 4_in);
+    //     drive.goBackward(0.7_tile);
+    //     drive.resetToleranceParams();
+    // }
+    // eff.toggleClamp(); // clamp mogo (if blue)
+    // pros::delay(250);       
+
+    // drive.setToleranceParams(0.75_s);
+    // is_blue ? drive.turnRight(172_deg) : drive.turnLeft(45_deg);
+    // drive.resetToleranceParams();
+    // drive.setToleranceParams(std::nullopt, 4_in);
+    // is_blue ? drive.goForward(0.7_tile) : drive.goBackward(1.1_tile);
+    // drive.resetToleranceParams();
+    // is_blue ? pros::delay(0) : eff.toggleClamp();
+    // eff.setIntake(IntakeState::INTAKE); // score second ring on 2nd mogo
+    // pros::delay(500);
+
+    // // if qual touh ladder
+    // if (!is_blue){
+    //     drive.turnLeft(170_deg);
+    //     drive.goForward(0.7_tile);
+    // }
+    // eff.setIntake(IntakeState::INACTIVE);
 
 
     //eff.toggleBoinker();
