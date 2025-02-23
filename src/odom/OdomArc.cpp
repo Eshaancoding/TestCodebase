@@ -15,13 +15,15 @@
 // too high distance
 
 namespace OdomArc {
+    
+
     std::atomic<okapi::QAngle> currentAngle = 0_deg;
     std::atomic<okapi::QLength> xPos = 0_in;
     std::atomic<okapi::QLength> yPos = 0_in;
     std::atomic<bool> calibrating;
 
-    pros::Rotation vert_track_wheel (16);  //16, og 8
-    pros::Rotation strafe_track_wheel (8); //8, og 14
+    pros::Rotation vert_track_wheel (13);  // vert 13
+    pros::Rotation strafe_track_wheel (20); // strafe 
 
     okapi::IMU imu (8, okapi::IMUAxes::z); // imu
 
