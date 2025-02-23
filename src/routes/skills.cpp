@@ -213,7 +213,7 @@ void Routes::skills () {
 
 
     // after you dropped mogo in corner
-    
+    drive.faceToPoint({-4_tile, -2_tile}, true);
 
 
 

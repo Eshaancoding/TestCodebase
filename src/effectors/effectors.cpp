@@ -126,6 +126,11 @@ void Effectors::toggleBoinker () {
     boinkerPiston.set_value(boinkerActive);
 }
 
+void Effectors::toggleMogoMech(){
+    mechDown = !mechDown;
+    mogoMech.set_value(mechDown);
+}
+
 
 // fancy arm things
 // press button -> arm turns a lil bit so conveyor can slide donut into it -> press button again -> 

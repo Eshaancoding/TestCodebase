@@ -76,9 +76,11 @@ void autonomous() {
     
     eff.seeColor = false;
 
-    Routes::skills();
+    //eff.toggleBoinker();
+
+    //Routes::skills();
     //Routes::ringSide();
-    //Routes::mogoSide();
+    Routes::mogoSide();
     
 
     //eff.arm_state = ArmState::PID_ARM;
@@ -152,7 +154,9 @@ void opcontrol() {
         //     Control::printController(0, isReverse ? "Reverse" : "Forward");
         // }
 
-        
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_X)){ // change button
+            eff.toggleMogoMech();
+        }
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L1)) {
             eff.arm_state = ArmState::PID_ARM;

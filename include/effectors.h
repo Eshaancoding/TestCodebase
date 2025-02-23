@@ -43,6 +43,7 @@ public:
 
     pros::ADIDigitalOut clampPiston;
     pros::ADIDigitalOut boinkerPiston;
+    pros::ADIDigitalOut mogoMech;
 
     static pros::Rotation rotationSensor;
     static pros::Optical colorSensor;
@@ -54,7 +55,6 @@ public:
     static std::atomic <bool> isBlue;
     static std::atomic <bool> seeColor;
 
-    pros::ADIDigitalIn limitSwitch;
 
     static State currentState;
     static Color colorState;
@@ -63,19 +63,21 @@ public:
     bool first_click;
     bool boinkerActive;
 
+    bool mechDown;
+
     Effectors () : 
         // for motor group: BACK LEFT 11, bottom left motor 13 top left motor 14
         //armLeft(6, pros::E_MOTOR_GEAR_200),
         conveyorMotor(20), // intake 20
         clampPiston('B'),
-        boinkerPiston('A'),
-        limitSwitch('H'),
+        boinkerPiston('A'), // doinker A
+        mogoMech('H'), // get right port
         isClamped(false),
         previous_limit(false),
         first_click(false),
-        boinkerActive(false)
+        boinkerActive(false),
+        mechDown(false)
     {
-        // armLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);  //PRAC code
         armRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
         rotationSensor.reset();
         rotationSensor.reset_position();
@@ -100,6 +102,7 @@ public:
 
     // boinker
     void toggleBoinker ();
+    void toggleMogoMech();
 
 
     void slowIntake();
