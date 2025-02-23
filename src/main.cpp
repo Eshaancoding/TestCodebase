@@ -47,7 +47,7 @@ AutonSelector::State waitForValidState () {
 
 // When robot initializes. 
 void initialize() {
-    AutonSelector::init();
+    // AutonSelector::init();
 
     leftMotorGroup.setGearing(AbstractMotor::gearset::blue);
     rightMotorGroup.setGearing(AbstractMotor::gearset::blue);
@@ -80,27 +80,31 @@ void autonomous() {
     //drive.turnLeft(180_deg);
 
     // drive.turnRight(90_deg);
-    AutonSelector::State state = waitForValidState(); 
+    // AutonSelector::State state = waitForValidState(); 
+    OdomArc::setPos(0_in, 0_in, 0_deg);
+    // drive.goForward(1_tile);
+    drive.turnRight(90_deg);
+//Routes::skills();
 
-    if (state.status == AutonSelector::SKILL) {
-        Routes::skills();
-        //Console::printBrain(1,"Distance: ",leftMotorGroup.getPosition())
-    }
-    else {
-        if (state.offDefState == AutonSelector::BLUE) {
-            eff.isBlue = true;
-        } 
-        else if (state.offDefState == AutonSelector::RED) {
-            eff.isBlue = false;
-        } 
+    // if (state.status == AutonSelector::SKILL) {
+    //     Routes::skills();
+    //     //Console::printBrain(1,"Distance: ",leftMotorGroup.getPosition())
+    // }
+    // else {
+    //     if (state.offDefState == AutonSelector::BLUE) {
+    //         eff.isBlue = true;
+    //     } 
+    //     else if (state.offDefState == AutonSelector::RED) {
+    //         eff.isBlue = false;
+    //     } 
 
-        if (state.elimQualState == AutonSelector::QUAL) {
-            Routes::ringSide(); 
-        } 
-        else if (state.elimQualState == AutonSelector::ELIM) {
-            Routes::mogoSide();
-        }
-    }
+    //     if (state.elimQualState == AutonSelector::QUAL) {
+    //         Routes::ringSide(); 
+    //     } 
+    //     else if (state.elimQualState == AutonSelector::ELIM) {
+    //         Routes::mogoSide();
+    //     }
+    // }
 };
 
 // you disabled the factor map thing

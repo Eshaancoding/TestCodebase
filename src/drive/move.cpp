@@ -10,7 +10,6 @@
 #include "pros/adi.h"
 #include "effectors.h"
 #include "odom/OdomArc.h"
-#include "odom/OdomCustom.h"
 #include "PIDParams.h"
 
 Point add (okapi::OdomState orig, Point p) {

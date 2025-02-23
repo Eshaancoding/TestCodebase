@@ -9,7 +9,7 @@
 #include "pros/rotation.hpp"
 
 #define PI 3.14159265
-#define WHEEL_DIA 2.9
+#define WHEEL_DIA 2.01
 
 // too low distance -->  higher wheel dia
 // too high distance
@@ -25,7 +25,7 @@ namespace OdomArc {
     pros::Rotation vert_track_wheel (13);  // vert 13
     pros::Rotation strafe_track_wheel (20); // strafe 
 
-    okapi::IMU imu (8, okapi::IMUAxes::z); // imu
+    okapi::IMU imu (6, okapi::IMUAxes::z); // imu
 
     double prevEnc = 0.0;
     double offsetEnc = 0.0;
@@ -36,7 +36,7 @@ namespace OdomArc {
     double prevAng = 0.0;
 
     double distanceGet() {
-        return -vert_track_wheel.get_position() * ((PI*WHEEL_DIA)/36000); // ticks -> inches
+        return vert_track_wheel.get_position() * ((PI*WHEEL_DIA)/36000); // ticks -> inches
     }
 
     double distanceb(){
