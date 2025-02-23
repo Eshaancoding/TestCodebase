@@ -58,10 +58,14 @@ void initialize() {
     //eff.armLeft.set_zero_position(0);
     eff.armRight.set_zero_position(0);
     
+    eff.arm_state = ArmState::PID_ARM;
+    eff.currentState = State::IDLE;
+
     // make sure to change all instances to OdomArc asw (instead of OdomCustom)
     OdomArc::init(); 
     Task task (OdomArc::MainLoop); 
 
+    Task arm (Effectors::stepArm);
     Task colorCheck (Effectors::intake);
 }
 
@@ -76,6 +80,7 @@ void autonomous() {
     //Routes::ringSide();
     //Routes::mogoSide();
 
+    //eff.arm_state = ArmState::PID_ARM;
    
 //Routes::skills();
 
@@ -164,8 +169,6 @@ void opcontrol() {
                 eff.arm_state = ArmState::IDLE_ARM; 
             }
         }
-
-        eff.stepArm();
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1)){
             eff.toggleIntakeState(IntakeState::INTAKE);

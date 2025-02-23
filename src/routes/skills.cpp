@@ -157,14 +157,34 @@ void ComplexLilRoute (bool reverse = false) {
 void Routes::skills () {
     OdomArc::setPos(0_in, 0_in, 45_deg);
 
-    eff.raiseArm();
-    pros::delay(850);
-    eff.lowerArm();
-    drive.goBackward()
-    
-    // eff.arm_state = ArmState::PID_ARM;
-    // eff.setState(IDLE);
+    eff.arm_state = ArmState::Raising_ARM;
+    pros::delay(100);
+    eff.currentState = State::IDLE;
+    eff.arm_state = ArmState::PID_ARM;
 
+    drive.goBackward(0.5_tile);
+
+    eff.toggleClamp();
+    drive.turnRight(130_deg);
+    eff.setIntake(IntakeState::INTAKE);
+    drive.goForward(1.2_tile);
+
+    drive.turnRight(90_deg);
+
+    drive.goForward(1_tile);
+    drive.turnLeft(90_deg); // 90 deg left turn
+    
+    eff.changeState();
+    drive.goForward(1_tile);
+    eff.setIntake(IntakeState::INACTIVE);
+
+    drive.turnRight(90_deg);
+    drive.goForward(0.25_tile);
+    eff.changeState();
+    pros::delay(500);
+    eff.changeState();
+
+    drive.goBackward(0.25_tile);
 
 
 

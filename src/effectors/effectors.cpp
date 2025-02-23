@@ -15,6 +15,10 @@ std::atomic<IntakeState> Effectors::intakeActive = IntakeState::INACTIVE;
 Color Effectors::colorState = Color::noColor;
 std::atomic<bool> Effectors::isBlue = false; // by default we assume that we are blue
 std::atomic<bool> Effectors::seeColor = false; // yes color sensor code
+State Effectors::currentState = State::IDLE;
+pros::Motor Effectors::armRight(11, pros::E_MOTOR_GEAR_100);
+pros::Rotation Effectors::rotationSensor(16);
+ArmState Effectors::arm_state(ArmState::PID_ARM);
 
 // INTAKE
 void Effectors::toggleIntakeState (IntakeState ia, bool isConveyor) {
@@ -137,50 +141,49 @@ void Effectors::changeState () {
     }
 }
 
-void Effectors::setState (State currState) {
-   currentState = currState;
-}
-
 void Effectors::stepArm () {
-    if (arm_state == ArmState::PID_ARM) {
-        // there's no while true loop; ALL OF THESE PARAMS TUNING
-        const double loadingAngle = 16; 
-        const double dumpAngle = 135; //135
-        const double idleAngle = 1.5;
-        const double initRotSensor = 0;
-        // one button for motor up one button for motor down
-
-        double targetAngle = this->currentState == State::isRaising ? loadingAngle : 
-                            this->currentState == State::hasDonut ? dumpAngle :
-                            idleAngle; // if idle
- 
-        double angle = ((double)-rotationSensor.get_angle() / 100) + 296;
-
-        double error = (angle - targetAngle)*3.1415926/180; // convert to radians
-        double p = -35; //-25
-        
-        Console::printBrain(5, "Error: %f", error*180/3.14159);
-        Console::printBrain(6, "Rot sensor: %f", (double)-rotationSensor.get_angle() / 100);
-        Console::printBrain(7, "angle: %f", angle);
-        if (abs(error) > (1.5_deg).convert(okapi::radian)) {
-            armRight.move_velocity(p * error); // RUN THE ARM of error is more than tolerance
-            Console::printBrain(9, "MOVING ARM VIA PID");
-        } else {
-            arm_state = ArmState::IDLE_ARM;
-            Console::printBrain(9, "GOING BACK TO IDLE BECAUSE OF ANGLE TOLERANCE");
-        }
-        Console::printBrain(8, "power: %f", p * error);
-    }
-    else if (arm_state == ArmState::Raising_ARM) {
-        armRight.move_velocity(-300);
-    }
-    else if (arm_state == ArmState::Lowering_ARM) {
-        armRight.move_velocity(300);
-    }
-    else if (arm_state == ArmState::IDLE_ARM) {
-        armRight.move_velocity(0);
-        // THIS WILL TRIGGER BRAKE MODE IF VELOCITY = 0
-    }
+    const double loadingAngle = 16; 
+    const double dumpAngle = 135; //135
+    const double idleAngle = 1.5;
+    const double initRotSensor = 0;
+    while (true) {
+        if (arm_state == ArmState::PID_ARM) {
+            // there's no while true loop; ALL OF THESE PARAMS TUNING
+            
+            // one button for motor up one button for motor down
+            const double loadingAngle = 117; // og 115
+            const double dumpAngle = 250; //135
+            const double idleAngle = 100;
+            // one button for motor up one button for motor down
     
+            double targetAngle = currentState == State::isRaising ? loadingAngle : 
+                                 currentState == State::hasDonut ? dumpAngle :
+                                 idleAngle; // if idle
+     
+            double angle = (double)rotationSensor.get_angle() / 100.0;
+    
+            double error = (angle - targetAngle)*3.1415926/180; // convert to radians
+            double p = -35; //-25
+            Console::printBrain(1, "Rot sensor: %f", angle);
+    
+            if (abs(error) > (1.5_deg).convert(okapi::radian)) {
+                armRight.move_velocity(p * error); // RUN THE ARM of error is more than tolerance
+            } else {
+                arm_state = ArmState::IDLE_ARM;
+            }
+        }
+        else if (arm_state == ArmState::Raising_ARM) {
+            armRight.move_velocity(300);
+        }
+        else if (arm_state == ArmState::Lowering_ARM) {
+            armRight.move_velocity(-300);
+        }
+        else if (arm_state == ArmState::IDLE_ARM) {
+            armRight.move_velocity(0);
+            // THIS WILL TRIGGER BRAKE MODE IF VELOCITY = 0
+        }
+        
+        pros::delay(10); 
+    }
 }
 

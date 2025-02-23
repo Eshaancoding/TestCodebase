@@ -37,17 +37,17 @@ enum Color {
 class Effectors {
 public:
     //pros::Motor armLeft; // make 2 arm motors
-    pros::Motor armRight;
+    static pros::Motor armRight;
     static pros::Motor intakeMotor;
     pros::Motor conveyorMotor;
 
     pros::ADIDigitalOut clampPiston;
     pros::ADIDigitalOut boinkerPiston;
 
-    pros::Rotation rotationSensor;
+    static pros::Rotation rotationSensor;
     static pros::Optical colorSensor;
 
-    ArmState arm_state;    
+    static ArmState arm_state;    
 
     bool isClamped;
     static std::atomic <IntakeState> intakeActive;
@@ -56,7 +56,7 @@ public:
 
     pros::ADIDigitalIn limitSwitch;
 
-    State currentState;
+    static State currentState;
     static Color colorState;
 
     bool previous_limit;
@@ -66,20 +66,16 @@ public:
     Effectors () : 
         // for motor group: BACK LEFT 11, bottom left motor 13 top left motor 14
         //armLeft(6, pros::E_MOTOR_GEAR_200),
-        armRight(11, pros::E_MOTOR_GEAR_100),
         conveyorMotor(20), // intake 20
         clampPiston('B'),
         boinkerPiston('A'),
         limitSwitch('H'),
-        rotationSensor(16), // imu 9
         isClamped(false),
         previous_limit(false),
         first_click(false),
-        boinkerActive(false),
-        currentState(State::IDLE),
-        arm_state(ArmState::PID_ARM)
+        boinkerActive(false)
     {
-        //armLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);  //PRAC code
+        // armLeft.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);  //PRAC code
         armRight.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
         rotationSensor.reset();
         rotationSensor.reset_position();
@@ -100,9 +96,7 @@ public:
     void lowerArm ();
     void stopArm();
     void changeState();
-    void stepArm();
-
-    void setState(State currState);
+    static void stepArm();
 
     // boinker
     void toggleBoinker ();
