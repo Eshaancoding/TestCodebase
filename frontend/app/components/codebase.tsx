@@ -2,16 +2,29 @@ import { useEffect, useState } from "react";
 import Button from "./button";
 import Prompt from "./prompt";
 import { useAtom } from "jotai";
-import { is_skills, pathsAtom, pathSelectAtom } from "../var";
+import { 
+  is_skills,
+  pathsAtom,
+  ang_tolerance, 
+  p_dist_atom, 
+  p_ang_atom,
+  def_lookhead_dist, 
+  end_tolerance, 
+  kp_angle, 
+  max_ang_acc, 
+  max_ang_speed, 
+  point_tolerance,
+  ki_angle,
+} from "../var";
 import writeProgram from "../backend/writeProgram";
 import readProgram from "../backend/readProgram";
 import { isRunning as ProgRunning, returnText, startProgram, stopProgram } from "../backend/Program";
 import getPrograms from "../backend/getPrograms";
+import setDefValues from "../backend/setDefValues";
 
 export default function Codebase () {
     const [program, setProgram] = useState("")
     const [paths, setPaths] = useAtom(pathsAtom)
-    const [, setPathSelect] = useAtom(pathSelectAtom)
     const [out, setOut] = useState("")
     const [isRun, setIsRunning] = useState(false)
     const [currentInterval, setCurrentInterval] = useState(undefined as NodeJS.Timeout | undefined)
@@ -20,6 +33,20 @@ export default function Codebase () {
     
     const [initAngle, setInitAngle] = useState(90)
     
+    // use atom values -- for writing prog
+    const [lhd, ] = useAtom(def_lookhead_dist)
+    const [p_dist, ] = useAtom(p_dist_atom)
+    const [p_ang, ] = useAtom(p_ang_atom)
+    const [end_tol, ] = useAtom(end_tolerance)
+    const [pt, ] = useAtom(point_tolerance)
+
+    // angle -- for writing prog
+    const [angSp, ] = useAtom(max_ang_speed)
+    const [angAcc, ] = useAtom(max_ang_acc)
+    const [kpAng, ] = useAtom(kp_angle)
+    const [kiAng, ] = useAtom(ki_angle)
+    const [angTol, ] = useAtom(ang_tolerance)
+
     useEffect(() => {
         async function a () {
             setAvailableFiles(await getPrograms())
@@ -76,6 +103,63 @@ export default function Codebase () {
         }
     }
 
+    async function writeProg () {
+        setDefValues([
+            {
+                param_name: "LOOKAHEAD_DIST",
+                value: lhd,
+                units: "tile"
+            },
+            {
+                param_name: "P_DIST",
+                value: p_dist,
+                units: undefined
+            },
+            {
+                param_name: "P_ANG",
+                value: p_ang,
+                units: undefined
+            },
+            {
+                param_name: "END_TOLERANCE",
+                value: end_tol,
+                units: "in"
+            },
+            {
+                param_name: "POINT_TOLERANCE",
+                value: pt,
+                units: "in"
+            },
+            {
+                param_name: "MAX_ANG_SPEED",
+                value: angSp,
+                units: "dps"
+            },
+            {
+                param_name: "MAX_ANG_ACCEL",
+                value: angAcc,
+                units: "dps2"
+            },
+            {
+                param_name: "KP_ANG",
+                value: kpAng,
+                units: undefined
+            },
+            {
+                param_name: "KI_ANG",
+                value: kiAng,
+                units: undefined
+            },
+            {
+                param_name: "ANG_TOLERANCE",
+                value: angTol,
+                units: "deg"
+            }
+        ]);
+    
+        writeProgram(program, paths, initAngle)
+    }
+
     return (
         <div className="flex flex-col gap-4">
             <Prompt label="Initial Angle" unit="deg" value={initAngle} update={setInitAngle} />
@@ -100,7 +184,7 @@ export default function Codebase () {
                 :
                     <Button text="Stop" class="w-[100px] bg-red-500" f={stop} />
                 }
-                <Button text="Save" class="w-[100px]" f={() => writeProgram(program, paths, initAngle)} />
+                <Button text="Save" class="w-[100px]" f={writeProg} />
             </div>
             {(isRun || out.length > 0) && 
                 <div className="w-full bg-neutral-800 p-4 rounded-[15px] flex flex-col gap-1">

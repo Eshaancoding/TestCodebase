@@ -44,9 +44,9 @@ export default async function writeProgram (prog:string, paths:any[], initAngle:
         else if (p["type"] == "path") {
             /*
             drive.move({
-                DrivePoint({0_tile, 0_tile}, 0.3_tile, 0.2_tps, 20.32, nullopt),
-                DrivePoint({0_tile, 3_tile}, 0.3_tile, 0.5_tps, 20.32, nullopt),
-                DrivePoint({1_tile, 3_tile}, 0.3_tile, 0.3_tps, 20.32, nullopt),
+                DrivePoint({0_tile, 0_tile}, 0.3_tile, nullopt),
+                DrivePoint({0_tile, 3_tile}, 0.3_tile, nullopt),
+                DrivePoint({1_tile, 3_tile}, 0.3_tile, nullopt),
             });
             */
             let m = "";
@@ -57,8 +57,6 @@ export default async function writeProgram (prog:string, paths:any[], initAngle:
                 m += "\t\tDrivePoint({" + r(pxlToTiles(point['x'], point['y']).x).toString() + "_tile, ";
                 m += r(pxlToTiles(point['x'], point['y']).y).toString() + "_tile}, ";
                 m += point["lookaheadDist"].toString() + "_tile, ";
-                m += point["maxSpeed"].toString() + "_tps, ";
-                m += point["kp"].toString() + ", ";
                 if (point["callback"].length > 0) {
                     lambdaFuncs += "\tauto lambda" + lambdaCounter.toString() + " = [](){ " + point["callback"] + " };\n";
                     m += "lambda" + lambdaCounter.toString();

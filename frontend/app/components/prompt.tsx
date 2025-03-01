@@ -1,10 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // add tooltip later
-export default function Prompt (props: { label: string, unit?: string, placeholder?: string, update: (inp:any) => void, isText?: boolean, value?: any }) {
+export default function Prompt (props: { label: string, unit?: string, placeholder?: string, update: (inp:any) => void, isText?: boolean, value?: any, longText?: boolean }) {
     let [displayVal, setDisplayVal] = useState(props.value)
+    
+    useEffect(() => {
+        if (props.value != undefined) {
+            setDisplayVal(props.value)
+        }
+    }, [props.value])
     
     function onCh (v:any) {
         setDisplayVal(v) // 
@@ -31,7 +37,7 @@ export default function Prompt (props: { label: string, unit?: string, placehold
                     value={displayVal} 
                     onChange={(e) => onCh(e.target.value)} 
                     placeholder={props.placeholder} 
-                    className="outline-none rounded-[7px] bg-neutral-800 p-2 w-[150px]" 
+                    className="outline-none rounded-[7px] bg-neutral-800 p-2"
                     type={props.isText == true ? "text" : "number"} 
                 /> 
                 <p>{props.unit}</p> 

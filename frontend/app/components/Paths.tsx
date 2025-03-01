@@ -1,12 +1,12 @@
+"use client";
+
 import { useAtom } from "jotai";
-import { def_kp, def_lookhead_dist, def_max_speed, pathsAtom, pathSelectAtom } from "../var";
+import { def_lookhead_dist, pathsAtom, pathSelectAtom } from "../var";
 import Button from "./button";
 
 export default function Paths() {
     const [paths, setPaths] = useAtom(pathsAtom)
     const [pathSelect, setPathSelect] = useAtom(pathSelectAtom)
-    const [ms, ] = useAtom(def_max_speed)
-    const [kp, ] = useAtom(def_kp)
     const [lhd, ] = useAtom(def_lookhead_dist)
 
     // helper functions
@@ -21,9 +21,7 @@ export default function Paths() {
                 p.push({
                     x: xPoint,
                     y: yPoint,
-                    maxSpeed: ms,
                     callback: "",
-                    kp: kp,
                     lookaheadDist: lhd
                 })
                 break
@@ -169,11 +167,6 @@ export default function Paths() {
                                         <p>deg</p>
                                     </div>
                                 </button>
-                                {/* {element['display'] ?
-                      <img onClick={() => toggleDisplay(index)} src="eye-off.svg" className="w-[30px] cursor-pointer" />
-                    :
-                      <img onClick={() => toggleDisplay(index)} src="eye.svg" className="w-[30px] cursor-pointer" />
-                    } */}
                                 <img onClick={() => goDown(index)} src="angle-down.svg" className="w-[30px] cursor-pointer" />
                                 <img onClick={() => goUp(index)} src="angle-down.svg" className="rotate-180 w-[30px] cursor-pointer" />
                                 <img onClick={() => deletePath(index)} src="trash.svg" className="w-[30px] cursor-pointer" />

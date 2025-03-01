@@ -4,30 +4,36 @@ import Collapsable from "./components/collapsable";
 import Map from "./components/map";
 import Prompt from "./components/prompt";
 import { useAtom } from "jotai";
-import { ang_tolerance, def_kp, def_lookhead_dist, def_max_acc, def_max_speed, end_tolerance, ki_atom, kp_angle, max_ang_acc, max_ang_speed, pathsAtom, pathSelectAtom, point_tolerance } from "./var";
-import PathInfo from "./components/PathInfo";
+import { 
+  ang_tolerance, 
+  p_dist_atom, 
+  p_ang_atom,
+  def_lookhead_dist, 
+  end_tolerance, 
+  kp_angle, 
+  max_ang_acc, 
+  max_ang_speed, 
+  point_tolerance,
+  ki_angle,
+} from "./var";
 import getDefValues from "./backend/getDefValues";
 import { useEffect, useState } from "react";
 import Codebase from "./components/codebase";
 import Paths from "./components/Paths";
 
 export default function Home() {
-  // yes I am ignoring the entire point of typescript but... I'm in a hurry to complete this
-  const [paths, setPaths] = useAtom(pathsAtom)
-  const [pathSelect, setPathSelect] = useAtom(pathSelectAtom)
-
   // use atom values
   const [lhd, setLHD] = useAtom(def_lookhead_dist)
-  const [ms, setMS] = useAtom(def_max_speed);
-  const [ma, setMA] = useAtom(def_max_acc)
-  const [kp, setKP] = useAtom(def_kp)
-  const [ki, setKI] = useAtom(ki_atom)
+  const [p_dist, set_p_dist] = useAtom(p_dist_atom)
+  const [p_ang, set_p_ang] = useAtom(p_ang_atom)
   const [end_tol, setEndTol] = useAtom(end_tolerance)
   const [pt, setPT] = useAtom(point_tolerance)
 
-  const [angAcc, setAngAcc] = useAtom(max_ang_acc)
+  // angle
   const [angSp, setAngSp] = useAtom(max_ang_speed)
+  const [angAcc, setAngAcc] = useAtom(max_ang_acc)
   const [kpAng, setKpAng] = useAtom(kp_angle)
+  const [kiAng, setKiAng] = useAtom(ki_angle)
   const [angTol, setAngTol] = useAtom(ang_tolerance)
 
   // program
@@ -37,15 +43,17 @@ export default function Home() {
     async function a () {
       let val = await getDefValues()
       let di = val.parsedDictionary
+      console.log(di)
       setLHD(di['LOOKAHEAD_DIST'])  
-      setMS(di['MAX_SPEED'])
-      setMA(di['MAX_ACCEL'])
-      setKP(di["KP"])
-      setKI(di["KI"])
+      set_p_dist(di["P_DIST"])
+      set_p_ang(di["P_ANG"])
       setEndTol(di["END_TOLERANCE"])
       setPT(di["POINT_TOLERANCE"])
-      setAngAcc(di["MAX_ANG_ACCEL"])
+
       setAngSp(di["MAX_ANG_SPEED"])
+      setAngAcc(di["MAX_ANG_ACCEL"])
+      setKpAng(di["KP_ANG"])
+      setKiAng(di["KI_ANG"])
       setAngTol(di["ANG_TOLERANCE"])
       setParsed(true)
     }
@@ -70,10 +78,8 @@ export default function Home() {
 
           <Collapsable title="Default Distance Params">
             <Prompt label="Lookahead Distance" unit="tiles" update={setLHD} value={lhd} />
-            <Prompt label="Max Speed" unit="tile/sec" update={setMS} value={ms} />
-            <Prompt label="Max Acceleration" unit="tile/sec^2" update={setMA} value={ma} />
-            <Prompt label="KP" unit="" update={setKP} value={kp} />
-            <Prompt label="KI" unit="" update={setKI} value={ki} />
+            <Prompt label="Proportional Distance" unit="" update={set_p_dist} value={p_dist} />
+            <Prompt label="Proportional Angle" unit="" update={set_p_ang} value={p_ang} />
             <Prompt label="End Tolerance" unit="in" update={setEndTol} value={end_tol} />
             <Prompt label="Point Tolerance" unit="in" update={setPT} value={pt} />
           </Collapsable>
@@ -82,15 +88,8 @@ export default function Home() {
             <Prompt label="Max Angular Speed" unit="degree/sec" update={setAngSp} value={angSp} />
             <Prompt label="Max Angular Acceleration" unit="degree/sec^2" update={setAngAcc} value={angAcc} />
             <Prompt label="KP Angle" unit="" update={setKpAng} value={kpAng} />
+            <Prompt label="KI Angle" unit="" update={setKiAng} value={kiAng} />
             <Prompt label="Angle Tolerance" unit="deg" update={setAngTol} value={angTol} />
-          </Collapsable>
-
-          <Collapsable title="Motion Profile">
-            {(pathSelect != -1 && paths[pathSelect]["type"] == "path" && paths[pathSelect]["points"].length > 1) ? 
-              <PathInfo />               
-            :
-              <p>No path selected</p>
-            }
           </Collapsable>
 
           <Collapsable title="Codebase">

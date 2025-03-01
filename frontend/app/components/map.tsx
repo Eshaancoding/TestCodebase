@@ -1,11 +1,9 @@
-"use client";
-
-import React, { useState, useRef, useEffect, useMemo, Ref } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Stage, Layer, Image, Circle, Line } from "react-konva";
 import useImage from "use-image";
 import Prompt from "./prompt";
 import { useAtom } from "jotai";
-import { def_kp, def_lookhead_dist, def_max_speed, is_skills, pathsAtom, pathSelectAtom } from "../var";
+import { def_lookhead_dist, is_skills, pathsAtom, pathSelectAtom } from "../var";
 import Button from "./button";
 
 // MAKE SURE YOU CHANGE TILETOPXL ON READPROGRAM.TSX
@@ -21,8 +19,6 @@ export default function Map () {
   const [paths, setPaths] = useAtom(pathsAtom)
   const [pathSelect, ] = useAtom(pathSelectAtom)
 
-  const [ms, ] = useAtom(def_max_speed);
-  const [kp, ] = useAtom(def_kp)
   const [lhd, ] = useAtom(def_lookhead_dist)
 
   const [isSkill, ] = useAtom(is_skills)
@@ -35,7 +31,6 @@ export default function Map () {
   const [selected, setIsSelected] = useState(-1)
   const [edit, setIsEdit] = useState(-1)
   const stage = useRef(undefined as any)
-  const isDrawing = useRef(false);
 
   useEffect(() => {
     setCurrentHover(-1) // any update in paths will deselect everything
@@ -74,9 +69,7 @@ export default function Map () {
       points = [...points, {
         x: x, 
         y: y,
-        maxSpeed: ms,
         callback: "",
-        kp: kp,
         lookaheadDist: lhd
       } ]
       let pathsCopy = paths.slice()
@@ -131,7 +124,6 @@ export default function Map () {
 
   function deletePoint () {
     let copyPath = paths.slice() 
-    let a = []
     copyPath[pathSelect]["points"].splice(edit, 1)
     setIsEdit(-1)
     setIsSelected(-1)
@@ -195,37 +187,24 @@ export default function Map () {
 
       {edit != -1 && pathSelect != -1 &&
         <div className="flex flex-col my-8">
-          <div className="flex gap-4">
-            <Prompt 
-              label="Max Speed" 
-              unit="tile/sec" 
-              update={(v) => setEditPoint("maxSpeed", v)} 
-              value={paths[pathSelect]["points"][edit]["maxSpeed"]} 
-            />
-
-            <Prompt 
-              label="Callback" 
-              unit="" 
-              update={(v) => setEditPoint("callback", v)} 
-              value={paths[pathSelect]["points"][edit]["callback"]} 
-              isText 
-            />
-
-            <Prompt 
-              label="KP" 
-              unit="" 
-              update={(v) => setEditPoint("kp", v)} 
-              value={paths[pathSelect]["points"][edit]["kp"]} 
-            />
-
+          <div className="flex gap-4 items-center">
             <Prompt 
               label="Lookahead Distance" 
               unit="tile" 
               update={(v) => setEditPoint("lookaheadDist", v)} 
               value={paths[pathSelect]["points"][edit]["lookaheadDist"]} 
             />
+            <Prompt 
+              label="Callback (include semicolon)" 
+              unit="" 
+              update={(v) => setEditPoint("callback", v)} 
+              value={paths[pathSelect]["points"][edit]["callback"]} 
+              isText 
+              longText
+            />
+
+            <Button text="Delete Point" class="bg-red-600 ml-4 max-h-[50px] w-[150px] text-center" f={deletePoint} />
           </div>
-          <Button text="Delete Point" class="bg-red-600 w-[150px] text-center" f={deletePoint} />
         </div>
       }
     </div>
