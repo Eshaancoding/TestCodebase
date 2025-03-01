@@ -17,17 +17,11 @@ class DrivePoint {
 public:
     okapi::Point point;
     std::optional<std::function<void()>> callback;
-    
-    // all of these variables will be active at the START of this Point and END at the start of the next Point 
     okapi::QLength lookaheadDistance;
-    okapi::QSpeed max_speed;
-    double kp;
 
     DrivePoint  (
         okapi::Point point, 
         optional<okapi::QLength> lookaheadDistance = nullopt,              // for angle displacement
-        optional<okapi::QSpeed> max_speed = nullopt,                            // for max speed during movement
-        optional<double> kp = nullopt,                                                 // Proportion for controlling motion profiling --> robot power
         optional<std::function<void()>> callback = nullopt    // call function if reaches point (with point_tolerance defined at move funciton). Ex: Alter effector state
     );
 };
@@ -111,8 +105,6 @@ public:
      */
     void goForward (
         QLength distance,
-        optional<QSpeed> vel = nullopt,
-        optional<QAcceleration> accel = nullopt,
         optional<QTime> timeout = nullopt,
         optional<QLength> end_tolerance = nullopt
     );
@@ -126,8 +118,6 @@ public:
      */
     void goBackward (
         QLength distance,
-        optional<QSpeed> vel = nullopt,
-        optional<QAcceleration> accel = nullopt,
         optional<QTime> timeout = nullopt,
         optional<QLength> end_tolerance = nullopt
     );
@@ -202,9 +192,8 @@ public:
     void move (
         std::initializer_list<DrivePoint> points,
         optional<QLength> point_tolerance = nullopt,
-        optional<QAcceleration> accel = nullopt,
-        optional<QTime> timeout = nullopt,
-        optional<QLength> end_tolerance = nullopt
+        optional<QLength> end_tolerance = nullopt,
+        optional<QTime> timeout = nullopt
     );
 
     // similar to move, but for just turning (faceToPoint)

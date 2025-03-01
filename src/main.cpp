@@ -8,7 +8,6 @@
 #include "controller.h"
 #include "odom/OdomCustom.h"
 #include "odom/OdomArc.h"
-#include "pros/adi.hpp"
 #include "pros/misc.h"
 #include "routes.h"
 
@@ -71,15 +70,7 @@ void autonomous() {
     
     eff.seeColor = false;
 
-    Routes::skills();
-    // drive.turnLeft(180_deg);
-
-    // drive.move(
-    //     {
-    //         DrivePoint({0_in, -4_tile}),
-    //         DrivePoint({0_in, 0_in}),
-    //     }
-    // );
+    Routes::test();
 
     // AutonSelector::State state = waitForValidState(); 
 

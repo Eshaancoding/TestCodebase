@@ -8,7 +8,7 @@ import { ang_tolerance, def_kp, def_lookhead_dist, def_max_acc, def_max_speed, e
 import PathInfo from "./components/PathInfo";
 import getDefValues from "./backend/getDefValues";
 import { useEffect, useState } from "react";
-import Codebase from "./components/Codebase";
+import Codebase from "./components/codebase";
 import Paths from "./components/Paths";
 
 export default function Home() {

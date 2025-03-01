@@ -2,62 +2,58 @@
 #include "Console.h"
 #include "drive.h"
 #include "Odom/Math.h"
-#include "motionProfiling.h"
 #include "okapi/api/odometry/odomState.hpp"
-#include "okapi/api/units/QAcceleration.hpp"
 #include "okapi/api/units/QAngle.hpp"
 #include "okapi/api/units/QLength.hpp"
-#include "okapi/api/units/QSpeed.hpp"
 #include "parameters.h"
 #include "odom/OdomArc.h"
 #include "pros/rtos.h"
 #include <cmath>
+#include <stdexcept>
 #include "moveParams.h"
+
+// Pure pursuit implementation
 
 DrivePoint :: DrivePoint (
     okapi::Point point, 
     optional<okapi::QLength> lookaheadDistance,
-    optional<okapi::QSpeed> max_speed,
-    optional<double> kp,
     optional<std::function<void()>> callback
 ) {
     this->point = point;
     this->lookaheadDistance = (lookaheadDistance == nullopt) ? LOOKAHEAD_DIST : (*lookaheadDistance);
-    this->max_speed = (max_speed == nullopt) ? MAX_SPEED : (*max_speed);
-    this->kp = (kp == nullopt) ? KP : (*kp);
     this->callback = callback;
 }
 
 void Drive::move (
     std::initializer_list<DrivePoint> points,
     optional<QLength> point_tolerance,
-    optional<QAcceleration> accel,
-    optional<QTime> timeout,
-    optional<QLength> end_tolerance
+    optional<QLength> end_tolerance,
+    optional<QTime> timeout
 ) {
     // ========= Set Optional to Defaults defined in moveParams.h ========= 
     if (point_tolerance == nullopt) point_tolerance = POINT_TOLERANCE;
-    if (accel == nullopt) accel = MAX_ACCEL;
     if (timeout == nullopt) timeout = TIMEOUT;
     if (end_tolerance == nullopt) end_tolerance = END_TOLERANCE;
 
     // ============= Setup Main Loop ============= 
-    OdomArc::resetDistTravelled();
-    MotionProfiling mt_profile (points, *accel);
-    double current_kp = points.begin()->kp;
-
     QLength lookahead_dist = points.begin()->lookaheadDistance; 
     int pointIdx = 0; // last point that we hit
 
     auto start = pros::c::millis();
     bool mainLoop = true;
-    bool is_reverse = Math::anglePoint(OdomArc::getPos(), (points.begin()+1)->point).abs() > 90_deg;
+    bool is_reverse = Math::anglePoint(
+        OdomArc::getPos(), 
+        (points.begin()+1)->point
+    ).abs() > 90_deg;
 
     QLength max_err = 0_in;
     QLength min_err = 0_in;
     bool stbool = false;
+    
+    unsigned int i = 0;
 
     // ============= Main Loop ============= 
+    printf("Started\n");
     while (mainLoop) {
         // ============= Get current conditions ============= 
         QTime elapsed = (pros::c::millis() - start) * 1_ms;
@@ -70,21 +66,11 @@ void Drive::move (
             auto drive_point = *(points.begin() + i);
             if (Math::distance(current_pos, drive_point.point) <= (*point_tolerance)) {
                 lookahead_dist = drive_point.lookaheadDistance;
-                current_kp = drive_point.kp;
                 if (drive_point.callback) (*drive_point.callback)();
                 pointIdx++;
                 break;
             }
         }
-
-        // ============= Calculate the motion profiling & forward motion vel ============= 
-        QLength total_dist_travelled = OdomArc::getDistTravelled();
-        QLength dist_err = (mt_profile.dist(elapsed) - total_dist_travelled);
-        double fw_motor_vel = dist_err.convert(okapi::inch) * current_kp + KI;
-    
-        if (dist_err < min_err || stbool) min_err = dist_err;
-        if (dist_err > max_err || stbool) max_err = dist_err;
-        stbool = true;
 
         // ============= Find Goal Point for Heading ============= 
         vector<Point> pot_points = {}; 
@@ -113,25 +99,40 @@ void Drive::move (
             }
         }
 
+        // If we can't find the target point but we are on the second to last point of the path, just set it to the target point
+        if (pointIdx == points.size() - 2 && target_point.x == -1_in && target_point.y == -1_in) {
+            target_point = points.end()->point;
+        }
+
         // find angle error (if valid point. Else, we assume 0_deg angle err)
         QAngle angle_err = 
             (target_point.x != -1_in && target_point.y != -1_in) ? 
                 Math::anglePoint(current_pos, target_point) 
             : 0_deg;
 
-        // angle motor vel
-        QSpeed target_vel = mt_profile.vel(elapsed);
-        // double ang_motor_vel = ROBOT_WIDTH.convert(okapi::inch) * sin(angle_err.convert(radian)) / lookahead_dist.convert(okapi::inch) * fw_motor_vel;
-        //double ang_motor_vel = angle_err.convert(okapi::degree) * KP_ANG * target_vel; // TODO: Make sure you add this within point effectors
-        //double ang_motor_vel = 0.0;
+        // ===== FOR DEBUGGING ===== 
+        if (target_point.x == -1_in && target_point.y == -1_in) {
+            // STOP completely
+            drive.moveArcade(0, 0);
+            printf("Target point not found; \n");
+            throw invalid_argument("Target point not found");
+            mainLoop = false;
+            break; 
+        }
+
+        // ============= Calculate the forward and turning vel ============= 
+        double fw_motor_vel = P_DIST * Math::distance(current_pos, target_point).abs().convert(inch);
+        double curvature = (2 * (target_point.x - current_pos.x).convert(inch)) / pow(lookahead_dist.convert(inch), 2);
+        double ang_motor_vel = P_ANG * curvature;
+
         // ============= Debug ============= 
-        if (true) {
+        if (true && i % 10 == 0) {
             // printf("* Total dist travelled: %f *\n", total_dist_travelled.convert(tile));
             // printf("* MT dist target: %f *\n", mt_profile.dist(elapsed).convert(tile));
             // printf("* Error: %f *\n", (mt_profile.dist(elapsed) - total_dist_travelled).convert(inch));
-            // printf("* FW motor vel [0-1]: %f *\n", fw_motor_vel/600);
+            printf("* FW: %f *\n", fw_motor_vel/10);
             // printf("* Target vel: %f *\n", mt_profile.vel(elapsed).convert(tps));
-            printf("* angle err: %f *\n", angle_err.convert(degree));
+            printf("* ang: %f *\n", angle_err.convert(degree));
             //printf("* ANG motor vel: %f *\n", ang_motor_vel);
             // printf("********************\n");
         }
@@ -140,20 +141,29 @@ void Drive::move (
         // note that 600 = drive base blue
         drive.moveArcade(
             (fw_motor_vel / 600) * (is_reverse ? -1 : 1),
-            0
+            (ang_motor_vel / 600)
         );
 
         // ============= Check if end program ============= 
         if (
-            (elapsed >= (mt_profile.get_total_time() + (*timeout))) ||  // timeout
-            (abs(mt_profile.get_total_distance() - total_dist_travelled) <= (*end_tolerance))                    // end tolerance
+            (elapsed >= (*timeout))
         ) {
+            printf("Elapsed time done\n");
+            mainLoop = false;
+            break;
+        }
+
+        if (
+            (Math::distance(current_pos, points.end()->point).abs() <= end_tolerance)
+        ) {
+            printf("Current position and end point less than time tolerance\n");
             mainLoop = false;
             break;
         }
 
         // ============= Delay ============= 
         pros::delay(10);
+        i += 1;
     }
 
     if (true) { // if debug
