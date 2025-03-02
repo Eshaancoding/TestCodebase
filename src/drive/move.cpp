@@ -109,8 +109,10 @@ void Drive::move (
         }
 
         // If we can't find the target point but we are on the second to last point of the path, just set it to the target point
+        bool is_using_targetp = false;
         if (pointIdx == points.size() - 2 && target_point.x == -1_in && target_point.y == -1_in) {
             target_point = points.end()->point;
+            is_using_targetp = true;
         }
 
         // find angle error (if valid point. Else, we assume 0_deg angle err)
@@ -132,7 +134,7 @@ void Drive::move (
         // ============= Calculate the forward and turning vel ============= 
         double fw_motor_vel = P_DIST * Math::distance(current_pos, target_point).abs().convert(inch);
         double curvature = (2 * calcXDist(current_pos, target_point).convert(inch)) / pow(lookahead_dist.convert(inch), 2);
-        double ang_motor_vel = P_ANG * curvature;
+        double ang_motor_vel = is_using_targetp ? 0 : P_ANG * curvature; // if using target point, then set vel to 0 just in case we go over target point (180_deg ang then.) 
 
         // ============= Debug ============= 
         if (true && i % 10 == 0) {
@@ -147,7 +149,7 @@ void Drive::move (
         }
         
         // ============= Move Robot ============= 
-        // note that 600 = drive base blue
+        // note that = drive base blue
         drive.moveArcade(
             (fw_motor_vel / 600) * (is_reverse ? -1 : 1),
             (ang_motor_vel / 600)
