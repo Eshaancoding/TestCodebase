@@ -3,6 +3,7 @@
 #include "drive.h"
 #include "Odom/Math.h"
 #include "okapi/api/odometry/odomState.hpp"
+#include "okapi/api/odometry/point.hpp"
 #include "okapi/api/units/QAngle.hpp"
 #include "okapi/api/units/QLength.hpp"
 #include "parameters.h"
@@ -13,6 +14,14 @@
 #include "moveParams.h"
 
 // Pure pursuit implementation
+
+QLength calcXDist (okapi::OdomState current_pos, okapi::Point target_point) {
+    // this is a simplified calculation of taking the projection vector of the x-axis (cos(theta), -sin(theta) in our coordinate system) as u
+    // and the displacement vector (target - current position) as v
+    // proj_u (v)
+
+    return cos(current_pos.theta) * (target_point.x - current_pos.x) - sin(current_pos.theta) * (target_point.y - current_pos.y);
+}
 
 DrivePoint :: DrivePoint (
     okapi::Point point, 
@@ -122,7 +131,7 @@ void Drive::move (
 
         // ============= Calculate the forward and turning vel ============= 
         double fw_motor_vel = P_DIST * Math::distance(current_pos, target_point).abs().convert(inch);
-        double curvature = (2 * (target_point.x - current_pos.x).convert(inch)) / pow(lookahead_dist.convert(inch), 2);
+        double curvature = (2 * calcXDist(current_pos, target_point).convert(inch)) / pow(lookahead_dist.convert(inch), 2);
         double ang_motor_vel = P_ANG * curvature;
 
         // ============= Debug ============= 
