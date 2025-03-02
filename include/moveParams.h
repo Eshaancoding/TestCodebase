@@ -5,7 +5,7 @@
 // for pure pursuit (can be abstracted for forward/backward)
 #define LOOKAHEAD_DIST   0.3_tile         // lookahead distance that determines angle control
 #define P_DIST           20.3             // P_DIST * distance of current goal and endpoint = forward motor vel; usually from 0-40
-#define P_ANG            0.95             // P_ANG * curvature of arc = turning motor vel; usually from 0 - 0.1
+#define P_ANG            0.75             // P_ANG * curvature of arc = turning motor vel; usually from 0 - 1
 #define END_TOLERANCE    0.5_in           // Tolerance of distance traveled before end of movement
 #define POINT_TOLERANCE  3_in             // Tolerance to set lookahead distance, kp, and callback function as movement occurs
 
