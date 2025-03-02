@@ -71,7 +71,11 @@ void autonomous() {
     
     eff.seeColor = false;
 
-    Routes::skills();
+    Routes::test();
+
+    // Routes::skills();
+    // OdomArc::setPos(0_in, 0_in, 0_deg);
+    // drive.goForward(3_tile);
     // drive.turnLeft(180_deg);
 
     // drive.move(

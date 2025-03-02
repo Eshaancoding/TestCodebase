@@ -16,8 +16,8 @@ void Drive::goPathDepr (
     bool isReverse,
     std::optional<QTime> maxTime
 ) {
-    DistancePID.reset();
-    HeadingPID.reset();
+    // DistancePID.reset();
+    // HeadingPID.reset();
     
     // =============== First convert all points to absolute if relative =============== 
     // and also convert to vector
@@ -128,8 +128,10 @@ void Drive::goPathDepr (
         if (dist_err < -LOOKAHEAD_DIST.convert(okapi::inch)) dist_err = -LOOKAHEAD_DIST.convert(okapi::inch);
 
         // make sure in drive you do the - - if in reverse
-        double ang_power = HeadingPID.step(angle_err);
-        double dist_power = DistancePID.step(dist_err);
+        // double ang_power = HeadingPID.step(angle_err);
+        // double dist_power = DistancePID.step(dist_err);
+        double ang_power = 0;
+        double dist_power = 0;
 
         Console::printBrain(4, dist_err, "dist err: ");
         Console::printBrain(5, angle_err, "angle err: ");
@@ -150,10 +152,10 @@ void Drive::goPathDepr (
         }
 
         // Move the robot; uncomment after test
-        drive.moveArcade(
-            dist_power * distance_factor * (isReverse ? -1 : 1), 
-            ang_power * heading_factor
-        );
+        // drive.moveArcade(
+        //     dist_power * distance_factor * (isReverse ? -1 : 1), 
+        //     ang_power * heading_factor
+        // );
 
         // check if we should break the loop if end time tolerance
         if (maxTime && (pros::millis() - start) >= (*maxTime).convert(okapi::millisecond)) {
@@ -169,5 +171,5 @@ void Drive::goPathDepr (
 
         pros::delay(10);
     }
-    drive.moveArcade(0,0);
+    // drive.moveArcade(0,0);
 }

@@ -1,16 +1,18 @@
-#include "odom/OdomCustom.h"
+#include "odom/Math.h"
+#include "okapi/api/units/QAcceleration.hpp"
 #include "okapi/api/units/QAngle.hpp"
 #include "okapi/api/units/QLength.hpp"
-#include "okapi/api/util/mathUtil.hpp"
-#include "okapi/impl/device/rotarysensor/adiEncoder.hpp"
-#include "parameters.h"
 #include <cmath>
+#include <sys/_intsup.h>
 #include "Console.h"
+#include "okapi/api/units/QSpeed.hpp"
+#include "okapi/api/units/QTime.hpp"
 #include "pros/rotation.hpp"
+#include "pros/rtos.hpp"
 
 #define PI 3.14159265
 #define WHEEL_DIA_VERT 2.0
-#define WHEEL_DIA_STRAFE 2.9
+#define WHEEL_DIA_STRAFE 2.0
 
 // too low distance -->  higher wheel dia
 // too high distance
@@ -20,6 +22,7 @@ namespace OdomArc {
     std::atomic<okapi::QLength> xPos = 0_in;
     std::atomic<okapi::QLength> yPos = 0_in;
     std::atomic<okapi::QLength> distTravelled = 0_ft; 
+    std::atomic<okapi::QSpeed> current_speed = 0_fps;  // in feet per sec
     std::atomic<bool> calibrating;
 
     pros::Rotation vert_track_wheel (13);  // vert 13
@@ -28,30 +31,31 @@ namespace OdomArc {
     okapi::IMU imu (6, okapi::IMUAxes::z); // imu
 
 
-    double prevDi = 0.0;
-    double prevDib = 0.0;
-    double prevAng = 0.0;
+    QLength prevDi = 0.0_in;
+    QLength prevDib = 0.0_in;
+    QAngle prevAng = 0.0_rad;
+    QTime prevTime = 0_s;
 
-    double distanceGet() {
-        return vert_track_wheel.get_position() * ((PI*WHEEL_DIA_VERT)/36000);  // ticks --> inches
+    QLength distanceGet() {
+        return vert_track_wheel.get_position() * ((PI*WHEEL_DIA_VERT)/36000) * 1_in;  // ticks --> inches
     }
 
-    double distanceb(){
+    QLength distanceb() {
         // tune it such that positive values from the backward wheel means robot is going into the -x axis
-        return strafe_track_wheel.get_position() * ((PI*WHEEL_DIA_STRAFE)/36000); // ticks --> inches
+        return strafe_track_wheel.get_position() * ((PI*WHEEL_DIA_STRAFE)/36000) * 1_in; // ticks --> inches
     }
 
-    double angleGet () { // in angle
-        return imu.get() * PI / 180;
+    QAngle angleGet () { // in angle
+        return imu.get() * PI / 180 * 1_rad;
     }
 
     void init (QAngle init_angle) {
         calibrating = true;
         imu.calibrate();
         imu.reset(init_angle.convert(okapi::degree));
-        prevDi = 0;
-        prevAng = init_angle.convert(okapi::radian); // ehhh not sure
-        prevDib = 0;
+        prevDi = 0_in;
+        prevAng = init_angle; // ehhh not sure
+        prevDib = 0_in;
         calibrating = false;
 
         pros::delay(1000);
@@ -79,56 +83,69 @@ namespace OdomArc {
     */
 
     void MainLoop () {
+        prevTime = pros::millis() * 1_ms;
+        auto prevDistTravelled = 0_in;
+        unsigned int i = 0;
         while (true) {
+            pros::delay(10); 
 
             // get change in encoder
-            double di = distanceGet(); // arc length
-            double Ddi = di - prevDi;
+            QLength di = distanceGet(); // arc length
+            QLength Ddi = di - prevDi;
 
-            double dib = distanceb(); // arc length back
-            double Ddib = dib - prevDib;
+            QLength dib = distanceb(); // arc length back
+            QLength Ddib = dib - prevDib;
 
-            double ang = angleGet(); // angle of robot in rad
-            double Dang = ang - prevAng + 1e-10; // delta angle
+            QAngle ang = angleGet(); // angle of robot in rad
+            double Dang = Math::restrictAngle180(ang - prevAng).convert(radian); // delta angle
 
-            double rFront = Ddi/Dang;
-            double rBack = Ddib/Dang;
+            QLength rFront = Dang == 0 ? 0_in : Ddi/Dang;
+            QLength rBack  = Dang == 0 ? 0_in : Ddib/Dang;
 
             // forward
-            double xarc_f = rFront * (1 - cos(Dang));
-            double yarc_f = rFront * sin(Dang);
+            QLength xarc_f = Dang == 0 ? 0_in : rFront * (1 - cos(Dang));
+            QLength yarc_f = Dang == 0 ? Ddi  : rFront * sin(Dang);
 
             // backward
-            double xarc_b = rBack * (1 - cos(Dang));
-            double yarc_b = rBack * sin(Dang);
+            QLength xarc_b = Dang == 0 ? 0_in : rBack * (1 - cos(Dang));
+            QLength yarc_b = Dang == 0 ? Ddib : rBack * sin(Dang);
 
             if (true) { // set true to debug
-                Console::printBrain(4, "x: %f y: %f ang: %f",(float)xPos.load().convert(okapi::tile), (float)yPos.load().convert(okapi::tile), ang * 180/PI);
+                Console::printBrain(4, "x: %f y: %f ang: %f",(float)xPos.load().convert(okapi::inch), (float)yPos.load().convert(okapi::inch), ang * 180/PI);
                 Console::printBrain(5, "Vert Tracking wheel front: %f", (float)vert_track_wheel.get_position());
                 Console::printBrain(6, "Vert Tracking wheel back: %f", (float)strafe_track_wheel.get_position());
                 Console::printBrain(7, "Total Distance: %f ft | %f tile", (float)distTravelled.load().convert(foot), (float)distTravelled.load().convert(tile));
                 Console::printBrain(8, "Dangle: %f", Dang);
             }
 
-            double f_xd =  xarc_f * cos(ang)          + yarc_f * sin(ang);  // x delta from forward tracking wheel
-            double f_yd = -xarc_f * cos(ang)          + yarc_f * cos(ang); // y delta from forward tracking wheel
-            double b_xd =  xarc_b * cos(ang - (PI/2)) + yarc_b * sin(ang - (PI/2));  // x delta from backward tracking wheel (note that positive values from backward sensor --> robot going in positive x-axis)
-            double b_yd = -xarc_b * cos(ang - (PI/2)) + yarc_b * cos(ang - (PI/2));  // y delta from backward tracking wheel (note that positive values from backward sensor --> robot going in positive x-axis)
+            QLength f_xd =  xarc_f * cos(ang)          + yarc_f * sin(ang);  // x delta from forward tracking wheel
+            QLength f_yd = -xarc_f * cos(ang)          + yarc_f * cos(ang); // y delta from forward tracking wheel
+            QLength b_xd =  xarc_b * cos(ang - (PI/2)*1_rad) + yarc_b * sin(ang - (PI/2)*1_rad);  // x delta from backward tracking wheel (note that positive values from backward sensor --> robot going in positive x-axis)
+            QLength b_yd = -xarc_b * cos(ang - (PI/2)*1_rad) + yarc_b * cos(ang - (PI/2)*1_rad);  // y delta from backward tracking wheel (note that positive values from backward sensor --> robot going in positive x-axis)
 
-            xPos = (xPos.load().convert(okapi::inch) + f_xd + b_xd) * 1_in;
-            yPos = (yPos.load().convert(okapi::inch) + f_yd + b_yd) * 1_in;
+            xPos = (xPos.load() + f_xd + b_xd);
+            yPos = (yPos.load() + f_yd + b_yd);
 
             // calculate delta distance travelled 
-            QLength delta_d = sqrt(pow(f_xd + b_xd, 2) + pow(f_yd + b_yd, 2)) * 1_in;
+            QLength delta_d = sqrt(pow((f_xd + b_xd).convert(inch), 2) + pow((f_yd + b_yd).convert(inch), 2)) * 1_in;
             distTravelled = distTravelled.load() + delta_d;
+            
+            // get speed
+            if (i % 5 == 0) {
+                auto currentTime = pros::millis() * 1_ms;
+                auto c = distTravelled.load();
+                current_speed = (c - prevDistTravelled) / (currentTime - prevTime);
+                prevTime = currentTime;
+                prevDistTravelled = c;
+            }
 
             // update internal variables
-            currentAngle = ang * 1_rad;
+            currentAngle = ang;
             prevDi = di;
             prevAng = ang;
             prevDib = dib;
 
-            pros::delay(10); 
+            i += 1;
         }
     }
 
@@ -158,5 +175,9 @@ namespace OdomArc {
 
     QLength getDistTravelled () {
         return distTravelled.load();
+    }
+
+    QSpeed getCurrentSpeed () {
+        return current_speed.load();
     }
 };

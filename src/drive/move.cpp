@@ -1,5 +1,3 @@
-#include "controller.h"
-#include "Console.h"
 #include "drive.h"
 #include "Odom/Math.h"
 #include "motionProfiling.h"
@@ -8,11 +6,22 @@
 #include "okapi/api/units/QAngle.hpp"
 #include "okapi/api/units/QLength.hpp"
 #include "okapi/api/units/QSpeed.hpp"
+#include "okapi/api/units/QTime.hpp"
 #include "parameters.h"
 #include "odom/OdomArc.h"
 #include "pros/rtos.h"
 #include <cmath>
+#include <sys/_intsup.h>
 #include "moveParams.h"
+#include "pros/rtos.hpp"
+
+QLength calcXDist (okapi::OdomState current_pos, okapi::Point target_point) {
+    // this is a simplified calculation of taking the projection vector of the x-axis (<cos(theta), -sin(theta)> in our coordinate system) as u
+    // and the displacement vector <target - current position> as v
+    // proj_u (v)
+
+    return cos(current_pos.theta) * (target_point.x - current_pos.x) - sin(current_pos.theta) * (target_point.y - current_pos.y);
+}
 
 DrivePoint :: DrivePoint (
     okapi::Point point, 
@@ -49,7 +58,7 @@ void Drive::move (
     QLength lookahead_dist = points.begin()->lookaheadDistance; 
     int pointIdx = 0; // last point that we hit
 
-    auto start = pros::c::millis();
+    QTime start_time = pros::c::millis() * 1_ms;
     bool mainLoop = true;
     bool is_reverse = Math::anglePoint(OdomArc::getPos(), (points.begin()+1)->point).abs() > 90_deg;
 
@@ -57,10 +66,21 @@ void Drive::move (
     QLength min_err = 0_in;
     bool stbool = false;
 
+    unsigned int i = 0;
+
+    QSpeed prev_left_vel = 0_fps;
+    QSpeed prev_right_vel = 0_fps;
+    QTime prev_time = start_time;
+
+    QAcceleration left_vel_acc = 0_fps2;
+    QAcceleration right_vel_acc = 0_fps2;
+    
     // ============= Main Loop ============= 
     while (mainLoop) {
+        // ============= Delay ============= 
+        pros::delay(10);
+        
         // ============= Get current conditions ============= 
-        QTime elapsed = (pros::c::millis() - start) * 1_ms;
         auto current_pos = OdomArc::getPos();
         current_pos.theta += (is_reverse ? 180_deg : 0_deg); // if reverse, act like we are going forward (we reverse motor direction)
 
@@ -77,16 +97,7 @@ void Drive::move (
             }
         }
 
-        // ============= Calculate the motion profiling & forward motion vel ============= 
-        QLength total_dist_travelled = OdomArc::getDistTravelled();
-        QLength dist_err = (mt_profile.dist(elapsed) - total_dist_travelled);
-        double fw_motor_vel = dist_err.convert(okapi::inch) * current_kp + KI;
-    
-        if (dist_err < min_err || stbool) min_err = dist_err;
-        if (dist_err > max_err || stbool) max_err = dist_err;
-        stbool = true;
-
-        // ============= Find Goal Point for Heading ============= 
+        // ============= Find Goal Point ============= 
         vector<Point> pot_points = {}; 
         Point target_point = {-1_in, -1_in};
 
@@ -106,61 +117,80 @@ void Drive::move (
         auto heading_point = Math::findPointOffset(current_pos, lookahead_dist);
         double shortest_distance = -1;
         for (auto p : pot_points) {
-            auto d = Math::distance(heading_point, p).convert(okapi::inch);
+            if (Math::anglePoint(current_pos, p).abs() > 150_deg) continue;
+            auto d = Math::distance(heading_point, p).convert(okapi::foot);
             if (shortest_distance == -1 || d < shortest_distance) {
                 shortest_distance = d;
                 target_point = p;
             }
         }
 
-        // find angle error (if valid point. Else, we assume 0_deg angle err)
-        QAngle angle_err = 
-            (target_point.x != -1_in && target_point.y != -1_in) ? 
-                Math::anglePoint(current_pos, target_point) 
-            : 0_deg;
-
-        // angle motor vel
-        QSpeed target_vel = mt_profile.vel(elapsed);
-        // double ang_motor_vel = ROBOT_WIDTH.convert(okapi::inch) * sin(angle_err.convert(radian)) / lookahead_dist.convert(okapi::inch) * fw_motor_vel;
-        //double ang_motor_vel = angle_err.convert(okapi::degree) * KP_ANG * target_vel; // TODO: Make sure you add this within point effectors
-        //double ang_motor_vel = 0.0;
-        // ============= Debug ============= 
-        if (true) {
-            // printf("* Total dist travelled: %f *\n", total_dist_travelled.convert(tile));
-            // printf("* MT dist target: %f *\n", mt_profile.dist(elapsed).convert(tile));
-            // printf("* Error: %f *\n", (mt_profile.dist(elapsed) - total_dist_travelled).convert(inch));
-            // printf("* FW motor vel [0-1]: %f *\n", fw_motor_vel/600);
-            // printf("* Target vel: %f *\n", mt_profile.vel(elapsed).convert(tps));
-            printf("* angle err: %f *\n", angle_err.convert(degree));
-            //printf("* ANG motor vel: %f *\n", ang_motor_vel);
-            // printf("********************\n");
-        }
+        // Output: target_point
         
         // ============= Move Robot ============= 
-        // note that 600 = drive base blue
-        drive.moveArcade(
-            (fw_motor_vel / 600) * (is_reverse ? -1 : 1),
-            0
-        );
+        // Find current time
+        QTime current_time = pros::millis() * 1_ms;
+        
+        // find the curvature of arc to go to the target point 
+        double curvature = 
+            (target_point.x != -1_in && target_point.y != -1_in) ?
+                (2 * calcXDist(current_pos, target_point).convert(foot))/pow(lookahead_dist.convert(foot), 2)  // 1/foot
+            :
+                0.0;
+        
+        // get left/right target velocity from motion profiling + curvature
+        QTime elapsed = current_time - start_time;
+        QSpeed forward_vel = mt_profile.vel(elapsed);
+        QSpeed left_vel = (forward_vel.convert(fps) * (2.0 + curvature*ROBOT_WIDTH.convert(foot))/2.0) * 1_fps; 
+        QSpeed right_vel = (forward_vel.convert(fps) * (2.0 - curvature*ROBOT_WIDTH.convert(foot))/2.0) * 1_fps;
+        
+        // calculate left vel acc and right vel acceleration
+        if (i % 5 == 0) {
+            QTime deltaT = current_time - prev_time;
+            left_vel_acc = (left_vel - prev_left_vel) / deltaT;
+            right_vel_acc = (right_vel - prev_right_vel) / deltaT;
+
+            prev_left_vel = left_vel;
+            prev_right_vel = right_vel;
+            prev_time = current_time;
+        }
+
+        // calculate feed forward of both vel and acc for each side of drivebase
+        double ff_left = KV * left_vel.convert(fps) + KA * left_vel_acc.convert(fps2);
+        double ff_right = KV * right_vel.convert(fps) + KA * right_vel_acc.convert(fps2);
+        
+        // set motor voltages
+        leftMotorGroup.moveVoltage(ff_left * 120); // 12000 is max: 12000/100 --> 120; 100 is full output
+        rightMotorGroup.moveVoltage(ff_right * 120); // 100 is full output
+        
+        // ============= Debug ============= 
+        if (true && i % 10 == 0) {
+            printf("* Current: %f *\n", OdomArc::getCurrentSpeed().convert(tps));
+            printf("* Target: %f *\n", forward_vel.convert(tps));
+            printf("* Curv: %f *\n", curvature);
+        }
 
         // ============= Check if end program ============= 
+        // if (
+        //     (elapsed >= (mt_profile.get_total_time() + (*timeout)))  // timeout
+        // ) {
+        //     printf("Timeout -- done\n");
+        //     mainLoop = false;
+        //     break;
+        // }
+        
+        auto total_dist_travelled = OdomArc::getDistTravelled();
         if (
-            (elapsed >= (mt_profile.get_total_time() + (*timeout))) ||  // timeout
             (abs(mt_profile.get_total_distance() - total_dist_travelled) <= (*end_tolerance))                    // end tolerance
         ) {
+            printf("Total distance travelled -- done\n");
             mainLoop = false;
             break;
         }
 
-        // ============= Delay ============= 
-        pros::delay(10);
+        i += 1;
     }
 
-    if (true) { // if debug
-        Console::printBrain(8, "Done with movement");
-        Control::printController(0, "%f to %f", min_err.convert(inch), max_err.convert(inch));
-    }
-
-    drive.moveArcade(0,0); // ensure movement stops at end.
-
+    leftMotorGroup.moveVoltage(0); 
+    rightMotorGroup.moveVoltage(0); 
 }

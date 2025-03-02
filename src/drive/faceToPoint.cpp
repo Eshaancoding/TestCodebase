@@ -6,6 +6,7 @@
 #include "okapi/api/odometry/odomState.hpp"
 #include "okapi/api/units/QAngle.hpp"
 #include "moveParams.h"
+#include "parameters.h"
 #include <cmath>
 
 void Drive :: faceToPoint (

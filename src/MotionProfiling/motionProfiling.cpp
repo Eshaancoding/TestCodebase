@@ -1,4 +1,5 @@
 #include "motionProfiling.h"
+#include "okapi/api/units/QAcceleration.hpp"
 #include "okapi/api/units/QLength.hpp"
 #include "okapi/api/units/QSpeed.hpp"
 #include "okapi/api/units/QTime.hpp"
@@ -35,6 +36,8 @@ MotionProfiling :: MotionProfiling (vector<DrivePoint> points, QAcceleration acc
 
         prev_speed = max_speed;
     }
+
+    printf("Total distance: %f\n", total_distance.convert(tile));
 
     // if sudden jump in vel, add lines to smooth it
     for (int i = 0; i < this->lines.size() - 1; i++) {
@@ -83,6 +86,7 @@ MotionProfiling :: MotionProfiling (vector<DrivePoint> points, QAcceleration acc
     }
 
     this->total_time = currentTime; // set total time
+    printf("Total time: %f", this->total_time.convert(second));
 }
 
 QSpeed MotionProfiling :: vel (QTime t) {
@@ -98,6 +102,13 @@ QLength MotionProfiling :: dist (QTime t) {
         out += l.area(t);
     }
     return out;
+}
+
+QAcceleration MotionProfiling :: accel (QTime t) {
+    for (auto l : this->lines) {
+        if (t >= l.t1 && t <= l.t2) return l.slope(t);
+    }
+    return 0_fps2;
 }
 
 QTime MotionProfiling :: get_total_time () {

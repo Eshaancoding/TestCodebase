@@ -6,6 +6,10 @@
 #include "okapi/api/units/RQuantity.hpp"
 using namespace okapi;
 
+QAcceleration Line :: slope (QTime t) {
+    return (y2 - y1) / (t2 - t1);
+}
+
 QSpeed Line :: eval (QTime t) {
     if (t < t1 || t > t2) return 0_fps;
 

@@ -2,10 +2,8 @@
 #define ODOMARC_H
 
 #include "main.h"
-#include "Math.h"
 #include "okapi/api/units/QLength.hpp"
-#include "parameters.h"
-#include <iostream>
+#include "okapi/api/units/QSpeed.hpp"
 using namespace std;
 
 namespace OdomArc {
@@ -24,6 +22,7 @@ namespace OdomArc {
     double angleGet ();
     void resetDistTravelled ();
     QLength getDistTravelled ();
+    QSpeed getCurrentSpeed ();
 };
 
 
