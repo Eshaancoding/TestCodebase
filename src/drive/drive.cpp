@@ -16,6 +16,8 @@ void Drive::goForward (
     // get starting position and then offset
     okapi::OdomState startingPos = OdomArc::getPos();
     Point absolute = Math::findPointOffset(startingPos, distance);
+    printf("Current %f %f\n", startingPos.x.convert(inch), startingPos.y.convert(inch));
+    printf("Absolute %f %f\n", absolute.x.convert(inch), absolute.y.convert(inch));
     move(
         {
             DrivePoint({startingPos.x, startingPos.y}),

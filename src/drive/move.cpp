@@ -61,6 +61,10 @@ void Drive::move (
     
     unsigned int i = 0;
 
+    auto last_point = (points.begin() + points.size()-1)->point;
+
+    bool prev_istargetp = false;
+
     // ============= Main Loop ============= 
     printf("Started\n");
     while (mainLoop) {
@@ -71,7 +75,7 @@ void Drive::move (
 
         // ======== Set lookahead distance, kp, and call callback ======
         // max speed, acceleration, and curvature speed are accounted for throughout the path in motion profiling 
-        for (int i = pointIdx; i < points.size(); i++) {
+        for (int i = pointIdx; i < points.size()-1; i++) {
             auto drive_point = *(points.begin() + i);
             if (Math::distance(current_pos, drive_point.point) <= (*point_tolerance)) {
                 lookahead_dist = drive_point.lookaheadDistance;
@@ -101,6 +105,7 @@ void Drive::move (
         auto heading_point = Math::findPointOffset(current_pos, lookahead_dist);
         double shortest_distance = -1;
         for (auto p : pot_points) {
+            if (Math::anglePoint(current_pos, p).abs() > 90_deg) continue;
             auto d = Math::distance(heading_point, p).convert(okapi::inch);
             if (shortest_distance == -1 || d < shortest_distance) {
                 shortest_distance = d;
@@ -110,8 +115,8 @@ void Drive::move (
 
         // If we can't find the target point but we are on the second to last point of the path, just set it to the target point
         bool is_using_targetp = false;
-        if (pointIdx == points.size() - 2 && target_point.x == -1_in && target_point.y == -1_in) {
-            target_point = points.end()->point;
+        if (pointIdx == points.size()-1 && target_point.x == -1_in && target_point.y == -1_in) {
+            target_point = last_point;
             is_using_targetp = true;
         }
 
@@ -132,19 +137,22 @@ void Drive::move (
         }
 
         // ============= Calculate the forward and turning vel ============= 
-        double fw_motor_vel = P_DIST * Math::distance(current_pos, target_point).abs().convert(inch);
+        double fw_motor_vel = P_DIST * Math::distance(current_pos, target_point).convert(inch);
         double curvature = (2 * calcXDist(current_pos, target_point).convert(inch)) / pow(lookahead_dist.convert(inch), 2);
-        double ang_motor_vel = is_using_targetp ? 0 : P_ANG * curvature; // if using target point, then set vel to 0 just in case we go over target point (180_deg ang then.) 
+        double ang_motor_vel = is_using_targetp ? 0 : (
+            (curvature < 0 ? -1 : 1) * CP_ANG * exp(P_ANG * abs(curvature))
+        ); // if using target point, then set vel to 0 just in case we go over target point (180_deg ang then.) 
 
         // ============= Debug ============= 
         if (true && i % 10 == 0) {
-            // printf("* Total dist travelled: %f *\n", total_dist_travelled.convert(tile));
-            // printf("* MT dist target: %f *\n", mt_profile.dist(elapsed).convert(tile));
-            // printf("* Error: %f *\n", (mt_profile.dist(elapsed) - total_dist_travelled).convert(inch));
-            printf("* FW: %f *\n", fw_motor_vel/10);
-            // printf("* Target vel: %f *\n", mt_profile.vel(elapsed).convert(tps));
             printf("* ang: %f *\n", angle_err.convert(degree));
-            //printf("* ANG motor vel: %f *\n", ang_motor_vel);
+            printf("* curv: %f *\n", curvature * 100);
+            printf("* t: %f *\n", (int)is_using_targetp * 100.0);
+            // printf("* y: %f *\n", current_pos.y.convert(inch));
+            // printf("* target y: %f *\n", target_point.y.convert(inch));
+            // printf("* idx: %d *\n", pointIdx);
+            // printf("* points len: %d *\n", (int)points.size());
+
             // printf("********************\n");
         }
         
@@ -164,10 +172,17 @@ void Drive::move (
             break;
         }
 
+        auto d = Math::distance(current_pos, (points.begin()+1)->point);
         if (
-            (Math::distance(current_pos, points.end()->point).abs() <= end_tolerance)
+            (Math::distance(current_pos, last_point).abs() <= end_tolerance)
         ) {
-            printf("Current position and end point less than time tolerance\n");
+            printf("Current position and end point less than end tolerance\n");
+            mainLoop = false;
+            break;
+        }
+
+        if (prev_istargetp && !is_using_targetp) {
+            printf("Target area lost\n");
             mainLoop = false;
             break;
         }
@@ -175,11 +190,7 @@ void Drive::move (
         // ============= Delay ============= 
         pros::delay(10);
         i += 1;
-    }
-
-    if (true) { // if debug
-        Console::printBrain(8, "Done with movement");
-        Control::printController(0, "%f to %f", min_err.convert(inch), max_err.convert(inch));
+        prev_istargetp = is_using_targetp;
     }
 
     drive.moveArcade(0,0); // ensure movement stops at end.
