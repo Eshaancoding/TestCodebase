@@ -29,3 +29,23 @@ QLength Line :: area (QTime t) {
 
     return ((slope / 2) * (t_sq - t1_sq) + intercept * (t.convert(second) - t1.convert(second))) * 1_ft;
 }
+
+QTime Line :: solveForArea (QLength t) {
+    double m = ((y2 - y1) / (t2 - t1)).convert(fps2);
+    double b = y2.convert(fps) - m * t2.convert(second);
+    double a = t1.convert(second);
+    double p = t.convert(foot);
+
+    return (
+        (m == 0.0) ? 
+            (a + (p/b)) 
+        :
+            ((
+                sqrt(
+                    m * ( (pow(a, 2) * m) + (2 * p) ) + 
+                    (2 * a * b * m) + 
+                    pow(b, 2)
+                ) - b
+            ) / m)
+    ) * 1_s;
+}

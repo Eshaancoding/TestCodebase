@@ -6,6 +6,7 @@
 #include "odom/Math.h"
 #include "odom/OdomArc.h"
 #include "Console.h"
+#include "pros/adi.hpp"
 
 #define LOOKAHEAD_DIST 3_in
 
@@ -156,6 +157,16 @@ void Drive::goPathDepr (
         //     dist_power * distance_factor * (isReverse ? -1 : 1), 
         //     ang_power * heading_factor
         // );
+
+        
+        auto atAuton = false;        
+        auto lineFollower = pros::ADILineSensor('A');
+
+        // if we are at auton and we break line follower
+        if (atAuton && lineFollower.get_value() > 3500) {
+            mainLoop = false; // stop
+            break;
+        }
 
         // check if we should break the loop if end time tolerance
         if (maxTime && (pros::millis() - start) >= (*maxTime).convert(okapi::millisecond)) {

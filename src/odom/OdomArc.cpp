@@ -1,5 +1,5 @@
+#include "odom/OdomArc.h"
 #include "odom/Math.h"
-#include "okapi/api/units/QAcceleration.hpp"
 #include "okapi/api/units/QAngle.hpp"
 #include "okapi/api/units/QLength.hpp"
 #include <cmath>
@@ -7,6 +7,7 @@
 #include "Console.h"
 #include "okapi/api/units/QSpeed.hpp"
 #include "okapi/api/units/QTime.hpp"
+#include "parameters.h"
 #include "pros/rotation.hpp"
 #include "pros/rtos.hpp"
 
@@ -22,7 +23,10 @@ namespace OdomArc {
     std::atomic<okapi::QLength> xPos = 0_in;
     std::atomic<okapi::QLength> yPos = 0_in;
     std::atomic<okapi::QLength> distTravelled = 0_ft; 
-    std::atomic<okapi::QSpeed> current_speed = 0_fps;  // in feet per sec
+
+    std::atomic<okapi::QSpeed> left_speed = 0_fps;
+    std::atomic<okapi::QSpeed> right_speed = 0_fps;
+
     std::atomic<bool> calibrating;
 
     pros::Rotation vert_track_wheel (13);  // vert 13
@@ -34,7 +38,6 @@ namespace OdomArc {
     QLength prevDi = 0.0_in;
     QLength prevDib = 0.0_in;
     QAngle prevAng = 0.0_rad;
-    QTime prevTime = 0_s;
 
     QLength distanceGet() {
         return vert_track_wheel.get_position() * ((PI*WHEEL_DIA_VERT)/36000) * 1_in;  // ticks --> inches
@@ -83,9 +86,6 @@ namespace OdomArc {
     */
 
     void MainLoop () {
-        prevTime = pros::millis() * 1_ms;
-        auto prevDistTravelled = 0_in;
-        unsigned int i = 0;
         while (true) {
             pros::delay(10); 
 
@@ -112,10 +112,9 @@ namespace OdomArc {
 
             if (true) { // set true to debug
                 Console::printBrain(4, "x: %f y: %f ang: %f",(float)xPos.load().convert(okapi::inch), (float)yPos.load().convert(okapi::inch), ang * 180/PI);
-                Console::printBrain(5, "Vert Tracking wheel front: %f", (float)vert_track_wheel.get_position());
-                Console::printBrain(6, "Vert Tracking wheel back: %f", (float)strafe_track_wheel.get_position());
-                Console::printBrain(7, "Total Distance: %f ft | %f tile", (float)distTravelled.load().convert(foot), (float)distTravelled.load().convert(tile));
-                Console::printBrain(8, "Dangle: %f", Dang);
+                Console::printBrain(5, "Total Distance: %f ft | %f tile", (float)distTravelled.load().convert(foot), (float)distTravelled.load().convert(tile));
+                Console::printBrain(5, "Left Speed: %f fps", left_speed.load().convert(fps));
+                Console::printBrain(6, "Right Speed: %f fps", right_speed.load().convert(fps));
             }
 
             QLength f_xd =  xarc_f * cos(ang)          + yarc_f * sin(ang);  // x delta from forward tracking wheel
@@ -130,22 +129,16 @@ namespace OdomArc {
             QLength delta_d = sqrt(pow((f_xd + b_xd).convert(inch), 2) + pow((f_yd + b_yd).convert(inch), 2)) * 1_in;
             distTravelled = distTravelled.load() + delta_d;
             
-            // get speed
-            if (i % 5 == 0) {
-                auto currentTime = pros::millis() * 1_ms;
-                auto c = distTravelled.load();
-                current_speed = (c - prevDistTravelled) / (currentTime - prevTime);
-                prevTime = currentTime;
-                prevDistTravelled = c;
-            }
+            // get speed for each drivebase
+            // ============== CHECK CHECK CHECK THIS ============== 
+            left_speed =  (rFront + (ROBOT_WIDTH/2) * Dang) / 10_ms; // delay is 10_ms
+            right_speed = (rFront - (ROBOT_WIDTH/2) * Dang) / 10_ms; // delay is 10_ms
 
             // update internal variables
             currentAngle = ang;
             prevDi = di;
             prevAng = ang;
             prevDib = dib;
-
-            i += 1;
         }
     }
 
@@ -177,7 +170,11 @@ namespace OdomArc {
         return distTravelled.load();
     }
 
-    QSpeed getCurrentSpeed () {
-        return current_speed.load();
+    QSpeed getLeftSpeed() {
+        return left_speed.load();
+    }
+
+    QSpeed getRightSpeed() {
+        return right_speed.load();
     }
 };

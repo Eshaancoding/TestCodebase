@@ -76,7 +76,7 @@ void Drive::move (
     QAcceleration right_vel_acc = 0_fps2;
     
     // ============= Main Loop ============= 
-    while (mainLoop) {
+    while (false) {
         // ============= Delay ============= 
         pros::delay(10);
         
@@ -139,9 +139,9 @@ void Drive::move (
                 0.0;
         
         // get left/right target velocity from motion profiling + curvature
-        QTime elapsed = current_time - start_time;
-        QSpeed forward_vel = mt_profile.vel(elapsed);
-        QSpeed left_vel = (forward_vel.convert(fps) * (2.0 + curvature*ROBOT_WIDTH.convert(foot))/2.0) * 1_fps; 
+        auto total_dist_travelled = OdomArc::getDistTravelled();
+        QSpeed forward_vel = mt_profile.vel(total_dist_travelled);
+        QSpeed left_vel =  (forward_vel.convert(fps) * (2.0 + curvature*ROBOT_WIDTH.convert(foot))/2.0) * 1_fps; 
         QSpeed right_vel = (forward_vel.convert(fps) * (2.0 - curvature*ROBOT_WIDTH.convert(foot))/2.0) * 1_fps;
         
         // calculate left vel acc and right vel acceleration
@@ -149,28 +149,33 @@ void Drive::move (
             QTime deltaT = current_time - prev_time;
             left_vel_acc = (left_vel - prev_left_vel) / deltaT;
             right_vel_acc = (right_vel - prev_right_vel) / deltaT;
-
+            
             prev_left_vel = left_vel;
             prev_right_vel = right_vel;
             prev_time = current_time;
         }
-
+        
         // calculate feed forward of both vel and acc for each side of drivebase
         double ff_left = KV * left_vel.convert(fps) + KA * left_vel_acc.convert(fps2);
         double ff_right = KV * right_vel.convert(fps) + KA * right_vel_acc.convert(fps2);
         
+        // feed backward
+        double fb_left = KP * (left_vel - OdomArc::getLeftSpeed()).convert(fps);
+        double fb_right = KP * (right_vel - OdomArc::getRightSpeed()).convert(fps);
+        
         // set motor voltages
-        leftMotorGroup.moveVoltage(ff_left * 120); // 12000 is max: 12000/100 --> 120; 100 is full output
-        rightMotorGroup.moveVoltage(ff_right * 120); // 100 is full output
+        leftMotorGroup.moveVoltage((ff_left + fb_left) * 120); // 12000 is max: 12000/100 --> 120; 100 is full output
+        rightMotorGroup.moveVoltage((ff_right + fb_right) * 120); // 100 is full output
         
         // ============= Debug ============= 
         if (true && i % 10 == 0) {
-            printf("* Current: %f *\n", OdomArc::getCurrentSpeed().convert(tps));
+            printf("* Current: %f *\n", ((OdomArc::getLeftSpeed() + OdomArc::getRightSpeed())/2).convert(tps));
             printf("* Target: %f *\n", forward_vel.convert(tps));
             printf("* Curv: %f *\n", curvature);
         }
-
+        
         // ============= Check if end program ============= 
+        // QTime elapsed = current_time - start_time;
         // if (
         //     (elapsed >= (mt_profile.get_total_time() + (*timeout)))  // timeout
         // ) {
@@ -179,7 +184,6 @@ void Drive::move (
         //     break;
         // }
         
-        auto total_dist_travelled = OdomArc::getDistTravelled();
         if (
             (abs(mt_profile.get_total_distance() - total_dist_travelled) <= (*end_tolerance))                    // end tolerance
         ) {

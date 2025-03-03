@@ -17,12 +17,15 @@ namespace OdomArc {
         std::optional<okapi::QAngle> angle=std::nullopt
     );
     bool isCalibrating ();
-    double distanceGet ();
-    double distanceb ();
-    double angleGet ();
+
+    QLength distanceGet ();
+    QLength distanceb ();
+    QAngle angleGet ();
     void resetDistTravelled ();
+
     QLength getDistTravelled ();
-    QSpeed getCurrentSpeed ();
+    QSpeed getLeftSpeed ();
+    QSpeed getRightSpeed ();
 };
 
 

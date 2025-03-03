@@ -29,6 +29,7 @@ public:
 
     QSpeed eval (QTime t);
     QAcceleration slope (QTime t);
+    QTime solveForArea (QLength t);
     QLength area (QTime t);
 };
 
@@ -42,6 +43,7 @@ private:
 public:
     MotionProfiling (std::vector<DrivePoint> points, QAcceleration acc);
     QSpeed vel (QTime t);
+    QSpeed vel (QLength dist);
     QAcceleration accel (QTime t);
     QLength dist (QTime t);
     void set_debug (bool is_debug);

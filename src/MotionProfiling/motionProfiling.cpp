@@ -96,6 +96,25 @@ QSpeed MotionProfiling :: vel (QTime t) {
     return 0_fps;
 }
 
+QSpeed MotionProfiling :: vel (QLength dist) {
+    vector<QLength> outs;
+    vector<QTime> times;
+    QLength out = 0_ft; 
+    for (auto l : this->lines) {
+        outs.push_back(out);
+        times.push_back(l.t1);
+        out += l.area(l.t2);
+    }   
+
+    for (int x = 0; x < outs.size(); x++) {
+        if (x == outs.size() - 1 || outs[x+1] > dist) {
+            auto final_t = this->lines[x].solveForArea(dist - outs[x]); 
+            return this->vel(final_t);
+        }
+    }
+    return 0_fps;
+}
+
 QLength MotionProfiling :: dist (QTime t) {
     QLength out = 0_ft; 
     for (auto l : this->lines) {
