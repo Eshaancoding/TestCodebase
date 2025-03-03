@@ -67,6 +67,14 @@ void initialize() {
 void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
+
+    // pros::Distance mogoSensor(1);
+    // double threshold = 15;
+
+    // double mogo_distance = mogoSensor.get();
+    // if (!eff.isClamped && mogo_distance < threshold){
+    //     eff.toggleClamp();
+    // }
     
     eff.seeColor = false;
 
