@@ -113,8 +113,8 @@ namespace OdomArc {
             if (true) { // set true to debug
                 Console::printBrain(4, "x: %f y: %f ang: %f",(float)xPos.load().convert(okapi::inch), (float)yPos.load().convert(okapi::inch), ang * 180/PI);
                 Console::printBrain(5, "Total Distance: %f ft | %f tile", (float)distTravelled.load().convert(foot), (float)distTravelled.load().convert(tile));
-                Console::printBrain(5, "Left Speed: %f fps", left_speed.load().convert(fps));
-                Console::printBrain(6, "Right Speed: %f fps", right_speed.load().convert(fps));
+                Console::printBrain(6, "Left Speed: %f fps", left_speed.load().convert(fps));
+                Console::printBrain(7, "Right Speed: %f fps", right_speed.load().convert(fps));
             }
 
             QLength f_xd =  xarc_f * cos(ang)          + yarc_f * sin(ang);  // x delta from forward tracking wheel
