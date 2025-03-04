@@ -4,14 +4,14 @@
 
 // for forward/backward
 #define LOOKAHEAD_DIST   0.6_tile      // lookahead distance that determines angle control
-#define MAX_SPEED        2.3_tps       // tile per second
-#define MAX_ACCEL        8_tps2       // tile per second squared
+#define MAX_SPEED        2.0_tps       // tile per second
+#define MAX_ACCEL        4_tps2       // tile per second squared
 
-#define KV               15.3           // Feed-forward constant with the target velocity (applied to each side of the wheel)
-#define KA               0.4           // Feed-forward constant with the target acceleration (applied to each side of the wheel)
-#define KP               0.0           // Feed-back constant with target velocity and measured vel (applied to each side of wheel)
+#define KV               18.3           // Feed-forward constant with the target velocity (applied to each side of the wheel)
+#define KA               0.6           // Feed-forward constant with the target acceleration (applied to each side of the wheel)
+#define KP               0.6           // Feed-back constant with target velocity and measured vel (applied to each side of wheel)
 
-#define END_TOLERANCE    0.15_in      // Tolerance of distance traveled before end of movement
+#define END_TOLERANCE    0.50_in      // Tolerance of distance traveled before end of movement
 #define POINT_TOLERANCE  3_in         // Tolerance to set lookahead distance, kp, and callback function as movement occurs
 
 // for turning movement
@@ -23,4 +23,4 @@
 
 // the timeout we have before stopping while loop; adds this value with the estimated amount of time to finish movement.
 // same for angle and distance movements
-#define TIMEOUT 1_s 
+#define TIMEOUT 2_s 

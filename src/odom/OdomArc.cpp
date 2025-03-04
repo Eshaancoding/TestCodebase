@@ -6,8 +6,6 @@
 #include <sys/_intsup.h>
 #include "Console.h"
 #include "okapi/api/units/QSpeed.hpp"
-#include "okapi/api/units/QTime.hpp"
-#include "parameters.h"
 #include "pros/rotation.hpp"
 #include "pros/rtos.hpp"
 
@@ -23,9 +21,7 @@ namespace OdomArc {
     std::atomic<okapi::QLength> xPos = 0_in;
     std::atomic<okapi::QLength> yPos = 0_in;
     std::atomic<okapi::QLength> distTravelled = 0_ft; 
-
-    std::atomic<okapi::QSpeed> left_speed = 0_fps;
-    std::atomic<okapi::QSpeed> right_speed = 0_fps;
+    std::atomic<okapi::QSpeed> speed = 0_fps; 
 
     std::atomic<bool> calibrating;
 
@@ -33,7 +29,6 @@ namespace OdomArc {
     pros::Rotation strafe_track_wheel (20); // strafe 
 
     okapi::IMU imu (6, okapi::IMUAxes::z); // imu
-
 
     QLength prevDi = 0.0_in;
     QLength prevDib = 0.0_in;
@@ -86,8 +81,11 @@ namespace OdomArc {
     */
 
     void MainLoop () {
+        unsigned int i = 0;
+        QLength prev_d_sp = 0_in;
         while (true) {
             pros::delay(10); 
+            i += 1;
 
             // get change in encoder
             QLength di = distanceGet(); // arc length
@@ -113,8 +111,6 @@ namespace OdomArc {
             if (true) { // set true to debug
                 Console::printBrain(4, "x: %f y: %f ang: %f",(float)xPos.load().convert(okapi::inch), (float)yPos.load().convert(okapi::inch), ang * 180/PI);
                 Console::printBrain(5, "Total Distance: %f ft | %f tile", (float)distTravelled.load().convert(foot), (float)distTravelled.load().convert(tile));
-                Console::printBrain(6, "Left Speed: %f fps", left_speed.load().convert(fps));
-                Console::printBrain(7, "Right Speed: %f fps", right_speed.load().convert(fps));
             }
 
             QLength f_xd =  xarc_f * cos(ang)          + yarc_f * sin(ang);  // x delta from forward tracking wheel
@@ -128,11 +124,6 @@ namespace OdomArc {
             // calculate delta distance travelled 
             QLength delta_d = sqrt(pow((f_xd + b_xd).convert(inch), 2) + pow((f_yd + b_yd).convert(inch), 2)) * 1_in;
             distTravelled = distTravelled.load() + delta_d;
-            
-            // get speed for each drivebase
-            // ============== CHECK CHECK CHECK THIS ============== 
-            left_speed =  (rFront + (ROBOT_WIDTH/2) * Dang) / 10_ms; // delay is 10_ms
-            right_speed = (rFront - (ROBOT_WIDTH/2) * Dang) / 10_ms; // delay is 10_ms
 
             // update internal variables
             currentAngle = ang;
@@ -170,11 +161,7 @@ namespace OdomArc {
         return distTravelled.load();
     }
 
-    QSpeed getLeftSpeed() {
-        return left_speed.load();
-    }
-
-    QSpeed getRightSpeed() {
-        return right_speed.load();
+    QSpeed getSpeed () {
+        return speed.load();
     }
 };

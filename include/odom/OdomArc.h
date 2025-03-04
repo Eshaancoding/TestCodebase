@@ -24,8 +24,7 @@ namespace OdomArc {
     void resetDistTravelled ();
 
     QLength getDistTravelled ();
-    QSpeed getLeftSpeed ();
-    QSpeed getRightSpeed ();
+    QSpeed getSpeed ();
 };
 
 

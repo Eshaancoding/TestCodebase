@@ -72,11 +72,13 @@ void Drive::move (
     QSpeed prev_right_vel = 0_fps;
     QTime prev_time = start_time;
 
+    QLength prev_dist = 0_tile;
+
     QAcceleration left_vel_acc = 0_fps2;
     QAcceleration right_vel_acc = 0_fps2;
     
     // ============= Main Loop ============= 
-    while (false) {
+    while (true) {
         // ============= Delay ============= 
         pros::delay(10);
         
@@ -139,8 +141,8 @@ void Drive::move (
                 0.0;
         
         // get left/right target velocity from motion profiling + curvature
-        auto total_dist_travelled = OdomArc::getDistTravelled();
-        QSpeed forward_vel = mt_profile.vel(total_dist_travelled);
+        QTime elapsed = current_time - start_time;
+        QSpeed forward_vel = mt_profile.vel(elapsed);
         QSpeed left_vel =  (forward_vel.convert(fps) * (2.0 + curvature*ROBOT_WIDTH.convert(foot))/2.0) * 1_fps; 
         QSpeed right_vel = (forward_vel.convert(fps) * (2.0 - curvature*ROBOT_WIDTH.convert(foot))/2.0) * 1_fps;
         
@@ -160,32 +162,35 @@ void Drive::move (
         double ff_right = KV * right_vel.convert(fps) + KA * right_vel_acc.convert(fps2);
         
         // feed backward
-        double fb_left = KP * (left_vel - OdomArc::getLeftSpeed()).convert(fps);
-        double fb_right = KP * (right_vel - OdomArc::getRightSpeed()).convert(fps);
+        QLength current_dist = OdomArc::getDistTravelled();
+        QLength target_dist = mt_profile.dist(elapsed);
+        double fb = KP * (target_dist - current_dist).convert(inch);
         
         // set motor voltages
-        leftMotorGroup.moveVoltage((ff_left + fb_left) * 120); // 12000 is max: 12000/100 --> 120; 100 is full output
-        rightMotorGroup.moveVoltage((ff_right + fb_right) * 120); // 100 is full output
+        leftMotorGroup.moveVoltage((is_reverse ? -1 : 1) * (ff_left + fb) * 120); // 12000 is max: 12000/100 --> 120; 100 is full output
+        rightMotorGroup.moveVoltage((is_reverse ? -1 : 1) * (ff_right + fb) * 120); // 100 is full output
         
         // ============= Debug ============= 
-        if (true && i % 10 == 0) {
-            printf("* Current: %f *\n", ((OdomArc::getLeftSpeed() + OdomArc::getRightSpeed())/2).convert(tps));
+        // only debug every X iterations and if we are *suppose* to be moving
+        if (true && i % 5 == 0) {
+            // calculate speed from dist
+            printf("* Target Dist: %f *\n", target_dist.convert(tile));
+            printf("* Current Dist: %f *\n", current_dist.convert(tile));
             printf("* Target: %f *\n", forward_vel.convert(tps));
-            printf("* Curv: %f *\n", curvature);
+            printf("----------\n");
         }
         
         // ============= Check if end program ============= 
-        // QTime elapsed = current_time - start_time;
-        // if (
-        //     (elapsed >= (mt_profile.get_total_time() + (*timeout)))  // timeout
-        // ) {
-        //     printf("Timeout -- done\n");
-        //     mainLoop = false;
-        //     break;
-        // }
+        if (
+            (elapsed >= (mt_profile.get_total_time() + (*timeout)))  // timeout
+        ) {
+            printf("Timeout -- done\n");
+            mainLoop = false;
+            break;
+        }
         
         if (
-            (abs(mt_profile.get_total_distance() - total_dist_travelled) <= (*end_tolerance))                    // end tolerance
+            (abs(mt_profile.get_total_distance() - current_dist) <= (*end_tolerance))                    // end tolerance
         ) {
             printf("Total distance travelled -- done\n");
             mainLoop = false;

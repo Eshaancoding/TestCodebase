@@ -27,7 +27,7 @@ extern PID HeadingPID;  // declared in parameters.cpp
 // =========================== MOTOR ==========================
 // ============================================================
 
-#define ROBOT_WIDTH 12_in 
+#define ROBOT_WIDTH 11.5_in 
 
 // drive
 #define RIGHT_BOTTOM_MOTOR   8 
