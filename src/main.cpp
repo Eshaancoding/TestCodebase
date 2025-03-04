@@ -10,6 +10,7 @@
 #include "odom/OdomArc.h"
 #include "pros/adi.hpp"
 #include "pros/misc.h"
+#include "pros/rtos.hpp"
 #include "routes.h"
 
 void disabled() {}
@@ -71,11 +72,11 @@ void autonomous() {
     
     eff.seeColor = false;
 
-    // Routes::test();
+    Routes::test();
 
-    OdomArc::setPos(0_in, 0_in, 0_deg);
-    drive.goForward(2_tile);
-    // drive.goBackward(2_tile);
+    // OdomArc::setPos(0_in, 0_in, 0_deg);
+    // drive.goForward(3_tile);
+    // drive.goBackward(3_tile);
 
     // AutonSelector::State state = waitForValidState(); 
 

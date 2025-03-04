@@ -9,7 +9,7 @@
 
 #define KV               18.3           // Feed-forward constant with the target velocity (applied to each side of the wheel)
 #define KA               0.6           // Feed-forward constant with the target acceleration (applied to each side of the wheel)
-#define KP               0.6           // Feed-back constant with target velocity and measured vel (applied to each side of wheel)
+#define KP               0.5           // Feed-back constant with target velocity and measured vel (applied to each side of wheel)
 
 #define END_TOLERANCE    0.50_in      // Tolerance of distance traveled before end of movement
 #define POINT_TOLERANCE  3_in         // Tolerance to set lookahead distance, kp, and callback function as movement occurs

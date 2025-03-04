@@ -143,8 +143,9 @@ void Drive::move (
         // get left/right target velocity from motion profiling + curvature
         QTime elapsed = current_time - start_time;
         QSpeed forward_vel = mt_profile.vel(elapsed);
-        QSpeed left_vel =  (forward_vel.convert(fps) * (2.0 + curvature*ROBOT_WIDTH.convert(foot))/2.0) * 1_fps; 
-        QSpeed right_vel = (forward_vel.convert(fps) * (2.0 - curvature*ROBOT_WIDTH.convert(foot))/2.0) * 1_fps;
+        auto c_const = (is_reverse ? -1 : 1) * curvature * ROBOT_WIDTH.convert(foot);
+        QSpeed left_vel =  (forward_vel.convert(fps) * (2.0 + c_const)/2.0) * 1_fps; 
+        QSpeed right_vel = (forward_vel.convert(fps) * (2.0 - c_const)/2.0) * 1_fps;
         
         // calculate left vel acc and right vel acceleration
         if (i % 5 == 0) {
@@ -202,4 +203,5 @@ void Drive::move (
 
     leftMotorGroup.moveVoltage(0); 
     rightMotorGroup.moveVoltage(0); 
+    pros::delay(100);
 }
