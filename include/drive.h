@@ -21,13 +21,11 @@ public:
     // all of these variables will be active at the START of this Point and END at the start of the next Point 
     okapi::QLength lookaheadDistance;
     okapi::QSpeed max_speed;
-    double kp;
 
     DrivePoint  (
         okapi::Point point, 
         optional<okapi::QLength> lookaheadDistance = nullopt,              // for angle displacement
         optional<okapi::QSpeed> max_speed = nullopt,                            // for max speed during movement
-        optional<double> kp = nullopt,                                                 // Proportion for controlling motion profiling --> robot power
         optional<std::function<void()>> callback = nullopt    // call function if reaches point (with point_tolerance defined at move funciton). Ex: Alter effector state
     );
 };

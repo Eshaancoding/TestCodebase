@@ -40,6 +40,7 @@ void Effectors::intake () {
 
     double currentPosition = intakeMotor.get_position(); 
     double prevPosition = currentPosition; 
+    colorSensor.set_led_pwm(100);
     while (true) {
         IntakeState state = intakeActive.load();
         const bool is_blue = isBlue.load(); // ===== By default: false ======

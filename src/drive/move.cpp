@@ -27,13 +27,11 @@ DrivePoint :: DrivePoint (
     okapi::Point point, 
     optional<okapi::QLength> lookaheadDistance,
     optional<okapi::QSpeed> max_speed,
-    optional<double> kp,
     optional<std::function<void()>> callback
 ) {
     this->point = point;
     this->lookaheadDistance = (lookaheadDistance == nullopt) ? LOOKAHEAD_DIST : (*lookaheadDistance);
     this->max_speed = (max_speed == nullopt) ? MAX_SPEED : (*max_speed);
-    this->kp = (kp == nullopt) ? KP : (*kp);
     this->callback = callback;
 }
 
@@ -53,7 +51,6 @@ void Drive::move (
     // ============= Setup Main Loop ============= 
     OdomArc::resetDistTravelled();
     MotionProfiling mt_profile (points, *accel);
-    double current_kp = points.begin()->kp;
 
     QLength lookahead_dist = points.begin()->lookaheadDistance; 
     int pointIdx = 0; // last point that we hit
@@ -92,7 +89,6 @@ void Drive::move (
             auto drive_point = *(points.begin() + i);
             if (Math::distance(current_pos, drive_point.point) <= (*point_tolerance)) {
                 lookahead_dist = drive_point.lookaheadDistance;
-                current_kp = drive_point.kp;
                 if (drive_point.callback) (*drive_point.callback)();
                 pointIdx++;
                 break;
@@ -143,7 +139,9 @@ void Drive::move (
         // get left/right target velocity from motion profiling + curvature
         QTime elapsed = current_time - start_time;
         QSpeed forward_vel = mt_profile.vel(elapsed);
-        auto c_const = (is_reverse ? -1 : 1) * curvature * ROBOT_WIDTH.convert(foot);
+
+        // adjust the 2_ft just because of wheel slip
+        auto c_const = (is_reverse ? -1 : 1) * curvature * (ROBOT_WIDTH).convert(foot);
         QSpeed left_vel =  (forward_vel.convert(fps) * (2.0 + c_const)/2.0) * 1_fps; 
         QSpeed right_vel = (forward_vel.convert(fps) * (2.0 - c_const)/2.0) * 1_fps;
         
@@ -165,7 +163,8 @@ void Drive::move (
         // feed backward
         QLength current_dist = OdomArc::getDistTravelled();
         QLength target_dist = mt_profile.dist(elapsed);
-        double fb = KP * (target_dist - current_dist).convert(inch);
+        // double fb = KP * (target_dist - current_dist).convert(inch);
+        double fb = 0.0;
         
         // set motor voltages
         leftMotorGroup.moveVoltage((is_reverse ? -1 : 1) * (ff_left + fb) * 120); // 12000 is max: 12000/100 --> 120; 100 is full output
