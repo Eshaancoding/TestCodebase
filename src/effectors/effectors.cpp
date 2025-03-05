@@ -161,7 +161,7 @@ void Effectors::changeState () {
 void Effectors::stepArm () {
     if (arm_state == ArmState::PID_ARM) {
         // there's no while true loop; ALL OF THESE PARAMS TUNING
-        const double loadingAngle = 120; // og 115
+        const double loadingAngle = 117; // og 115
         const double dumpAngle = 250; //135
         const double idleAngle = 105;
         // one button for motor up one button for motor down
@@ -173,7 +173,7 @@ void Effectors::stepArm () {
         double angle = (double)rotationSensor.get_angle() / 100.0;
 
         double error = (angle - targetAngle)*3.1415926/180; // convert to radians
-        double p = -45; //-25
+        double p = -40; //-25
         Console::printBrain(1, "Rot sensor: %f", angle);
 
         if (abs(error) > (1_deg).convert(okapi::radian)) {
