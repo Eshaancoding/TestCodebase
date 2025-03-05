@@ -160,7 +160,7 @@ void Effectors::changeState () {
 void Effectors::stepArm () {
     if (arm_state == ArmState::PID_ARM) {
         // there's no while true loop; ALL OF THESE PARAMS TUNING
-        const double loadingAngle = 117; // og 115
+        const double loadingAngle = 108; // og 115
         const double dumpAngle = 250; //135
         const double idleAngle = 100;
         // one button for motor up one button for motor down

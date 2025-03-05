@@ -129,8 +129,9 @@ void opcontrol() {
         // ======================== Tank ======================== 
         // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+        
+        //heading = (2 * (1 + exp(-5 * heading))) - 1.0;
         drive.moveArcade((isReverse ? -distance : distance), heading);
-
 
         // color
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_LEFT)){
@@ -170,13 +171,13 @@ void opcontrol() {
 
         eff.stepArm();
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1)){
+        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R1)){ // chanbge back to debounce
             eff.toggleIntakeState(IntakeState::INTAKE);
+        } if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)){
+            eff.toggleIntakeState(IntakeState::OUTTAKE);
         } 
 
-        if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_R2)){
-            eff.toggleIntakeState(IntakeState::OUTTAKE);
-        }
+
 
         if (Control::getDebouncePressed(pros::E_CONTROLLER_DIGITAL_L2))
             eff.toggleClamp();           
