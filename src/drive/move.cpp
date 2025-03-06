@@ -143,6 +143,8 @@ void Drive::move (
             :
                 0.0;
 
+        ang_pow *= (is_reverse ? -1 : 1);
+
         // get left/right target velocity from motion profiling + curvature
         QTime elapsed = current_time - start_time;
         QSpeed forward_vel = mt_profile.vel(elapsed);
@@ -181,11 +183,11 @@ void Drive::move (
         // only debug every X iterations and if we are *suppose* to be moving
         if (true && i % 5 == 0) {
             // calculate speed from dist
-            printf("Ang err: %f ", Math::anglePoint(current_pos, target_point).convert(degree));
-            printf("Ang power: %f ", ang_pow);
-            // printf("* Target Dist: %f *\n", target_dist.convert(tile));
-            // printf("* Current Dist: %f *\n", current_dist.convert(tile));
-            // printf("* Target: %f *\n", forward_vel.convert(tps));
+            //printf("Ang err: %f ", Math::anglePoint(current_pos, target_point).convert(degree));
+            //printf("Ang power: %f ", ang_pow);
+            printf("* Target Dist: %f *\n", target_dist.convert(tile));
+            printf("* Current Dist: %f *\n", current_dist.convert(tile));
+            printf("* Target: %f *\n", forward_vel.convert(tps));
             printf("----------\n");
         }
         

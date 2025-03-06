@@ -7,58 +7,43 @@
 #include "odom/OdomArc.h"   
 
 void Routes::AWPRed () {
-    /*    
 
-    eff.isBlue = false;
+	OdomArc::setPos(0.4014_tile, 3.4324_tile, -115_deg);
 
-    OdomArc::setPos(0_in, 0_in, 0_deg); // set our default/initial position
+	eff.raiseArm();
 
-    drive.goBackward(1.55_tile, {}, {});
-    eff.toggleClamp();
-    drive.goForward(0.25_tile);
+	pros::delay(1000);
 
-    drive.setToleranceParams(1_s, std::nullopt, std::nullopt, std::nullopt);
-    drive.turnLeft(135_deg);
-    drive.resetToleranceParams();
+	eff.lowerArm();
 
-    eff.setIntake(IntakeState::INTAKE);
-    drive.goForward(0.8_tile);
+	pros::delay(1500);
 
-    drive.setToleranceParams(1_s,std::nullopt, std::nullopt, std::nullopt);
-    drive.turnRight(40_deg);
-    drive.resetToleranceParams();
+	eff.stopArm();
 
-    drive.goForward(0.8_tile);
 
-    drive.setToleranceParams(1_s,std::nullopt, std::nullopt, std::nullopt);
-    drive.turnRight(10_deg);
-    drive.resetToleranceParams();
+	drive.move({
+		DrivePoint({0.4014_tile, 3.4324_tile}, 0.6_tile, 2_tps, nullopt),
+		DrivePoint({2.3628_tile, 4.1855_tile}, 0.6_tile, 2_tps, nullopt),
+	});
 
-    drive.goForward(0.3_tile);
-    pros::delay(300);
-    drive.goBackward(0.5_tile);
-    
-    drive.setToleranceParams(1.5_s, std::nullopt, std::nullopt, std::nullopt);
-    drive.faceToPoint({0_in, 10_tile}, true);
-    drive.resetToleranceParams();
+	eff.toggleClamp();
 
-    drive.goForward(1.6_tile);
-    drive.turnRight(90_deg);
-    drive.goForward(3_tile);
-    eff.toggleClamp();
-    eff.setIntake(IntakeState::INACTIVE);
+	drive.turnLeft(180_deg);
 
-    // =========== crossed line =========
-    drive.faceToPoint({25_tile,-25_tile}, true);
-    drive.goBackward(1.6_tile);
-    eff.toggleClamp();
-    eff.setIntake(IntakeState::INTAKE);
+	/*;
 
-    drive.goForward(0.2_tile);
-    drive.turnRight(135_deg);
-    drive.goForward(1_tile);
-    drive.turnRight(180_deg);
-    drive.goForward(2_tile);
+	eff.setIntake(IntakeState::INTAKE);
 
-    */
+
+	drive.move({
+		DrivePoint({2.0317_tile, 4.0697_tile}, 0.6_tile, 2_tps, nullopt),
+		DrivePoint({2.52_tile, 4.3924_tile}, 0.6_tile, 1_tps, nullopt),
+		DrivePoint({2.7103_tile, 4.6076_tile}, 0.6_tile, 1_tps, nullopt),
+		DrivePoint({2.8428_tile, 4.9552_tile}, 0.6_tile, 1_tps, nullopt),
+		DrivePoint({2.8097_tile, 5.5428_tile}, 0.6_tile, 1_tps, nullopt),
+	});
+
+	*/;
+
+
 }
