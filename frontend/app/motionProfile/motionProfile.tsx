@@ -5,8 +5,7 @@ export interface Points {
     x: number,             // in pxl format, use pxlToTile
     y: number,             // in pxl format, use pxlToTile
     maxSpeed: number,      // in tiles/sec
-    callback: string,
-    kp: number,
+    callback: string
     lookaheadDist: number  // in tiles
 }
 

@@ -26,6 +26,10 @@ export default function Codebase () {
         }
         a()
     }, [])
+
+    useEffect(() => {
+        console.log(initAngle) 
+    }, [initAngle])
     
     async function run () {
         if (program.length == 0) return

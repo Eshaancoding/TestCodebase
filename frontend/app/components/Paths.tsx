@@ -6,7 +6,6 @@ export default function Paths() {
     const [paths, setPaths] = useAtom(pathsAtom)
     const [pathSelect, setPathSelect] = useAtom(pathSelectAtom)
     const [ms, ] = useAtom(def_max_speed)
-    const [kp, ] = useAtom(def_kp)
     const [lhd, ] = useAtom(def_lookhead_dist)
 
     // helper functions
@@ -23,7 +22,6 @@ export default function Paths() {
                     y: yPoint,
                     maxSpeed: ms,
                     callback: "",
-                    kp: kp,
                     lookaheadDist: lhd
                 })
                 break

@@ -5,7 +5,7 @@ import { Stage, Layer, Image, Circle, Line } from "react-konva";
 import useImage from "use-image";
 import Prompt from "./prompt";
 import { useAtom } from "jotai";
-import { def_kp, def_lookhead_dist, def_max_speed, is_skills, pathsAtom, pathSelectAtom } from "../var";
+import { def_lookhead_dist, def_max_speed, is_skills, pathsAtom, pathSelectAtom } from "../var";
 import Button from "./button";
 
 // MAKE SURE YOU CHANGE TILETOPXL ON READPROGRAM.TSX
@@ -22,7 +22,6 @@ export default function Map () {
   const [pathSelect, ] = useAtom(pathSelectAtom)
 
   const [ms, ] = useAtom(def_max_speed);
-  const [kp, ] = useAtom(def_kp)
   const [lhd, ] = useAtom(def_lookhead_dist)
 
   const [isSkill, ] = useAtom(is_skills)
@@ -76,7 +75,6 @@ export default function Map () {
         y: y,
         maxSpeed: ms,
         callback: "",
-        kp: kp,
         lookaheadDist: lhd
       } ]
       let pathsCopy = paths.slice()
@@ -209,13 +207,6 @@ export default function Map () {
               update={(v) => setEditPoint("callback", v)} 
               value={paths[pathSelect]["points"][edit]["callback"]} 
               isText 
-            />
-
-            <Prompt 
-              label="KP" 
-              unit="" 
-              update={(v) => setEditPoint("kp", v)} 
-              value={paths[pathSelect]["points"][edit]["kp"]} 
             />
 
             <Prompt 

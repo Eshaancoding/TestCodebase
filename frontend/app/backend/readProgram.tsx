@@ -23,7 +23,7 @@ function parseMove (line:string, lambdaDict: {[key:string]: string}) {
     let points = []
     for (var driveP of drivePoints) {
         let [
-            x_coords, y_coords, lhd, speed, kp, cb
+            x_coords, y_coords, lhd, speed, cb
         ] = driveP.split(",").map((v) => v.trim())
         x_coords = x_coords.slice(1, x_coords.length)
         y_coords = y_coords.slice(0, y_coords.length - 1)
@@ -35,7 +35,6 @@ function parseMove (line:string, lambdaDict: {[key:string]: string}) {
             y: tileToPxl(x, y).y,
             maxSpeed: parseFloat(speed.split("_")[0]),
             callback: cb == "nullopt" ? "" : lambdaDict[cb],
-            kp: parseFloat(kp),
             lookaheadDist: parseFloat(lhd.split("_")[0])
         })
     }

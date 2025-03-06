@@ -58,7 +58,6 @@ export default async function writeProgram (prog:string, paths:any[], initAngle:
                 m += r(pxlToTiles(point['x'], point['y']).y).toString() + "_tile}, ";
                 m += point["lookaheadDist"].toString() + "_tile, ";
                 m += point["maxSpeed"].toString() + "_tps, ";
-                m += point["kp"].toString() + ", ";
                 if (point["callback"].length > 0) {
                     lambdaFuncs += "\tauto lambda" + lambdaCounter.toString() + " = [](){ " + point["callback"] + " };\n";
                     m += "lambda" + lambdaCounter.toString();
