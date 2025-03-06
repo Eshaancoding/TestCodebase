@@ -7,9 +7,10 @@
 #define MAX_SPEED        2.0_tps       // tile per second
 #define MAX_ACCEL        4_tps2       // tile per second squared
 
-#define KV               18.3           // Feed-forward constant with the target velocity (applied to each side of the wheel)
+#define KV               18.3          // Feed-forward constant with the target velocity (applied to each side of the wheel)
 #define KA               0.6           // Feed-forward constant with the target acceleration (applied to each side of the wheel)
 #define KP               0.5           // Feed-back constant with target velocity and measured vel (applied to each side of wheel)
+#define KDrift           0             // Drift parameter
 
 #define END_TOLERANCE    0.50_in      // Tolerance of distance traveled before end of movement
 #define POINT_TOLERANCE  3_in         // Tolerance to set lookahead distance, kp, and callback function as movement occurs

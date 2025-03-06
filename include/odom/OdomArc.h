@@ -20,6 +20,7 @@ namespace OdomArc {
 
     QLength distanceGet ();
     QLength distanceb ();
+    QSpeed velb ();
     QAngle angleGet ();
     void resetDistTravelled ();
 

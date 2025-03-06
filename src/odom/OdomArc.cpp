@@ -42,6 +42,10 @@ namespace OdomArc {
         // tune it such that positive values from the backward wheel means robot is going into the -x axis
         return strafe_track_wheel.get_position() * ((PI*WHEEL_DIA_STRAFE)/36000) * 1_in; // ticks --> inches
     }
+    
+    QSpeed velb () {
+        return strafe_track_wheel.get_velocity() * ((PI*WHEEL_DIA_STRAFE)/36000) * 1_in / 1_s; // ticks --> inches;
+    }
 
     QAngle angleGet () { // in angle
         return imu.get() * PI / 180 * 1_rad;

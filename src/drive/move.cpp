@@ -141,9 +141,10 @@ void Drive::move (
         QSpeed forward_vel = mt_profile.vel(elapsed);
 
         // adjust the 2_ft just because of wheel slip
-        auto c_const = (is_reverse ? -1 : 1) * curvature * (ROBOT_WIDTH).convert(foot);
-        QSpeed left_vel =  (forward_vel.convert(fps) * (2.0 + c_const)/2.0) * 1_fps; 
-        QSpeed right_vel = (forward_vel.convert(fps) * (2.0 - c_const)/2.0) * 1_fps;
+        auto c_const = (is_reverse ? -1 : 1) * curvature * (ROBOT_WIDTH * 6).convert(foot);
+        auto kdrift = (is_reverse ? -1 : 1) * KDrift * OdomArc::velb().convert(fps);
+        QSpeed left_vel =  (forward_vel.convert(fps) * (2.0 + c_const)/2.0 - kdrift) * 1_fps; 
+        QSpeed right_vel = (forward_vel.convert(fps) * (2.0 - c_const)/2.0 + kdrift) * 1_fps;
         
         // calculate left vel acc and right vel acceleration
         if (i % 5 == 0) {
@@ -157,14 +158,14 @@ void Drive::move (
         }
         
         // calculate feed forward of both vel and acc for each side of drivebase
-        double ff_left = KV * left_vel.convert(fps) + KA * left_vel_acc.convert(fps2);
+        double ff_left = KV * left_vel.convert(fps) + KA * left_vel_acc.convert(fps2) ;
         double ff_right = KV * right_vel.convert(fps) + KA * right_vel_acc.convert(fps2);
         
         // feed backward
         QLength current_dist = OdomArc::getDistTravelled();
         QLength target_dist = mt_profile.dist(elapsed);
-        // double fb = KP * (target_dist - current_dist).convert(inch);
-        double fb = 0.0;
+        double fb = KP * (target_dist - current_dist).convert(inch);
+        // double fb = 0.0;
         
         // set motor voltages
         leftMotorGroup.moveVoltage((is_reverse ? -1 : 1) * (ff_left + fb) * 120); // 12000 is max: 12000/100 --> 120; 100 is full output
