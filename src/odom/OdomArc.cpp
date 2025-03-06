@@ -126,7 +126,7 @@ namespace OdomArc {
             yPos = (yPos.load() + f_yd + b_yd);
 
             // calculate delta distance travelled 
-            QLength delta_d = sqrt(pow((f_xd + b_xd).convert(inch), 2) + pow((f_yd + b_yd).convert(inch), 2)) * 1_in;
+            QLength delta_d = sqrt(pow((f_xd).convert(inch), 2) + pow((f_yd).convert(inch), 2)) * 1_in;
             distTravelled = distTravelled.load() + delta_d;
 
             // update internal variables

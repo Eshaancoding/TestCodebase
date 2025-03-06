@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 // add tooltip later
 export default function Prompt (props: { label: string, unit?: string, placeholder?: string, update: (inp:any) => void, isText?: boolean, value?: any }) {
     let [displayVal, setDisplayVal] = useState(props.value)
-    
+      
     useEffect(() => {
         if (props.value != undefined) {
             setDisplayVal(props.value)

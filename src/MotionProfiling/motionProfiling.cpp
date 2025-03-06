@@ -86,7 +86,7 @@ MotionProfiling :: MotionProfiling (vector<DrivePoint> points, QAcceleration acc
     }
 
     this->total_time = currentTime; // set total time
-    printf("Total time: %f", this->total_time.convert(second));
+    printf("Total time: %f\n", this->total_time.convert(second));
 }
 
 QSpeed MotionProfiling :: vel (QTime t) {

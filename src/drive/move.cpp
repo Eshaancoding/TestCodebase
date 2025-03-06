@@ -50,6 +50,7 @@ void Drive::move (
 
     // ============= Setup Main Loop ============= 
     OdomArc::resetDistTravelled();
+    PID ang_pid (AngP, 0, AngD, 0, 0.0, 100.0, 1.0, 1.0);
     MotionProfiling mt_profile (points, *accel);
 
     QLength lookahead_dist = points.begin()->lookaheadDistance; 
@@ -135,16 +136,21 @@ void Drive::move (
                 (2 * calcXDist(current_pos, target_point).convert(foot))/pow(lookahead_dist.convert(foot), 2)  // 1/foot
             :
                 0.0;
-        
+            
+        double ang_pow = 
+            (target_point.x != -1_in && target_point.y != -1_in) ?
+                ang_pid.step(Math::anglePoint(current_pos, target_point).convert(degree))
+            :
+                0.0;
+
         // get left/right target velocity from motion profiling + curvature
         QTime elapsed = current_time - start_time;
         QSpeed forward_vel = mt_profile.vel(elapsed);
 
         // adjust the 2_ft just because of wheel slip
         auto c_const = (is_reverse ? -1 : 1) * curvature * (ROBOT_WIDTH * 6).convert(foot);
-        auto kdrift = (is_reverse ? -1 : 1) * KDrift * OdomArc::velb().convert(fps);
-        QSpeed left_vel =  (forward_vel.convert(fps) * (2.0 + c_const)/2.0 - kdrift) * 1_fps; 
-        QSpeed right_vel = (forward_vel.convert(fps) * (2.0 - c_const)/2.0 + kdrift) * 1_fps;
+        QSpeed left_vel =  forward_vel;
+        QSpeed right_vel = forward_vel;
         
         // calculate left vel acc and right vel acceleration
         if (i % 5 == 0) {
@@ -168,16 +174,18 @@ void Drive::move (
         // double fb = 0.0;
         
         // set motor voltages
-        leftMotorGroup.moveVoltage((is_reverse ? -1 : 1) * (ff_left + fb) * 120); // 12000 is max: 12000/100 --> 120; 100 is full output
-        rightMotorGroup.moveVoltage((is_reverse ? -1 : 1) * (ff_right + fb) * 120); // 100 is full output
+        leftMotorGroup.moveVoltage((is_reverse ? -1 : 1) * (ff_left + fb + ang_pow) * 120); // 12000 is max: 12000/100 --> 120; 100 is full output
+        rightMotorGroup.moveVoltage((is_reverse ? -1 : 1) * (ff_right + fb - ang_pow) * 120); // 100 is full output
         
         // ============= Debug ============= 
         // only debug every X iterations and if we are *suppose* to be moving
         if (true && i % 5 == 0) {
             // calculate speed from dist
-            printf("* Target Dist: %f *\n", target_dist.convert(tile));
-            printf("* Current Dist: %f *\n", current_dist.convert(tile));
-            printf("* Target: %f *\n", forward_vel.convert(tps));
+            printf("Ang err: %f ", Math::anglePoint(current_pos, target_point).convert(degree));
+            printf("Ang power: %f ", ang_pow);
+            // printf("* Target Dist: %f *\n", target_dist.convert(tile));
+            // printf("* Current Dist: %f *\n", current_dist.convert(tile));
+            // printf("* Target: %f *\n", forward_vel.convert(tps));
             printf("----------\n");
         }
         
