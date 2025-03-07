@@ -72,12 +72,10 @@ void autonomous() {
     
     eff.seeColor = false;
 
-    Routes::AWPRed();
 
-
-    // OdomArc::setPos(0_in, 0_in, 0_deg);
-    // drive.goForward(3_tile);
-    // drive.goBackward(3_tile);
+    OdomArc::setPos(0_in, 0_in, 0_deg);
+    drive.goForward(3_tile);
+    drive.goBackward(3_tile);
 
     // AutonSelector::State state = waitForValidState(); 
 

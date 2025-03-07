@@ -150,7 +150,7 @@ void Drive::move (
         QSpeed forward_vel = mt_profile.vel(elapsed);
 
         // adjust the 2_ft just because of wheel slip
-        auto c_const = (is_reverse ? -1 : 1) * curvature * (ROBOT_WIDTH * 6).convert(foot);
+        // auto c_const = (is_reverse ? -1 : 1) * curvature * (ROBOT_WIDTH * 6).convert(foot);
         QSpeed left_vel =  forward_vel;
         QSpeed right_vel = forward_vel;
         
@@ -188,6 +188,7 @@ void Drive::move (
             printf("* Target Dist: %f *\n", target_dist.convert(tile));
             printf("* Current Dist: %f *\n", current_dist.convert(tile));
             printf("* Target: %f *\n", forward_vel.convert(tps));
+            printf("left: %f\n", abs(mt_profile.get_total_distance() - current_dist).convert(inch));
             printf("----------\n");
         }
         

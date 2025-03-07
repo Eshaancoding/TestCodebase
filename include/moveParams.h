@@ -7,9 +7,9 @@
 #define MAX_SPEED        2.0_tps       // tile per second
 #define MAX_ACCEL        4_tps2       // tile per second squared
 
-#define KV               17.9          // Feed-forward constant with the target velocity (applied to each side of the wheel)
+#define KV               18.7          // Feed-forward constant with the target velocity (applied to each side of the wheel)
 #define KA               0.3           // Feed-forward constant with the target acceleration (applied to each side of the wheel)
-#define KP               0.5           // Feed-back constant with target velocity and measured vel (applied to each side of wheel)
+#define KP               0.8           // Feed-back constant with target velocity and measured vel (applied to each side of wheel)
 
 #define AngP             3.3
 #define AngD             1.2
