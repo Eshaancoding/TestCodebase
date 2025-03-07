@@ -14,7 +14,7 @@
 #define AngP             3.3
 #define AngD             1.2
 
-#define END_TOLERANCE    0.5_in      // Tolerance of distance traveled before end of movement
+#define END_TOLERANCE    1_in      // Tolerance of distance traveled before end of movement
 #define POINT_TOLERANCE  3_in         // Tolerance to set lookahead distance, kp, and callback function as movement occurs
 
 // for turning movement
