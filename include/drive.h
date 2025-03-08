@@ -84,6 +84,8 @@ private:
     );
 
 public:
+    bool doHeading = false;
+
     /**
      * @brief move arcade
      * 

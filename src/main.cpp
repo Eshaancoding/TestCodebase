@@ -69,13 +69,15 @@ void initialize() {
 void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-    
-    eff.seeColor = false;
 
 
-    OdomArc::setPos(0_in, 0_in, 0_deg);
-    drive.goForward(3_tile);
-    drive.goBackward(3_tile);
+    Routes::AWPRed();
+
+	// drive.turnRight(200_deg);
+
+    // OdomArc::setPos(0_in, 0_in, 0_deg);
+    // drive.goForward(3_tile);
+    // drive.goBackward(3_tile);
 
     // AutonSelector::State state = waitForValidState(); 
 

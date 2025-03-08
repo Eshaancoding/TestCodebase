@@ -170,14 +170,14 @@ void Drive::move (
         double ff_right = KV * right_vel.convert(fps) + KA * right_vel_acc.convert(fps2);
         
         // feed backward
-        QLength current_dist = OdomArc::getDistTravelled();
+        QLength current_dist = OdomArc::getDistTravelled().abs();
         QLength target_dist = mt_profile.dist(elapsed);
         double fb = KP * (target_dist - current_dist).convert(inch);
         // double fb = 0.0;
         
         // set motor voltages
-        leftMotorGroup.moveVoltage((is_reverse ? -1 : 1) * (ff_left + fb + ang_pow) * 120); // 12000 is max: 12000/100 --> 120; 100 is full output
-        rightMotorGroup.moveVoltage((is_reverse ? -1 : 1) * (ff_right + fb - ang_pow) * 120); // 100 is full output
+        leftMotorGroup.moveVoltage((is_reverse ? -1 : 1) * (ff_left + fb + ang_pow * (this->doHeading)) * 120); // 12000 is max: 12000/100 --> 120; 100 is full output
+        rightMotorGroup.moveVoltage((is_reverse ? -1 : 1) * (ff_right + fb - ang_pow * (this->doHeading)) * 120); // 100 is full output
         
         // ============= Debug ============= 
         // only debug every X iterations and if we are *suppose* to be moving
@@ -202,7 +202,7 @@ void Drive::move (
         }
         
         if (
-            (abs(mt_profile.get_total_distance() - current_dist) <= (*end_tolerance))                    // end tolerance
+            (abs(abs(mt_profile.get_total_distance()) - current_dist) <= (*end_tolerance))                    // end tolerance
         ) {
             printf("Total distance travelled -- done\n");
             mainLoop = false;

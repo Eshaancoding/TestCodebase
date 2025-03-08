@@ -26,4 +26,4 @@
 
 // the timeout we have before stopping while loop; adds this value with the estimated amount of time to finish movement.
 // same for angle and distance movements
-#define TIMEOUT 1_s
+#define TIMEOUT 0_s
