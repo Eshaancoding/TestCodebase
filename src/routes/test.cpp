@@ -14,6 +14,7 @@ ASSET(testpath_txt);
 void Routes::test () {
 
 	OdomArc::setPos(1.966_tile, 0.008_tile, 0_deg);
+	chassis.setPose(OdomArc::getPos());
 
 	chassis.follow(testpath_text, 10, 1000);
 

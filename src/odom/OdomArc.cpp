@@ -34,12 +34,12 @@ namespace OdomArc {
 
     okapi::IMU imu (6, okapi::IMUAxes::z); // imu
 
-    lemlib::OdomSensors sensors(&vert_track_wheel,
-                                nullptr,
-                                &strafe_track_wheel,
-                                nullptr,
-                                &imu
-    );
+    // lemlib::OdomSensors sensors(&vert_track_wheel,
+    //                             nullptr,
+    //                             &strafe_track_wheel,
+    //                             nullptr,
+    //                             &imu
+    // );
 
     QLength prevDi = 0.0_in;
     QLength prevDib = 0.0_in;
@@ -139,6 +139,9 @@ namespace OdomArc {
             // calculate delta distance travelled 
             QLength delta_d = sqrt(pow((f_xd).convert(inch), 2) + pow((f_yd).convert(inch), 2)) * 1_in;
             distTravelled = distTravelled.load() + delta_d;
+
+            // update lemlib positioning if we wanna use custom odom
+            chassis.setPose(xPos.load(), yPos.load(), currentAngle);
 
             // update internal variables
             currentAngle = ang;
