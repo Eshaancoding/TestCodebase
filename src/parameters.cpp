@@ -5,6 +5,7 @@
 #include "pros/motors.h"
 #include "main.h"
 #include "pid.h"
+#include "lemlib/api.hpp" // IWYU pragma: keep
 
 PID DistancePID = PID(
     Distance_P,   
@@ -31,6 +32,14 @@ PID HeadingPID = PID(
 // gearing and brake mode are set in initialize
 MotorGroup leftMotorGroup = okapi::MotorGroup({-LEFT_TOP_MOTOR, -LEFT_BOTTOM_MOTOR, -LEFT_MIDDLE_MOTOR});
 MotorGroup rightMotorGroup = okapi::MotorGroup({RIGHT_TOP_MOTOR, RIGHT_BOTTOM_MOTOR, RIGHT_MIDDLE_MOTOR});
+
+lemlib::Drivetrain drivetrain(&leftMotorGroup,
+                              &rightMotorGroup,
+                              ROBOT_WIDTH, // edit track width
+                              lemlib::Omniwheel::NEW_325, // wheel diameter
+                              360, // drivetrain rpm 
+                              2 // horizontal drift
+                              );
 
 Drive drive = Drive();
 Effectors eff = Effectors();

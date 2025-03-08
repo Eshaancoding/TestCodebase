@@ -8,6 +8,7 @@
 #include "okapi/api/units/QSpeed.hpp"
 #include "pros/rotation.hpp"
 #include "pros/rtos.hpp"
+#include "lemlib/api.hpp" // IWYU pragma: keep
 
 #define PI 3.14159265
 #define WHEEL_DIA_VERT 2.0
@@ -28,7 +29,17 @@ namespace OdomArc {
     pros::Rotation vert_track_wheel (13);  // vert 13
     pros::Rotation strafe_track_wheel (20); // strafe 
 
+    lemlib::TrackingWheel horizontal(&strafe_track_wheel, lemlib::Omniwheel::NEW_2, 0.5) // edit offset
+    lemlib::TrackingWheel vertical(&vert_track_wheel, lemlib::Omniwheel::NEW_2, 0.5) // edit offset
+
     okapi::IMU imu (6, okapi::IMUAxes::z); // imu
+
+    lemlib::OdomSensors sensors(&vert_track_wheel,
+                                nullptr,
+                                &strafe_track_wheel,
+                                nullptr,
+                                &imu
+    );
 
     QLength prevDi = 0.0_in;
     QLength prevDib = 0.0_in;

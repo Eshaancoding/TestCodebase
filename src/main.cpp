@@ -12,6 +12,7 @@
 #include "pros/misc.h"
 #include "pros/rtos.hpp"
 #include "routes.h"
+#include "lemlib/api.hpp" // IWYU pragma: keep
 
 void disabled() {}
 void competition_initialize() {}
@@ -22,6 +23,46 @@ Hi adi if you want an intro to the codebase,
 you could head up to the README I documented some stuff
 *************************************************************
 */
+
+// NEEDS TUNING
+lemlib::ControllerSettings linearController(
+    0.068, //kp
+    0, //ki
+    0.038, //kd
+    3, // anti windup
+    0.5, // small error range (in)
+    100, // samll error range timeout (ms)
+    3, // large error range (in)
+    500, // large error range timeout (ms)
+    1 // max acceleration (slew)
+);
+
+lemlib::ControllerSettings angularController(
+    0.292, //kp
+    0, //ki
+    0.049, //kd
+    3, // anti windup
+    0.51, // small error range (deg)
+    100, // small error range timeout (ms)
+    3, // large error rnage (deg)
+    500, // large error range timeout (ms)
+    1 // max accel (slew)
+);
+
+// drive controller settings
+lemlib::ExpoDriveCurve throttleCurve(3, // joystick deadband uot of 127
+                                     10, // min output where drivetrain will move out of 127
+                                     1.109 // expo curve gain
+                                    );
+
+lemlib::ExpoDriveCurve steerCurve(3,
+                                  10,
+                                  1.019
+                                );
+
+// chassis
+lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors, &throttelCurve, &steerCurve);
+
 
 // Auton Selector wait state function (helper for autonomous and opcontrol)
 AutonSelector::State waitForValidState () {
@@ -55,6 +96,8 @@ void initialize() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
 
+    chassis.calibrate(); // calibrate sensors
+ 
     drive.resetToleranceParams();
     //eff.armLeft.set_zero_position(0);
     eff.armRight.set_zero_position(0);
@@ -69,7 +112,6 @@ void initialize() {
 void autonomous() {
     leftMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
     rightMotorGroup.setBrakeMode(AbstractMotor::brakeMode::brake);
-
 
     Routes::AWPRed();
 
@@ -128,7 +170,8 @@ void opcontrol() {
         // ======================== Tank ======================== 
         // double left = Control::getAnalog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         // double right = Control::getAnalog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-        drive.moveArcade((isReverse ? -distance : distance), heading);
+        //drive.moveArcade((isReverse ? -distance : distance), heading);
+        chassis.arcade(distance, heading);
 
 
         // color
